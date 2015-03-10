@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/green1</item>
+        <item name="colorPrimaryDark">@color/green1</item>
+        <item name="colorAccent">@color/green2</item>
+        <item name="windowActionBar">true</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <color name="red">#CC0000</color>
+    <color name="green1">#008D7F</color>
+    <color name="green2">#009688</color>
+</resources>

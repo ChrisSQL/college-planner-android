@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">College Planner</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Fullname</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_register">REGISTER</string>
+    <string name="btn_link_to_register">Not a member? Sign up now.</string>
+    <string name="btn_link_to_login">Already registered! Login.</string>
+    <string name="welcome">Welcome</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="name">Fullname</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_new">Add Project</string>
+    <string name="title_activity_add_new_project">AddNewProjectActivity</string>
+    <string name="subject_prompt">Select Subject :</string>
+
+    <string-array name="subject_array">
+        <item>Android Development</item>
+        <item>User Centred Design</item>
+        <item>Information Systems</item>
+        <item>Advanced Databases</item>
+        <item>Security Principles</item>
+        <item>Software Enterprise </item>
+    </string-array>
+    <string-array name="project_type_array">
+        <item>Project</item>
+        <item>Exam</item>
+        <item>Presentation</item>
+        <item>Event</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="percentage_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+        <item>51</item>
+        <item>52</item>
+        <item>53</item>
+        <item>54</item>
+        <item>55</item>
+        <item>56</item>
+        <item>57</item>
+        <item>58</item>
+        <item>59</item>
+        <item>60</item>
+        <item>61</item>
+        <item>62</item>
+        <item>63</item>
+        <item>64</item>
+        <item>65</item>
+        <item>66</item>
+        <item>67</item>
+        <item>68</item>
+        <item>69</item>
+        <item>70</item>
+        <item>71</item>
+        <item>72</item>
+        <item>73</item>
+        <item>74</item>
+        <item>75</item>
+        <item>76</item>
+        <item>77</item>
+        <item>78</item>
+        <item>79</item>
+        <item>80</item>
+        <item>81</item>
+        <item>82</item>
+        <item>83</item>
+        <item>84</item>
+        <item>85</item>
+        <item>86</item>
+        <item>87</item>
+        <item>88</item>
+        <item>89</item>
+        <item>90</item>
+        <item>91</item>
+        <item>92</item>
+        <item>93</item>
+        <item>94</item>
+        <item>95</item>
+        <item>96</item>
+        <item>97</item>
+        <item>98</item>
+        <item>99</item>
+        <item>100</item>
+    </string-array>
+
+    <string name="title_activity_update_project">UpdateProjectActivity</string>
+
+    <string name="title_activity_time_table">TimeTableActivity</string>
+    <string name="dummy_button">Upload TimeTable</string>
+    <string name="dummy_content">Upload TimeTable</string>
+
+    <string name="title_activity_view_project">ViewProjectActivity</string>
+
+
+    <string name="title_section1">Project Details</string>
+    <string name="title_section2">Project Notes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="change_timetable">Change TimeTable</string>
+    <string name="settings_text">Settings</string>
+    <string name="hello">hello</string>
+    <string name="set_reminder">Set Reminder</string>
+    <string name="title_activity_set_reminder">Set Reminder</string>
+
+    <string name="title_activity_time_table2">TimeTable2</string>
+    <string name="add_new_timetable_string">Change TimeTable</string>
+    <string name="title_activity_web_view_time_table">WebViewTimeTable</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="login">Login</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="logout">Logout</string>
+    <string name="title_activity_login_activity2">LoginActivity2</string>
+
+
+
+    <string name="title_activity_register_activity2">RegisterActivity2</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
+    <string name="title_activity_time_table_web_view">TimeTableWebView</string>
+    <string name="title_activity_register_activity_two">RegisterActivityTwo</string>
+    <string name="title_activity_main_activity3">MainActivity3</string>
+    <string name="title_activity_register_activity_three">RegisterActivityThree</string>
+
+</resources>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffffff"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Subject :"
+        android:id="@+id/SubjectTextview"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:gravity="left|center"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Type :"
+        android:id="@+id/TypeTextView"
+        android:layout_below="@+id/SubjectTextview"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"
+        android:layout_toStartOf="@+id/SubjectSpinner"
+        android:textAlignment="center"
+        android:gravity="left|center"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Title :"
+        android:id="@+id/TitleTextView"
+        android:layout_below="@+id/TypeTextView"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"
+        android:layout_toStartOf="@+id/TypeSpinner"
+        android:textAlignment="center"
+        android:gravity="left|center"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TitleTextFragment"
+        android:layout_alignTop="@+id/TitleTextView"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_marginRight="15dp"
+        android:editable="false"
+        android:focusable="false"
+        android:layout_alignBottom="@+id/TitleTextView"
+        android:padding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Worth :"
+        android:id="@+id/WorthTextView"
+        android:padding="10dp"
+        android:layout_below="@+id/TitleTextView"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/TitleText"
+        android:textAlignment="center"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:id="@+id/DetailsTextFragment"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:ems="10"
+        android:autoLink="all"
+        android:editable="false"
+        android:hint="Details..."
+        android:gravity="top|left"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentBottom="true"
+        android:focusable="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/DueDateTextFragment"
+        android:layout_marginRight="15dp"
+        android:padding="10dp"
+        android:editable="false"
+        android:focusable="false"
+        android:layout_below="@+id/WorthTextView"
+        android:layout_alignStart="@+id/WorthText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Due Date :"
+        android:id="@+id/textView"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/DueDateTextFragment"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/WorthText"
+        android:focusable="false"
+        android:layout_above="@+id/DueDateTextFragment"
+        android:layout_alignStart="@+id/TitleTextFragment"
+        android:layout_alignEnd="@+id/TitleTextFragment"
+        android:padding="10dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SubjectText"
+        android:layout_alignBottom="@+id/SubjectTextview"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/TitleTextFragment"
+        android:layout_alignEnd="@+id/TitleTextFragment"
+        android:focusable="false"
+        android:padding="10dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TypeText"
+        android:layout_alignTop="@+id/TypeTextView"
+        android:layout_alignEnd="@+id/TitleTextFragment"
+        android:layout_alignStart="@+id/SubjectText"
+        android:layout_above="@+id/TitleTextFragment"
+        android:focusable="false"
+        android:padding="10dp" />
+
+
+</RelativeLayout>

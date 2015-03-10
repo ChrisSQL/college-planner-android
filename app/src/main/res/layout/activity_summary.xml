@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SummaryActivity">
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SummaryListView"
+        android:choiceMode="singleChoice"
+        android:layout_alignParentStart="false"
+        android:longClickable="true"
+/>
+
+    <!--<GridLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/gridLayout"-->
+        <!--android:padding="3dp"-->
+        <!--android:background="#ffffffff"-->
+        <!--android:layout_marginBottom="10dp">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:text="Subject"-->
+            <!--android:id="@+id/SubjectText"-->
+            <!--android:layout_row="0"-->
+            <!--android:layout_column="0"-->
+            <!--android:padding="3dp"-->
+            <!--android:layout_marginLeft="5dp" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:text="Due In"-->
+            <!--android:id="@+id/DueInText"-->
+            <!--android:layout_row="0"-->
+            <!--android:layout_column="3"-->
+            <!--android:padding="3dp"-->
+            <!--android:layout_marginRight="2dp" />-->
+    <!--</GridLayout>-->
+
+    <!--<ImageButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginBottom="12dp"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:text="Button"-->
+        <!--android:src="@drawable/ic_action_new"-->
+        <!--android:id="@+id/addButton" />-->
+
+
+</RelativeLayout>

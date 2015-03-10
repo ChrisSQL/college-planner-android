@@ -1,0 +1,11 @@
+TODO
+
+Rebuild Adapter to only show logged in users Subjects and Projects // Done
+
+Add ability to share whole list
+
+Group notes
+
+Timetable Zoom.
+
+Use GitHub
