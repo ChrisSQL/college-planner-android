@@ -19,10 +19,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.TabsPagerAdapter;
 import com.chris.collegeplanner.helper.JSONParser;
+import com.chris.collegeplanner.helper.SQLiteHandler;
+import com.chris.collegeplanner.helper.SessionManager;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,13 +68,24 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
     private EditText typeSpinner;
     private EditText worthSpinner;
     private ProgressDialog pDialog;
-    private String[] tabs = {"Project Details", "Project Notes"};
+    private String[] tabs = {"Project Details"};
+    private static String url = "";
+    List<HashMap<String, String>> fillMaps;
+    private int id = 0;
+    SimpleAdapter adapter;
+    AlphaInAnimationAdapter animationAdapter;
+    ListView list;
+    private SQLiteHandler db;
+    private SessionManager session;
+    public static final String MyPREFERENCES = "MySettings" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_project);
         setTitle("View Project");
+
+        list = (ListView) findViewById(R.id.groupNotesListView);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -114,6 +132,9 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
         titleText = (EditText) findViewById(R.id.TitleTextFragment);
         dueDateText = (EditText) findViewById(R.id.DueDateTextFragment);
 
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             pid = extras.getString("ProjectID");
@@ -126,6 +147,8 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+
+
 
     }
 
@@ -172,6 +195,14 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
         GetProductDetails task = new GetProductDetails();
         // passes values for the urls string array
         task.execute(new String[]{urlSingleProject});
+
+//        String urlurl = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email="+session.getUserDetails()+"";
+//    //    url = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email=chrismaher.wit@gmail.com";
+//        url = urlurl;
+//
+//        ReadAllProjectGroupNotesBackgroundTask task2 = new ReadAllProjectGroupNotesBackgroundTask();
+//        // passes values for the urls string array
+//        task2.execute(new String[]{url});
 
 
     }
@@ -229,7 +260,7 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return 1;
         }
 
         @Override
@@ -238,8 +269,8 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
             switch (position) {
                 case 0:
                     return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+//                case 1:
+//                    return getString(R.string.title_section2).toUpperCase(l);
 
             }
             return null;
@@ -340,5 +371,17 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
             pDialog.dismiss();
         }
     }
+
+    public void addGroupNote(View view){
+
+        Toast.makeText(getApplicationContext(), "Clicked!!!", Toast.LENGTH_LONG).show();
+
+
+    }
+
+
+
+
+
 
 }

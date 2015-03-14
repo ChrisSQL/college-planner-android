@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.chris.collegeplanner.fragments.ProjectDetailsFragment;
-import com.chris.collegeplanner.fragments.ProjectNotesFragment;
 
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
@@ -25,9 +24,9 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 // Top Rated fragment activity
                 return new ProjectDetailsFragment();
-            case 1:
-                // Games fragment activity
-                return new ProjectNotesFragment();
+//            case 1:
+//                // Games fragment activity
+//                return new ProjectGroupNotesFragment();
         }
 
         return null;
@@ -36,7 +35,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // get item count - equal to number of tabs
-        return 2;
+        return 1;
     }
 
 }

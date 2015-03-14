@@ -27,6 +27,7 @@ public class SessionManager {
 
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_COURSE = "course";
 
 	public SessionManager(Context context) {
 		this._context = context;

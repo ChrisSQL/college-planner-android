@@ -171,8 +171,84 @@ public class LoginActivity extends Activity {
 
 		// Adding request to request queue
         session.createLoginSession(email);
+        setLoginCourse(email);
 		AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 	}
+
+    /**
+     * function to verify login details in mysql db
+     * */
+    private void setLoginCourse(final String email) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_login";
+
+        pDialog.setMessage("Logging in ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Method.POST,
+                AppConfig.URL_REGISTER, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Login Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    // Check for error node in json
+                    if (!error) {
+                        // user successfully logged in
+                        // Create login session
+                        session.setLogin(true);
+                        session.getUserDetails();
+
+                        // Launch main activity
+                        Intent intent = new Intent(LoginActivity.this,
+                                SummaryActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("tag", "login");
+                params.put("email", email);
+            //    params.put("password", password);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        session.createLoginSession(email);
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
 
 	private void showDialog() {
 		if (!pDialog.isShowing())

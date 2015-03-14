@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -128,6 +128,14 @@
         <activity
             android:name=".app.RegisterActivityThree"
             android:label="@string/title_activity_register_activity_three" >
+        </activity>
+        <activity
+            android:name=".app.GroupNotesActivity"
+            android:label="@string/title_activity_group_notes" >
+        </activity>
+        <activity
+            android:name=".app.AddNewGroupNoteActivity"
+            android:label="@string/title_activity_add_new_group_note" >
         </activity>
     </application>
 

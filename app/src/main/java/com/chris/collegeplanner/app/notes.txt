@@ -1,11 +1,12 @@
 TODO
 
-Rebuild Adapter to only show logged in users Subjects and Projects // Done
-
 Add ability to share whole list
 
 Group notes
+  Add Project Group Note Method
 
 Timetable Zoom.
 
 Use GitHub
+
+Daily Reminders Overview

@@ -6,13 +6,21 @@
     android:background="#ffffffff"
     android:id="@+id/RelLayoutAddNotes">
 
-    <TextView android:layout_width="fill_parent"
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Group Notes - Coming Soon"
-        android:textSize="20dp"
-        android:layout_centerInParent="true"
-        android:id="@+id/ProjectNotesGroupText" />
+        android:text="Add Course Group Note"
+        android:id="@+id/addProjectGroupNoteButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="addGroupNote"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/groupNotesListView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

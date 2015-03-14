@@ -90,7 +90,7 @@ public class SummaryActivity extends ActionBarActivity {
     private SQLiteHandler db;
     private SessionManager session;
     public static final String MyPREFERENCES = "MySettings" ;
-
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +102,6 @@ public class SummaryActivity extends ActionBarActivity {
 
         if (session.isLoggedIn()){
 
-
-//            Toast.makeText(getApplicationContext(), "User Login Status: " + session.getUserDetails(), Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), "Syncing!", Toast.LENGTH_SHORT).show();
             getWebData();
 
         }
@@ -313,10 +310,26 @@ public class SummaryActivity extends ActionBarActivity {
 
     }
 
+    // Launches The ADD NEW Screen
+    public void addNewEntryIntentClick(View view) {
+
+        Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
+        startActivity(intent);
+
+    }
+
     // Launches The TimeTable Screen
     public void launchSchedule(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, TimeTableWebView.class);
+        startActivity(intent);
+
+    }
+
+    // Launches The Group Notes Screen
+    public void launchGroupNotesScreen(MenuItem item) {
+
+        Intent intent = new Intent(SummaryActivity.this, GroupNotesActivity.class);
         startActivity(intent);
 
     }
@@ -368,6 +381,14 @@ public class SummaryActivity extends ActionBarActivity {
     public void logoutUserProxy(MenuItem item) {
 
         logoutUser();
+    }
+
+    public void addNewProject(MenuItem item) {
+
+        Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
+        startActivity(intent);
+
+
     }
 
 //    public void launchLoginScreen(MenuItem item) {
@@ -447,9 +468,17 @@ public class SummaryActivity extends ActionBarActivity {
 
         // Send session.getUserDetails() to filter List by LoggedIn user
 
+
+
         private String jsonResult;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
+            Toast.makeText(getApplicationContext(), "Syncing with Server...", Toast.LENGTH_LONG).show();
+
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -487,6 +516,8 @@ public class SummaryActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             ListMaker();
+
+
         }
 
         public void ListMaker() {

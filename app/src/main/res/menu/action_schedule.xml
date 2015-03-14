@@ -4,10 +4,27 @@
     <item
 
         android:id="@+id/action_cart"
-        android:icon="@drawable/tt3"
+        android:icon="@drawable/timetable_icon"
         android:orderInCategory="100"
         yourapp:showAsAction="always"
         android:title="TimeTable"
         android:onClick="launchSchedule"/>
+
+    <item
+
+        android:id="@+id/action_group"
+        android:icon="@drawable/ic_launcher"
+        android:orderInCategory="101"
+        yourapp:showAsAction="always"
+        android:title="TimeTable"
+        android:onClick="launchGroupNotesScreen"/>
+    <item
+
+        android:id="@+id/action_add_new"
+        android:icon="@drawable/green_add_icon_fixed"
+        android:orderInCategory="102"
+        yourapp:showAsAction="always"
+        android:title="TimeTable"
+        android:onClick="addNewProject"/>
 
 </menu>

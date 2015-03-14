@@ -177,5 +177,9 @@
     <string name="title_activity_register_activity_two">RegisterActivityTwo</string>
     <string name="title_activity_main_activity3">MainActivity3</string>
     <string name="title_activity_register_activity_three">RegisterActivityThree</string>
+    <string name="title_activity_group_notes">GroupNotesActivity</string>
+    <string name="launchGroup">Launch Group Notes</string>
+    <string name="title_activity_add_new_group_note">AddNewGroupNoteActivity</string>
+    <string name="add_new_group_note">Add New Group Note</string>
 
 </resources>

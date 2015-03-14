@@ -2,13 +2,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".SummaryActivity">
 
-    <item
+    <!--<item-->
 
-        android:id="@+id/action_settings"
-        android:title="@string/add_new"
-        android:orderInCategory="100"
-        android:onClick="addNewEntryIntentClick"
-        app:showAsAction="never" />
+        <!--android:id="@+id/action_settings"-->
+        <!--android:title="@string/add_new"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:onClick="addNewEntryIntentClick"-->
+        <!--app:showAsAction="never" />-->
+
+    <!--<item-->
+
+        <!--android:id="@+id/launchGroupNotes"-->
+        <!--android:title="@string/launchGroup"-->
+        <!--android:orderInCategory="101"-->
+        <!--android:onClick="launchGroupNotesScreen"-->
+        <!--app:showAsAction="never" />-->
 
     <!--<item-->
 
@@ -25,6 +33,7 @@
         android:orderInCategory="102"
         android:onClick="logoutUserProxy"
         app:showAsAction="never" />
+
 
     <!--<item-->
 
