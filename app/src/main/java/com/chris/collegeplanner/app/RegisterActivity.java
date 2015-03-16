@@ -7,8 +7,11 @@ package com.chris.collegeplanner.app;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -113,16 +116,38 @@ public class RegisterActivity extends Activity {
                 String collegeText = college.getText().toString();
                 String courseText = course.getText().toString();
 
-				if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty()) {
-					registerUser(email, password, confirmPassword, collegeText, courseText);
+                // Check if college exists already
+
+                if(!collegeText.isEmpty()){
 
 
 
-				} else {
-					Toast.makeText(getApplicationContext(),
-							"Please enter your details!", Toast.LENGTH_LONG)
-							.show();
-				}
+                }
+
+
+                // Register User
+                if(isNetworkAvailable()){
+
+                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty()) {
+                        registerCourse(courseText);
+                        registerCollege(collegeText);
+                        registerUser(email, password, confirmPassword, collegeText, courseText);
+
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Please enter your details!", Toast.LENGTH_LONG)
+                                .show();
+                    }
+
+                } else{
+
+                    Toast.makeText(getApplicationContext(), "Internet Connection Required to Register!", Toast.LENGTH_LONG).show();
+
+                }
+
+
 			}
 		});
 
@@ -157,6 +182,7 @@ public class RegisterActivity extends Activity {
 		StringRequest strReq = new StringRequest(Method.POST,
 				AppConfig.URL_REGISTER, new Response.Listener<String>() {
 
+//
 
 					@Override
 					public void onResponse(String response) {
@@ -232,6 +258,166 @@ public class RegisterActivity extends Activity {
 		AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
 	}
+
+    private void registerCollege(final String collegeIn) {
+
+
+        // Tag used to cancel the request
+        String tag_string_req = "req_college";
+
+        pDialog.setMessage("Registering ...");
+        showDialog();
+
+
+
+        StringRequest strReq = new StringRequest(Method.POST,
+                AppConfig.URL_REGISTER, new Response.Listener<String>() {
+
+//
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "College Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+//                        // User successfully stored in MySQL
+//                        // Now store the user in sqlite
+//                        String uid = jObj.getString("uid");
+//                        JSONObject user = jObj.getJSONObject("user");
+//                        String email = user.getString("email");
+//                        // Inserting row in users table
+//                        db.addUser(email, uid);
+//                        // Launch login activity
+//                        Intent intent = new Intent( RegisterActivity.this, SummaryActivity.class);
+//                        startActivity(intent);
+//                        finish();
+
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+//                        String errorMsg = jObj.getString("error_msg");
+//                        Toast.makeText(getApplicationContext(),
+//                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Registration Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("tag", "college");
+                params.put("college", collegeIn);
+
+
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
+    }
+
+    private void registerCourse(final String courseIn) {
+
+
+        // Tag used to cancel the request
+        String tag_string_req = "req_course";
+
+        pDialog.setMessage("Registering ...");
+        showDialog();
+
+
+
+        StringRequest strReq = new StringRequest(Method.POST,
+                AppConfig.URL_REGISTER, new Response.Listener<String>() {
+
+//
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Course Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+//                        // User successfully stored in MySQL
+//                        // Now store the user in sqlite
+//                        String uid = jObj.getString("uid");
+//                        JSONObject user = jObj.getJSONObject("user");
+//                        String email = user.getString("email");
+//                        // Inserting row in users table
+//                        db.addUser(email, uid);
+//                        // Launch login activity
+//                        Intent intent = new Intent( RegisterActivity.this, SummaryActivity.class);
+//                        startActivity(intent);
+//                        finish();
+
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+//                        String errorMsg = jObj.getString("error_msg");
+//                        Toast.makeText(getApplicationContext(),
+//                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Registration Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("tag", "course");
+                params.put("course", courseIn);
+
+
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
+    }
 
     private void getWebData() {
 
@@ -341,6 +527,7 @@ public class RegisterActivity extends Activity {
 
     }
 
+
     class addCoursesToListBackgroundTask extends AsyncTask<String, Void, String> {
 
         private String jsonResult;
@@ -447,4 +634,12 @@ public class RegisterActivity extends Activity {
 		if (pDialog.isShowing())
 			pDialog.dismiss();
 	}
+
+    // Method to check if device has internet connection.
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

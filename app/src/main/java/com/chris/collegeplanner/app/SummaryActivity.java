@@ -321,7 +321,7 @@ public class SummaryActivity extends ActionBarActivity {
     // Launches The TimeTable Screen
     public void launchSchedule(MenuItem item) {
 
-        Intent intent = new Intent(SummaryActivity.this, TimeTableWebView.class);
+        Intent intent = new Intent(SummaryActivity.this, TimeTableActivity.class);
         startActivity(intent);
 
     }

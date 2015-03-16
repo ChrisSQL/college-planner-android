@@ -2,11 +2,14 @@ TODO
 
 Add ability to share whole list
 
-Group notes
-  Add Project Group Note Method
-
 Timetable Zoom.
 
 Use GitHub
 
 Daily Reminders Overview
+
+Group Notes Not showing
+
+Login needs fixing.
+
+Online Database Needs to save course.

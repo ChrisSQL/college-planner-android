@@ -153,6 +153,14 @@ public class GroupNotesActivity extends ActionBarActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            Toast.makeText(getApplicationContext(), "Syncing with Server...", Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
         protected void onPostExecute(String result) {
             ListMaker();
         }
