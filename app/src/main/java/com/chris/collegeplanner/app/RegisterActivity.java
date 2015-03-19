@@ -100,7 +100,7 @@ public class RegisterActivity extends Activity {
 		if (session.isLoggedIn()) {
 			// User is already logged in. Take him to main activity
 
-            Toast.makeText(getApplicationContext(), session.getUserDetails(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), session.getUserEmail(), Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(RegisterActivity.this, SummaryActivity.class);
 			startActivity(intent);
 			finish();

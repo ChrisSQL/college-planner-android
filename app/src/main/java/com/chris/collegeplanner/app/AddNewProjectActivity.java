@@ -368,7 +368,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
             String worth = worthSpinner.getSelectedItem().toString();
             String details = detailsText.getText().toString();
             String dueDate = dueDateText.getText().toString();
-            String projectEmail = session.getUserDetails();
+            String projectEmail = session.getUserEmail();
 
             if (title.equalsIgnoreCase("")) {
                 title = "NA";

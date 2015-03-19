@@ -21,13 +21,14 @@ public class SessionManager {
 	int PRIVATE_MODE = 0;
 
 	// Shared preferences file name
+
 	private static final String PREF_NAME = "MySettings";
-	
 	private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
 
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
     public static final String KEY_COURSE = "course";
+    public static final String KEY_COLLEGE = "college";
 
 	public SessionManager(Context context) {
 		this._context = context;
@@ -60,10 +61,19 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void setLoginCourse(String course){
+
+        // Storing email in pref
+        editor.putString(KEY_COURSE, course);
+
+        // commit changes
+        editor.commit();
+    }
+
     /**
      * Get stored session data
      * */
-    public String getUserDetails(){
+    public String getUserEmail(){
         HashMap<String, String> user = new HashMap<String, String>();
 
         // user email id
@@ -71,5 +81,18 @@ public class SessionManager {
 
         // return user
         return pref.getString(KEY_EMAIL, null);
+    }
+
+    /**
+     * Get stored session data
+     * */
+    public String getUserCourse(){
+        HashMap<String, String> user = new HashMap<String, String>();
+
+        // user email id
+        user.put(KEY_COURSE, pref.getString(KEY_COURSE, null));
+
+        // return user
+        return pref.getString(KEY_COURSE, null);
     }
 }

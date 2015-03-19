@@ -2,8 +2,9 @@ package com.chris.collegeplanner.app;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,10 +60,17 @@ public class GroupNotesActivity extends ActionBarActivity {
 
         // Session manager
         session = new SessionManager(getApplicationContext());
+        String email = session.getUserEmail();
         list = (ListView) findViewById(R.id.groupNotesListView1);
 
+        Toast.makeText(getApplicationContext(), session.getUserCourse(), Toast.LENGTH_LONG).show();
 
-        getWebData();
+
+        try {
+            getWebData();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -89,14 +99,19 @@ public class GroupNotesActivity extends ActionBarActivity {
     }
 
     // Method to start the List Fill Process
-    private void getWebData() {
+    private void getWebData() throws UnsupportedEncodingException {
 
-        String urlurl = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email="+session.getUserDetails()+"";
-        url = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email=chrismaher.wit@gmail.com";
-        url = urlurl;
+        // Send in an email and get a course
 
-        ReadAllProjectGroupNotesBackgroundTask task = new ReadAllProjectGroupNotesBackgroundTask();
+        String course = URLEncoder.encode(session.getUserCourse(), "utf-8");
+        url = String.format("http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?course=%s", course);
+
+
+
+
+        ReadAllProjectsBackgroundTask task = new ReadAllProjectsBackgroundTask();
         // passes values for the urls string array
+        Log.d("Log...", url);
         task.execute(new String[]{url});
 
 
@@ -111,13 +126,22 @@ public class GroupNotesActivity extends ActionBarActivity {
 
 
 
-    class ReadAllProjectGroupNotesBackgroundTask extends AsyncTask<String, Void, String> {
+    // Background Async Task to Fill List with WebServer Data
+    class ReadAllProjectsBackgroundTask extends AsyncTask<String, Void, String> {
 
-        // Send session.getUserDetails() to filter List by LoggedIn user
+        // Send session.getUserEmail() to filter List by LoggedIn user
+
+
 
         private String jsonResult;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
+            Toast.makeText(getApplicationContext(), "Syncing with Server...", Toast.LENGTH_LONG).show();
+
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -153,19 +177,15 @@ public class GroupNotesActivity extends ActionBarActivity {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            Toast.makeText(getApplicationContext(), "Syncing with Server...", Toast.LENGTH_LONG).show();
-
-        }
-
-        @Override
         protected void onPostExecute(String result) {
             ListMaker();
+
+
         }
 
         public void ListMaker() {
+
+
 
             List<Map<String, String>> projectList = new ArrayList<Map<String, String>>();
             fillMaps = new ArrayList<HashMap<String, String>>();
@@ -175,33 +195,28 @@ public class GroupNotesActivity extends ActionBarActivity {
                 JSONObject jsonResponse = new JSONObject(jsonResult);
                 JSONArray jsonMainNode = jsonResponse.optJSONArray("GroupNotes");
 
-                GroupNote groupNote = new GroupNote();
+                GroupNote project = new GroupNote();
 
 
                 for (int i = 0; i < jsonMainNode.length(); i++) {
-
-
-
                     JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
 
-                    groupNote.setGroupNoteId(jsonChildNode.optString("GroupNoteId"));
-                    groupNote.setGroupNoteAuthor(jsonChildNode.optString("GroupNoteAuthor"));
-                    groupNote.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
-                    groupNote.setGroupNoteText(jsonChildNode.optString("GroupNoteText"));
 
 
-                    Toast.makeText(getApplicationContext(), "Notes visible to your class only.", Toast.LENGTH_SHORT).show();
 
+
+                    project.setGroupNoteAuthor(jsonChildNode.optString("GroupNoteAuthor"));
+                    project.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
+                    project.setGroupNoteText(jsonChildNode.optString("GroupNoteText"));
 
 
                     //        ------------------------------------------------------------------------------------------
 
 
                     HashMap<String, String> map = new HashMap<String, String>();
-                    map.put("GroupNoteId", groupNote.getGroupNoteId());
-                    map.put("GroupNoteAuthor", groupNote.getGroupNoteAuthor());
-                    map.put("GroupNoteDatePosted", groupNote.getGroupNoteDatePosted());
-                    map.put("GroupNoteText", "" + groupNote.getGroupNoteText());
+                    map.put("GroupNoteAuthor", project.getGroupNoteAuthor());
+                    map.put("GroupNoteDatePosted", project.getGroupNoteDatePosted());
+                    map.put("GroupNoteText", "" + project.getGroupNoteText());
 
                     fillMaps.add(map);
 
@@ -215,8 +230,14 @@ public class GroupNotesActivity extends ActionBarActivity {
 
             adapter = new SimpleAdapter(getApplicationContext(), fillMaps, R.layout.group_notes_list_item, from, to);
 
+            animationAdapter = new AlphaInAnimationAdapter(adapter);
+            animationAdapter.setAbsListView(list);
+            list.setAdapter(animationAdapter);
 
-            list.setAdapter(adapter);
+
+
+
+            //  list.setAdapter(adapter);
 
 
 

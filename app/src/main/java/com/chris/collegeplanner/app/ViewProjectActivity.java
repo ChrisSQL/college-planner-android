@@ -196,7 +196,7 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
         // passes values for the urls string array
         task.execute(new String[]{urlSingleProject});
 
-//        String urlurl = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email="+session.getUserDetails()+"";
+//        String urlurl = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email="+session.getUserEmail()+"";
 //    //    url = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email=chrismaher.wit@gmail.com";
 //        url = urlurl;
 //

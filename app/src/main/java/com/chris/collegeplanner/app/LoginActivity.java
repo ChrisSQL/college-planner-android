@@ -22,10 +22,22 @@ import com.android.volley.toolbox.StringRequest;
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.helper.SessionManager;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,6 +50,9 @@ public class LoginActivity extends Activity {
 	private EditText inputPassword;
 	private ProgressDialog pDialog;
 	private SessionManager session;
+    String email = "";
+    private String url = "";
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +68,8 @@ public class LoginActivity extends Activity {
 		pDialog = new ProgressDialog(this);
 		pDialog.setCancelable(false);
 
+        url = "http://chrismaher.info/AndroidProjects2/get_login_course.php?email="+email;
+
 		// Session manager
 		session = new SessionManager(getApplicationContext());
 
@@ -63,6 +80,8 @@ public class LoginActivity extends Activity {
 			startActivity(intent);
 			finish();
 		}
+
+     //   session.setLogin(false);
 
 		// Login button Click Event
 		btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +145,7 @@ public class LoginActivity extends Activity {
 								// user successfully logged in
 								// Create login session
 								session.setLogin(true);
-                                session.getUserDetails();
+                                session.getUserEmail();
 
 								// Launch main activity
 								Intent intent = new Intent(LoginActivity.this,
@@ -170,8 +189,10 @@ public class LoginActivity extends Activity {
 
 		// Adding request to request queue
         session.createLoginSession(email);
-        setLoginCourse(email);
+        session.setLoginCourse("Software Systems Development");
 		AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
+
 	}
 
     /**
@@ -201,7 +222,7 @@ public class LoginActivity extends Activity {
                         // user successfully logged in
                         // Create login session
                         session.setLogin(true);
-                        session.getUserDetails();
+                        session.getUserEmail();
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
@@ -248,6 +269,38 @@ public class LoginActivity extends Activity {
         session.createLoginSession(email);
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
+
+    public void onConnect() {
+        new Thread(){
+            public void run(){
+
+                Log.d("mytag", session.getUserEmail());
+
+
+                HttpClient myClient = new DefaultHttpClient();
+                HttpPost post = new HttpPost("http://chrismaher.info/AndroidProjects2/user_session_details.php?email="+session.getUserEmail());
+                try {
+                    List<NameValuePair> myArgs = new ArrayList<NameValuePair>();
+                    myArgs.add(new BasicNameValuePair("email", "email"));
+                    myArgs.add(new BasicNameValuePair("userCourse", "userCourse"));
+                    post.setEntity(new UrlEncodedFormEntity(myArgs));
+                    HttpResponse myResponse = myClient.execute(post);
+                    BufferedReader br = new BufferedReader( new InputStreamReader(myResponse.getEntity().getContent()));
+                    String line = "";
+                    while ((line = br.readLine()) != null)
+                    {
+                        Log.d("mytag", line);
+
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+    }
+
 
 	private void showDialog() {
 		if (!pDialog.isShowing())

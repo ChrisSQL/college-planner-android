@@ -38,7 +38,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,7 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
     private Button saveButton2;
     List<String> subjectsArray = new ArrayList<>();
     AutoCompleteTextView subjectGroupText;
-    private String urlUpload = "http://chrismaher.info/AndroidProjects2/group_notes_upload.php";
+    private String urlUpload = "http://chrismaher.info/AndroidProjects2/group_note_upload.php";
     private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -277,13 +279,18 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
             String subject = subjectGroupText.getText().toString();
             String details = detailsText.getText().toString();
 
-            String projectEmail = session.getUserDetails();
+            String projectEmail = session.getUserEmail();
+         //   String groupNoteCourse = session.getUserCourse();
+            String groupNoteCourse = session.getUserCourse();
+            String date = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss").format(new Date());
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("GroupAuthorEmail", projectEmail));
-            params.add(new BasicNameValuePair("GroupNoteSubject", subject));
+            params.add(new BasicNameValuePair("GroupNoteId", "0"));
+            params.add(new BasicNameValuePair("GroupNoteAuthor", projectEmail));
+            params.add(new BasicNameValuePair("GroupNoteDatePosted", date));
             params.add(new BasicNameValuePair("GroupNoteText", details));
+            params.add(new BasicNameValuePair("GroupNoteCourse", session.getUserCourse()));
 
 
             // getting JSON Object

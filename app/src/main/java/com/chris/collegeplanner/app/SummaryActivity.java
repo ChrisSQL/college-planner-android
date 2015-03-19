@@ -41,6 +41,7 @@ import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.objects.Project;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -60,6 +61,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,6 +93,9 @@ public class SummaryActivity extends ActionBarActivity {
     private SessionManager session;
     public static final String MyPREFERENCES = "MySettings" ;
     private ProgressDialog dialog;
+    JSONObject jobj = null;
+    ClientServerInterface clientServerInterface = new ClientServerInterface();
+    String ab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +107,9 @@ public class SummaryActivity extends ActionBarActivity {
 
         if (session.isLoggedIn()){
 
+        //    Toast.makeText(getApplicationContext(), "Session Course : " + session.getUserCourse(), Toast.LENGTH_SHORT).show();
             getWebData();
+
 
         }
 
@@ -164,7 +171,40 @@ public class SummaryActivity extends ActionBarActivity {
             }
         });
 
+        new RetreiveData().execute();
+
+
     }
+
+    class RetreiveData extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            // TODO Auto-generated method stub
+            Log.d("EE : ", "http://chrismaher.info/AndroidProjects2/user_session_details.php?email='"+session.getUserEmail()+"'" );
+            jobj = clientServerInterface.makeHttpRequest("http://chrismaher.info/AndroidProjects2/user_session_details.php?email=\'"+session.getUserEmail()+"\'");
+
+            try {
+                String ab = jobj.getJSONArray("project").getJSONObject(0).getString("userCourse");
+                Log.d("AB : ", ab);
+                session.setLoginCourse(ab);
+                Log.d("SessionCourse",session.getUserCourse());
+
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return ab;
+        }
+    protected void onPostExecute(String ab){
+
+
+
+    }
+
+}
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -269,8 +309,8 @@ public class SummaryActivity extends ActionBarActivity {
     // Method to start the List Fill Process
     private void getWebData() {
 
-        String urlurl = "http://chrismaher.info/AndroidProjects2/project_details.php?email="+session.getUserDetails()+"";
-        url = "http://chrismaher.info/AndroidProjects2/project_details.php?email=chrismaher.wit@gmail.com";
+        String urlurl = "http://chrismaher.info/AndroidProjects2/project_details.php?email="+session.getUserEmail()+"";
+//        url = "http://chrismaher.info/AndroidProjects2/project_details.php?email=chrismaher.wit@gmail.com";
         url = urlurl;
 
         ReadAllProjectsBackgroundTask task = new ReadAllProjectsBackgroundTask();
@@ -466,7 +506,7 @@ public class SummaryActivity extends ActionBarActivity {
     // Background Async Task to Fill List with WebServer Data
     class ReadAllProjectsBackgroundTask extends AsyncTask<String, Void, String> {
 
-        // Send session.getUserDetails() to filter List by LoggedIn user
+        // Send session.getUserEmail() to filter List by LoggedIn user
 
 
 
@@ -613,6 +653,66 @@ public class SummaryActivity extends ActionBarActivity {
         finish();
     }
 
+    public class ClientServerInterface {
+        //input stream deals with bytes
+        InputStream is = null;
+        JSONObject jobj = null;
+        String json = "";
+        //constructor
+        public ClientServerInterface(){
+
+        }
+        //this method returns json object.
+        public JSONObject makeHttpRequest(String url){
+            //http client helps to send and receive data
+            DefaultHttpClient httpclient = new DefaultHttpClient();
+            //our request method is post
+            HttpPost httppost = new HttpPost(url);
+            try {
+            //get the response
+                HttpResponse httpresponse = httpclient.execute(httppost);
+                HttpEntity httpentity = httpresponse.getEntity();
+            // get the content and store it into inputstream object.
+                is = httpentity.getContent();
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+            //convert byte-stream to character-stream.
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                try {
+                    while((line = reader.readLine())!=null){
+                        sb.append(line+"\n");
+
+                    }
+            //close the input stream
+                    is.close();
+                    json = sb.toString();
+                    try {
+                        jobj = new JSONObject(json);
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return jobj;
+        }
+    }
 }
 
 
