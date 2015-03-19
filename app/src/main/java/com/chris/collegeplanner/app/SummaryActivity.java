@@ -516,7 +516,12 @@ public class SummaryActivity extends ActionBarActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            Toast.makeText(getApplicationContext(), "Syncing with Server...", Toast.LENGTH_LONG).show();
+            super.onPreExecute();
+            pDialog = new ProgressDialog(SummaryActivity.this);
+            pDialog.setMessage("Syncing with Server...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
 
         }
 
@@ -556,6 +561,7 @@ public class SummaryActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             ListMaker();
+            pDialog.dismiss();
 
 
         }

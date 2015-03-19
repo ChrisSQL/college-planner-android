@@ -1,5 +1,6 @@
 package com.chris.collegeplanner.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,21 +50,20 @@ public class GroupNotesActivity extends ActionBarActivity {
     private SQLiteHandler db;
     private SessionManager session;
     public static final String MyPREFERENCES = "MySettings" ;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_notes);
 
-        setTitle("Group Notes");
-
-
         // Session manager
         session = new SessionManager(getApplicationContext());
+        setTitle(session.getUserCourse()+" Group Notes");
         String email = session.getUserEmail();
         list = (ListView) findViewById(R.id.groupNotesListView1);
 
-        Toast.makeText(getApplicationContext(), session.getUserCourse(), Toast.LENGTH_LONG).show();
+     //   Toast.makeText(getApplicationContext(), session.getUserCourse(), Toast.LENGTH_LONG).show();
 
 
         try {
@@ -139,7 +139,12 @@ public class GroupNotesActivity extends ActionBarActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            Toast.makeText(getApplicationContext(), "Syncing with Server...", Toast.LENGTH_LONG).show();
+            super.onPreExecute();
+            pDialog = new ProgressDialog(GroupNotesActivity.this);
+            pDialog.setMessage(session.getUserCourse()+"");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
 
         }
 
@@ -179,6 +184,7 @@ public class GroupNotesActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             ListMaker();
+            pDialog.dismiss();
 
 
         }
@@ -206,7 +212,7 @@ public class GroupNotesActivity extends ActionBarActivity {
 
 
                     project.setGroupNoteAuthor(jsonChildNode.optString("GroupNoteAuthor"));
-                    project.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
+                 //   project.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
                     project.setGroupNoteText(jsonChildNode.optString("GroupNoteText"));
 
 
@@ -215,7 +221,7 @@ public class GroupNotesActivity extends ActionBarActivity {
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("GroupNoteAuthor", project.getGroupNoteAuthor());
-                    map.put("GroupNoteDatePosted", project.getGroupNoteDatePosted());
+                 //   map.put("GroupNoteDatePosted", project.getGroupNoteDatePosted());
                     map.put("GroupNoteText", "" + project.getGroupNoteText());
 
                     fillMaps.add(map);
