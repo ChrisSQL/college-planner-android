@@ -181,5 +181,8 @@
     <string name="launchGroup">Launch Group Notes</string>
     <string name="title_activity_add_new_group_note">AddNewGroupNoteActivity</string>
     <string name="add_new_group_note">Add New Group Note</string>
+    <string name="hint_username">Full Name</string>
+    <string name="hint_phone">Phone Number</string>
+    <string name="btn_save">Save</string>
 
 </resources>

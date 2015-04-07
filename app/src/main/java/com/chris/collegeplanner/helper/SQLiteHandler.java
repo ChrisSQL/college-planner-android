@@ -32,6 +32,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	private static final String KEY_ID = "id";
 	private static final String KEY_EMAIL = "email";
 	private static final String KEY_UID = "uid";
+	private static final String KEY_NAME = "name";
+	private static final String KEY_PHONE = "phone";
 
 	public SQLiteHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,7 +47,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + TABLE_LOGIN + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY, "
 				+ KEY_EMAIL + " TEXT UNIQUE,"
-                + KEY_UID + " TEXT"
+						+ KEY_UID + " TEXT,"
+						+ KEY_NAME + " TEXT,"
+						+ KEY_PHONE + " TEXT"
+
 				+ ")";
 		db.execSQL(CREATE_LOGIN_TABLE);
 
@@ -65,12 +70,14 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	/**
 	 * Storing user details in database
 	 * */
-	public void addUser(String email, String uid) {
+	public void addUser(String email, String uid, String name, String phone) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_EMAIL, email); // Email
 		values.put(KEY_UID, uid); // Email
+		values.put(KEY_NAME, name); // Email
+		values.put(KEY_PHONE, phone); // Email
 
 		// Inserting Row
 		long id = db.insert(TABLE_LOGIN, null, values);

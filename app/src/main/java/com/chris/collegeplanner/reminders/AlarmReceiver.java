@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
@@ -24,6 +25,8 @@ public class AlarmReceiver extends BroadcastReceiver
 
         String title = intent.getStringExtra("Title");
         String subject = intent.getStringExtra("Subject");
+        String phoneNumber = intent.getStringExtra("PhoneNumber");
+
 
 
         // Setup Notification Details.
@@ -43,7 +46,8 @@ public class AlarmReceiver extends BroadcastReceiver
 
 
         // Setup SMS Details.
-        String phoneNumberReciever="0863066702";
+        String phoneNumberReciever = phoneNumber;
+        Log.d("PHONE NUMBER : ", phoneNumber);
         String message = subject + " - " + title+" : Due in 2 days.";
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumberReciever, null, message, null, null);

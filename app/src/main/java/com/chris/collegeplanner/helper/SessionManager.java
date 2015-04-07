@@ -6,10 +6,12 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class SessionManager {
 	// LogCat tag
 	private static String TAG = SessionManager.class.getSimpleName();
+    List<HashMap<String, String>> fillMaps;
 
 	// Shared Preferences
 	SharedPreferences pref;
@@ -29,6 +31,8 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_COURSE = "course";
     public static final String KEY_COLLEGE = "college";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_PHONE = "phone";
 
 	public SessionManager(Context context) {
 		this._context = context;
@@ -50,16 +54,37 @@ public class SessionManager {
 		return pref.getBoolean(KEY_IS_LOGGEDIN, false);
 	}
 
-    public void createLoginSession(String email){
+    public void createLoginSession(String email, String name, String phone) {
+        // Storing login value as TRUE
+        editor.putBoolean(KEY_IS_LOGGEDIN, true);
+
+        // Storing email in pref
+        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_PHONE, phone);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void createLoginSession(String email) {
+
         // Storing login value as TRUE
         editor.putBoolean(KEY_IS_LOGGEDIN, true);
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
 
+        // get details from Database
+
+        //   String url = "http://chrismaher.info/AndroidProjects2/project_details.php?email="+session.getUserEmail()+"";
+
+
         // commit changes
         editor.commit();
     }
+
+
 
     public void setLoginCourse(String course){
 
@@ -94,5 +119,31 @@ public class SessionManager {
 
         // return user
         return pref.getString(KEY_COURSE, null);
+    }
+
+    /**
+     * Get stored session data
+     */
+    public String getUserName() {
+        HashMap<String, String> user = new HashMap<String, String>();
+
+        // user email id
+        user.put(KEY_NAME, pref.getString(KEY_NAME, null));
+
+        // return user
+        return pref.getString(KEY_NAME, null);
+    }
+
+    /**
+     * Get stored session data
+     */
+    public String getUserPhone() {
+        HashMap<String, String> user = new HashMap<String, String>();
+
+        // user email id
+        user.put(KEY_PHONE, pref.getString(KEY_PHONE, null));
+
+        // return user
+        return pref.getString(KEY_PHONE, null);
     }
 }

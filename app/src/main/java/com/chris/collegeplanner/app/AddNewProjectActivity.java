@@ -332,6 +332,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
         Intent intentAlarm = new Intent(this, AlarmReceiver.class);
         intentAlarm.putExtra("Subject", subjectSpinner.getText().toString());
         intentAlarm.putExtra("Title", titleText.getText().toString());
+        intentAlarm.putExtra("PhoneNumber", session.getUserPhone());
 
         // create the object
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

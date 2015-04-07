@@ -15,5 +15,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'http://audiobox.keytwo.net' }
     }
 }

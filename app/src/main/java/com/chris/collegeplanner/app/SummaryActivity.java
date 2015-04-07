@@ -1,11 +1,3 @@
-// Chris Maher 20059304
-// Multiple Screens - 5% Yes
-// Validation - 5% Yes - On ServerSide and in Java
-// App Design - 10%
-// UI Design/Usability - 25%
-// Functionality - 30%
-// Extras - 25% - WebServer - SMS - Push Notification
-
 
 package com.chris.collegeplanner.app;
 
@@ -166,13 +158,12 @@ public class SummaryActivity extends ActionBarActivity {
                 // We know the View is a TextView so we can cast it
                 TextView clickedView = (TextView) view;
 
-                Toast.makeText(SummaryActivity.this, "Item with id ["+id+"] - Position ["+position+"] - Planet ["+clickedView.getText()+"]", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SummaryActivity.this, "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
 
             }
         });
 
         new RetreiveData().execute();
-
 
     }
 

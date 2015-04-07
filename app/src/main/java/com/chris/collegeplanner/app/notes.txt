@@ -8,8 +8,4 @@ Use GitHub
 
 Daily Reminders Overview
 
-Group Notes Not showing
-
-Login needs fixing.
-
-Online Database Needs to save course.
+After 5 opening or entries. Would you like to share this list with a classmate?

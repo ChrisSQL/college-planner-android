@@ -53,8 +53,8 @@ public class RegisterActivity extends Activity {
 	private static final String TAG = RegisterActivity.class.getSimpleName();
 	private Button btnRegister;
 	private Button btnLinkToLogin;
-	private EditText inputEmail;
-	private EditText inputPassword, inputConfirmPassword;
+    private EditText inputEmail, inputDisplayName, inputPhoneNumber;
+    private EditText inputPassword, inputConfirmPassword;
 	private ProgressDialog pDialog;
 	private SessionManager session;
 	private SQLiteHandler db;
@@ -77,6 +77,9 @@ public class RegisterActivity extends Activity {
         inputConfirmPassword = (EditText) findViewById(R.id.confirmPassword);
 		btnRegister = (Button) findViewById(R.id.btnRegister);
 		btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
+
+        inputDisplayName = (EditText) findViewById(R.id.displayName);
+        inputPhoneNumber = (EditText) findViewById(R.id.phoneNumber);
 
         college = (AutoCompleteTextView) findViewById(R.id.college);
         college.setThreshold(1);
@@ -115,6 +118,8 @@ public class RegisterActivity extends Activity {
                 String confirmPassword = inputConfirmPassword.getText().toString();
                 String collegeText = college.getText().toString();
                 String courseText = course.getText().toString();
+                String displayName = inputDisplayName.getText().toString();
+                String phoneNumber = inputPhoneNumber.getText().toString();
 
                 // Check if college exists already
 
@@ -128,10 +133,10 @@ public class RegisterActivity extends Activity {
                 // Register User
                 if(isNetworkAvailable()){
 
-                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty()) {
+                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty() && !displayName.isEmpty() && !phoneNumber.isEmpty()) {
                         registerCourse(courseText);
                         registerCollege(collegeText);
-                        registerUser(email, password, confirmPassword, collegeText, courseText);
+                        registerUser(email, password, confirmPassword, collegeText, courseText, displayName, phoneNumber);
 
 
 
@@ -168,7 +173,7 @@ public class RegisterActivity extends Activity {
 	 * Function to store user in MySQL database will post params(tag, name,
 	 * email, password) to register url
 	 * */
-	private void registerUser(final String email, final String password, final String confirmPassword, final String collegeIn, final String courseIn) {
+    private void registerUser(final String email, final String password, final String confirmPassword, final String collegeIn, final String courseIn, final String nameIn, final String phoneIn) {
 
 
 		// Tag used to cancel the request
@@ -203,7 +208,7 @@ public class RegisterActivity extends Activity {
                             //    String confirmPassword = user.getString("confirmPassword");
 
 								// Inserting row in users table
-								db.addUser(email, uid);
+                                db.addUser(email, uid, nameIn, phoneIn);
 
 
 
@@ -245,6 +250,8 @@ public class RegisterActivity extends Activity {
 				params.put("password", password);
                 params.put("college", collegeIn);
                 params.put("course", courseIn);
+                params.put("name", nameIn);
+                params.put("phone", phoneIn);
 
 
 
@@ -254,8 +261,8 @@ public class RegisterActivity extends Activity {
 		};
 
 		// Adding request to request queue
-        session.createLoginSession(email);
-		AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        session.createLoginSession(email, nameIn, phoneIn);
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
 	}
 

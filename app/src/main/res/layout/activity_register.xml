@@ -57,6 +57,32 @@
             android:textColorHint="@color/input_register_hint"
             android:layout_gravity="center_horizontal" />
 
+        <EditText
+            android:id="@+id/displayName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="#ffffffff"
+            android:hint="@string/hint_username"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="#ffffffff"
+            android:hint="@string/hint_phone"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint"
+            android:inputType="phone" />
+
         <AutoCompleteTextView
             android:id="@+id/college"
             android:layout_width="fill_parent"
