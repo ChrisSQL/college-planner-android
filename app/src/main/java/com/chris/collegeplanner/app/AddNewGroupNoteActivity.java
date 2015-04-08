@@ -279,7 +279,7 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
             String subject = subjectGroupText.getText().toString();
             String details = detailsText.getText().toString();
 
-            String projectEmail = session.getUserEmail();
+            String projectEmail = session.getUserName();
          //   String groupNoteCourse = session.getUserCourse();
             String groupNoteCourse = session.getUserCourse();
             String date = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss").format(new Date());
