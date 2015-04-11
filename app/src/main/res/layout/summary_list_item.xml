@@ -56,7 +56,7 @@
             android:padding="2dp"
             android:textColor="#008D7F"
             android:layout_below="@+id/SubjectTextList"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentStart="false"
             android:capitalize="words" />
 
         <TextView

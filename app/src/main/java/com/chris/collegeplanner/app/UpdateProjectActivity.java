@@ -320,7 +320,7 @@ public class UpdateProjectActivity extends ActionBarActivity {
                 title = "NA";
             }
             if (details.equalsIgnoreCase("")) {
-                title = "NA";
+                details = "NA";
             }
 
             Log.e("Parameters", subject + " " + type + " " + title + " " + worth + " " + details + " " + dueDate + " " + projectEmail  + " " + pid);

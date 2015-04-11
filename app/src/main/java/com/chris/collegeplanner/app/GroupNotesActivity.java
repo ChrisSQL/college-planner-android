@@ -212,7 +212,7 @@ public class GroupNotesActivity extends ActionBarActivity {
 
 
                     project.setGroupNoteAuthor(jsonChildNode.optString("GroupNoteAuthor"));
-                 //   project.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
+                    project.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
                     project.setGroupNoteText(jsonChildNode.optString("GroupNoteText"));
 
 
@@ -221,7 +221,7 @@ public class GroupNotesActivity extends ActionBarActivity {
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("GroupNoteAuthor", project.getGroupNoteAuthor());
-                 //   map.put("GroupNoteDatePosted", project.getGroupNoteDatePosted());
+                    map.put("GroupNoteDatePosted", project.getGroupNoteDatePosted());
                     map.put("GroupNoteText", "" + project.getGroupNoteText());
 
                     fillMaps.add(map);

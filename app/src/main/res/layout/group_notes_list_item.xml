@@ -37,7 +37,7 @@
             android:id="@+id/GroupNotesDate"
             android:padding="10dp"
             android:textStyle="bold"
-            android:textColor="#ff000000"
+            android:textColor="#008D7F"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

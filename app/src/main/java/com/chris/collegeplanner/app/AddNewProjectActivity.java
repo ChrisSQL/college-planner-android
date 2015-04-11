@@ -375,7 +375,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
                 title = "NA";
             }
             if (details.equalsIgnoreCase("")) {
-                title = "NA";
+                details = "NA";
             }
 
 
