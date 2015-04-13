@@ -10,16 +10,26 @@ public class GroupNote {
     private String groupNoteAuthor;
     private String groupNoteDatePosted;
     private String groupNoteText;
+    private String groupNoteSubject;
 
-    public GroupNote(String groupNoteId, String groupNoteAuthor, String groupNoteDatePosted, String groupNoteText) {
+    public GroupNote(String groupNoteId, String groupNoteAuthor, String groupNoteDatePosted, String groupNoteText, String groupNoteSubject) {
         this.groupNoteId = groupNoteId;
         this.groupNoteAuthor = groupNoteAuthor;
         this.groupNoteDatePosted = groupNoteDatePosted;
         this.groupNoteText = groupNoteText;
+        this.groupNoteSubject = groupNoteSubject;
     }
 
     public GroupNote() {
 
+    }
+
+    public String getGroupNoteSubject() {
+        return groupNoteSubject;
+    }
+
+    public void setGroupNoteSubject(String groupNoteSubject) {
+        this.groupNoteSubject = groupNoteSubject;
     }
 
     public String getGroupNoteAuthor() {

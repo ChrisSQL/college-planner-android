@@ -289,7 +289,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
 
             //   adapter = new SimpleAdapter(getApplicationContext(), fillCollegesArray, R.layout.layout_college_list, from, to);
-            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, subjectsArray);
+            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(AddNewProjectActivity.this, android.R.layout.simple_dropdown_item_1line, subjectsArray);
 
             subject.setAdapter(adapter2);
 

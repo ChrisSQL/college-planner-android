@@ -20,19 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Author"
-            android:id="@+id/Author"
-            android:padding="10dp"
-            android:textStyle="bold"
-            android:textColor="#ff000000"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Date"
             android:id="@+id/GroupNotesDate"
             android:padding="10dp"
@@ -40,30 +27,80 @@
             android:textColor="#008D7F"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/horizontalScrollView"
+            android:layout_alignEnd="@+id/horizontalScrollView"
+            android:gravity="center_vertical|center_horizontal" />
 
         <HorizontalScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/horizontalScrollView"
-            android:layout_below="@+id/Author"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_above="@+id/GroupNotesDate">
+            android:layout_above="@+id/GroupNotesDate"
+            android:layout_below="@+id/linearLayout">
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/GroupNotesText"
-                android:autoLink="all"
-                android:autoText="false"
-                android:linksClickable="true"
-                android:padding="5dp"
-                android:hint="Notes"
-                android:textColor="#ff000000" />
         </HorizontalScrollView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:id="@+id/linearLayout">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Author"
+                    android:id="@+id/Author"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:textColor="#008D7F"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="left" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Subject"
+                    android:id="@+id/SubjectText"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:padding="10dp"
+                    android:textColor="#008D7F"
+                    android:textStyle="bold"
+                    android:layout_row="0"
+                    android:layout_column="2" />
+            </GridLayout>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/GroupNotesText"
+            android:autoLink="all"
+            android:autoText="false"
+            android:linksClickable="true"
+            android:padding="5dp"
+            android:hint="Notes"
+            android:textColor="#ff000000"
+            android:layout_alignTop="@+id/horizontalScrollView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/GroupNotesDate"
+            android:layout_alignRight="@+id/GroupNotesDate"
+            android:layout_alignEnd="@+id/GroupNotesDate" />
 
         <!--<ImageButton-->
         <!--android:layout_width="wrap_content"-->

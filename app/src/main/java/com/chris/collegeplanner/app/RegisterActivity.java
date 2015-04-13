@@ -518,7 +518,7 @@ public class RegisterActivity extends Activity {
 
 
             //   adapter = new SimpleAdapter(getApplicationContext(), fillCollegesArray, R.layout.layout_college_list, from, to);
-            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, collegesArray);
+            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(RegisterActivity.this, android.R.layout.simple_dropdown_item_1line, collegesArray);
 
             college.setAdapter(adapter2);
 
@@ -616,7 +616,7 @@ public class RegisterActivity extends Activity {
 
 
             //   adapter = new SimpleAdapter(getApplicationContext(), fillCoursesArray, R.layout.layout_college_list, from, to);
-            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, courseArray);
+            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(RegisterActivity.this, android.R.layout.simple_dropdown_item_1line, courseArray);
 
             course.setAdapter(adapter2);
 

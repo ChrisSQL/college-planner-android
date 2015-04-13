@@ -195,8 +195,8 @@ public class GroupNotesActivity extends ActionBarActivity {
 
             List<Map<String, String>> projectList = new ArrayList<Map<String, String>>();
             fillMaps = new ArrayList<HashMap<String, String>>();
-            String[] from = new String[]{"GroupNoteAuthor", "GroupNoteDatePosted", "GroupNoteText"};
-            int[] to = new int[]{R.id.Author, R.id.GroupNotesDate, R.id.GroupNotesText};
+            String[] from = new String[]{"GroupNoteAuthor", "GroupNoteDatePosted", "GroupNoteText", "GroupNoteSubject"};
+            int[] to = new int[]{R.id.Author, R.id.GroupNotesDate, R.id.GroupNotesText, R.id.SubjectText};
             try {
                 JSONObject jsonResponse = new JSONObject(jsonResult);
                 JSONArray jsonMainNode = jsonResponse.optJSONArray("GroupNotes");
@@ -214,6 +214,7 @@ public class GroupNotesActivity extends ActionBarActivity {
                     project.setGroupNoteAuthor(jsonChildNode.optString("GroupNoteAuthor"));
                     project.setGroupNoteDatePosted(jsonChildNode.optString("GroupNoteDatePosted"));
                     project.setGroupNoteText(jsonChildNode.optString("GroupNoteText"));
+                    project.setGroupNoteSubject(jsonChildNode.optString("GroupNoteSubject"));
 
 
                     //        ------------------------------------------------------------------------------------------
@@ -223,6 +224,7 @@ public class GroupNotesActivity extends ActionBarActivity {
                     map.put("GroupNoteAuthor", project.getGroupNoteAuthor());
                     map.put("GroupNoteDatePosted", project.getGroupNoteDatePosted());
                     map.put("GroupNoteText", "" + project.getGroupNoteText());
+                    map.put("GroupNoteSubject", "" + project.getGroupNoteSubject());
 
                     fillMaps.add(map);
 

@@ -93,7 +93,10 @@
             android:singleLine="true"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint"
-            android:hint="College" />
+            android:hint="College"
+            android:textIsSelectable="false"
+            android:capitalize="words"
+            android:autoText="false" />
 
         <AutoCompleteTextView
             android:id="@+id/course"

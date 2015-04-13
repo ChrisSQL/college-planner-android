@@ -12,3 +12,5 @@ After 5 opening or entries. Would you like to share this list with a classmate?
 
 Validation
 
+SQLite Storing if Offline
+

@@ -239,7 +239,7 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
 
 
             //   adapter = new SimpleAdapter(getApplicationContext(), fillCollegesArray, R.layout.layout_college_list, from, to);
-            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, subjectsArray);
+            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(AddNewGroupNoteActivity.this, android.R.layout.simple_dropdown_item_1line, subjectsArray);
 
             subjectGroupText.setAdapter(adapter2);
 
@@ -282,7 +282,7 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
             String projectEmail = session.getUserName();
          //   String groupNoteCourse = session.getUserCourse();
             String groupNoteCourse = session.getUserCourse();
-            String date = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss").format(new Date());
+            String date = new SimpleDateFormat("dd-mm-yyyy'T'HH:mm").format(new Date());
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -291,6 +291,7 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
             params.add(new BasicNameValuePair("GroupNoteDatePosted", date));
             params.add(new BasicNameValuePair("GroupNoteText", details));
             params.add(new BasicNameValuePair("GroupNoteCourse", session.getUserCourse()));
+            params.add(new BasicNameValuePair("GroupNoteSubject", subject));
 
 
             // getting JSON Object

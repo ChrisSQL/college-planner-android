@@ -97,11 +97,14 @@ public class SummaryActivity extends ActionBarActivity {
         // Session manager
         session = new SessionManager(getApplicationContext());
 
+
         if (session.isLoggedIn()){
 
-        //    Toast.makeText(getApplicationContext(), "Session Course : " + session.getUserCourse(), Toast.LENGTH_SHORT).show();
             getWebData();
 
+        } else {
+
+            // Fill With SQLite
 
         }
 
@@ -507,7 +510,6 @@ public class SummaryActivity extends ActionBarActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            super.onPreExecute();
             pDialog = new ProgressDialog(SummaryActivity.this);
             pDialog.setMessage("Syncing with Server...");
             pDialog.setIndeterminate(false);
