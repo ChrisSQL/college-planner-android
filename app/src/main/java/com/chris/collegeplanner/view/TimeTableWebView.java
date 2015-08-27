@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.AlertDialog;
 import android.content.Context;

@@ -1,14 +1,12 @@
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,16 +18,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
-import com.chris.collegeplanner.helper.JSONParser;
 import com.chris.collegeplanner.helper.SessionManager;
+import com.chris.collegeplanner.model.Subject;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +40,6 @@ import java.util.Map;
 
 public class AddNewGroupNoteActivity extends ActionBarActivity {
 
-    JSONParser jsonParser = new JSONParser();
 
     private SessionManager session;
     private EditText detailsText;
@@ -61,6 +52,8 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
     List<HashMap<String, String>> fillSubjectsArray;
+
+    String subject, details, projectEmail, groupNoteCourse, date;
 
 
     // This is the date picker used to select the date for our notification
@@ -117,6 +110,14 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "Internet Connection Required.", Toast.LENGTH_LONG).show();
         }
 
+        subject = subjectGroupText.getText().toString();
+        details = detailsText.getText().toString();
+
+        projectEmail = session.getUserName();
+        //   String groupNoteCourse = session.getUserCourse();
+        groupNoteCourse = session.getUserCourse();
+        date = new SimpleDateFormat("dd-mm-yyyy'T'HH:mm").format(new Date());
+
 
     }
 
@@ -165,17 +166,21 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(params[0]);
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                jsonResult = inputStreamToString(
-                        response.getEntity().getContent()).toString();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+//
+//            HttpClient httpclient = new DefaultHttpClient();
+//            HttpPost httppost = new HttpPost(params[0]);
+//            try {
+//                HttpResponse response = httpclient.execute(httppost);
+//                jsonResult = inputStreamToString(
+//                        response.getEntity().getContent()).toString();
+//            } catch (ClientProtocolException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+
             return null;
         }
 
@@ -276,50 +281,19 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
          */
         protected String doInBackground(String... args) {
 
-            String subject = subjectGroupText.getText().toString();
-            String details = detailsText.getText().toString();
 
-            String projectEmail = session.getUserName();
-         //   String groupNoteCourse = session.getUserCourse();
-            String groupNoteCourse = session.getUserCourse();
-            String date = new SimpleDateFormat("dd-mm-yyyy'T'HH:mm").format(new Date());
-
-            // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("GroupNoteId", "0"));
-            params.add(new BasicNameValuePair("GroupNoteAuthor", projectEmail));
-            params.add(new BasicNameValuePair("GroupNoteDatePosted", date));
-            params.add(new BasicNameValuePair("GroupNoteText", details));
-            params.add(new BasicNameValuePair("GroupNoteCourse", session.getUserCourse()));
-            params.add(new BasicNameValuePair("GroupNoteSubject", subject));
+//
+//            // Building Parameters
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();
+//            params.add(new BasicNameValuePair("GroupNoteId", "0"));
+//            params.add(new BasicNameValuePair("GroupNoteAuthor", projectEmail));
+//            params.add(new BasicNameValuePair("GroupNoteDatePosted", date));
+//            params.add(new BasicNameValuePair("GroupNoteText", details));
+//            params.add(new BasicNameValuePair("GroupNoteCourse", session.getUserCourse()));
+//            params.add(new BasicNameValuePair("GroupNoteSubject", subject));
 
 
-            // getting JSON Object
-            // Note that create product url accepts POST method
-            Log.d("PARAMS HERE ", params.toString());
-            JSONObject json = jsonParser.makeHttpRequest(urlUpload,
-                    "POST", params);
 
-            // check log cat fro response
-            Log.d("Create Response", json.toString());
-
-            // check for success tag
-            try {
-                int success = json.getInt("success");
-
-                if (success == 1) {
-                    // successfully created product
-                    Intent i = new Intent(getApplicationContext(), GroupNotesActivity.class);
-                    startActivity(i);
-
-                    // closing this screen
-                    finish();
-                } else {
-                    // failed to create product
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
 
             return null;

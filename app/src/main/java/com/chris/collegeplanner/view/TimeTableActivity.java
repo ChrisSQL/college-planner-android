@@ -1,5 +1,5 @@
 // Chris Maher 20059304
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

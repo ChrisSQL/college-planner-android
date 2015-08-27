@@ -1,5 +1,5 @@
 // Chris Maher 20059304
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -8,11 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,26 +18,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.chris.collegeplanner.R;
-import com.chris.collegeplanner.helper.JSONParser;
+//import com.chris.collegeplanner.helper.JSONParser;
 import com.chris.collegeplanner.helper.SessionManager;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+//import org.apache.http.NameValuePair;
+//import org.apache.http.message.BasicNameValuePair;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 public class UpdateProjectActivity extends ActionBarActivity {
 
     // single product url
     private static final String urlSingleProject = "http://chrismaher.info/AndroidProjects2/project_details_single_row.php";
-    JSONParser jsonParser = new JSONParser();
+//    JSONParser jsonParser = new JSONParser();
     String pid;
     // Date For DueDate
     Calendar myCalendar = Calendar.getInstance();
@@ -198,82 +191,82 @@ public class UpdateProjectActivity extends ActionBarActivity {
          */
         protected String doInBackground(String... params) {
 
-            // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    // Check for success tag
-                    int success;
-                    try {
-                        // Building Parameters
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("ProjectID", pid));
-
-                        // getting product details by making HTTP request
-                        // Note that product details url will use GET request
-                        JSONObject json = jsonParser.makeHttpRequest(urlSingleProject, "GET", params);
-
-
-                        // check your log for json response
-                        Log.d("Single Product Details", json.toString());
-
-                        // json success tag
-                        success = json.getInt("success");
-
-                        if (success == 1) {
-
-                            // successfully received product details
-                            JSONArray productObj = json.getJSONArray("project"); // JSON Array
-
-
-                            // get first product object from JSON Array
-                            JSONObject project = productObj.getJSONObject(0);
-                            //    Toast.makeText(UpdateProjectActivity.this, project.getString("ProjectID"), Toast.LENGTH_SHORT).show();
-                            titleText.setText(project.getString("ProjectTitle"));
-                            detailsText.setText(project.getString("ProjectDetails"));
-                            dueDateText.setText(project.getString("ProjectDueDate"));
-
-                            // Set subjectSpinner Values
-                            String compareValue = project.getString("ProjectSubject");
-                            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.subject_array, R.layout.spinner_item);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            subjectSpinner.setAdapter(adapter);
-                            if (!compareValue.equals(null)) {
-                                int spinnerPostion = adapter.getPosition(compareValue);
-                                subjectSpinner.setSelection(spinnerPostion);
-                                spinnerPostion = 0;
-                            }
-
-                            // Set typeSpinner Values
-                            compareValue = project.getString("ProjectTitle");
-                            adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.project_type_array, R.layout.spinner_item);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            typeSpinner.setAdapter(adapter);
-                            if (!compareValue.equals(null)) {
-                                int spinnerPostion = adapter.getPosition(compareValue);
-                                typeSpinner.setSelection(spinnerPostion);
-
-                                spinnerPostion = 0;
-                            }
-                            // Set worthSpinner Values
-                            compareValue = project.getString("ProjectWorth");
-                            adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.percentage_array, R.layout.spinner_item);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            worthSpinner.setAdapter(adapter);
-                            if (!compareValue.equals(null)) {
-                                int spinnerPostion = adapter.getPosition(compareValue);
-                                worthSpinner.setSelection(spinnerPostion);
-                                spinnerPostion = 0;
-                            }
-
-
-                        } else {
-                            // product with pid not found
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+//            // updating UI from Background Thread
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    // Check for success tag
+//                    int success;
+//                    try {
+//                        // Building Parameters
+//                        List<NameValuePair> params = new ArrayList<NameValuePair>();
+//                        params.add(new BasicNameValuePair("ProjectID", pid));
+//
+//                        // getting product details by making HTTP request
+//                        // Note that product details url will use GET request
+////                        JSONObject json = jsonParser.makeHttpRequest(urlSingleProject, "GET", params);
+//
+//
+//                        // check your log for json response
+//                        Log.d("Single Product Details", json.toString());
+//
+//                        // json success tag
+//                        success = json.getInt("success");
+//
+//                        if (success == 1) {
+//
+//                            // successfully received product details
+//                            JSONArray productObj = json.getJSONArray("project"); // JSON Array
+//
+//
+//                            // get first product object from JSON Array
+//                            JSONObject project = productObj.getJSONObject(0);
+//                            //    Toast.makeText(UpdateProjectActivity.this, project.getString("ProjectID"), Toast.LENGTH_SHORT).show();
+//                            titleText.setText(project.getString("ProjectTitle"));
+//                            detailsText.setText(project.getString("ProjectDetails"));
+//                            dueDateText.setText(project.getString("ProjectDueDate"));
+//
+//                            // Set subjectSpinner Values
+//                            String compareValue = project.getString("ProjectSubject");
+//                            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.subject_array, R.layout.spinner_item);
+//                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                            subjectSpinner.setAdapter(adapter);
+//                            if (!compareValue.equals(null)) {
+//                                int spinnerPostion = adapter.getPosition(compareValue);
+//                                subjectSpinner.setSelection(spinnerPostion);
+//                                spinnerPostion = 0;
+//                            }
+//
+//                            // Set typeSpinner Values
+//                            compareValue = project.getString("ProjectTitle");
+//                            adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.project_type_array, R.layout.spinner_item);
+//                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                            typeSpinner.setAdapter(adapter);
+//                            if (!compareValue.equals(null)) {
+//                                int spinnerPostion = adapter.getPosition(compareValue);
+//                                typeSpinner.setSelection(spinnerPostion);
+//
+//                                spinnerPostion = 0;
+//                            }
+//                            // Set worthSpinner Values
+//                            compareValue = project.getString("ProjectWorth");
+//                            adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.percentage_array, R.layout.spinner_item);
+//                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                            worthSpinner.setAdapter(adapter);
+//                            if (!compareValue.equals(null)) {
+//                                int spinnerPostion = adapter.getPosition(compareValue);
+//                                worthSpinner.setSelection(spinnerPostion);
+//                                spinnerPostion = 0;
+//                            }
+//
+//
+//                        } else {
+//                            // product with pid not found
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
 
             return null;
         }
@@ -308,60 +301,60 @@ public class UpdateProjectActivity extends ActionBarActivity {
          */
         protected String doInBackground(String... args) {
 
-            String subject = subjectSpinner.getSelectedItem().toString();
-            String type = typeSpinner.getSelectedItem().toString();
-            String title = titleText.getText().toString();
-            String worth = worthSpinner.getSelectedItem().toString();
-            String details = detailsText.getText().toString();
-            String dueDate = dueDateText.getText().toString();
-            String projectEmail = session.getUserEmail();
-
-            if (title.equalsIgnoreCase("")) {
-                title = "NA";
-            }
-            if (details.equalsIgnoreCase("")) {
-                details = "NA";
-            }
-
-            Log.e("Parameters", subject + " " + type + " " + title + " " + worth + " " + details + " " + dueDate + " " + projectEmail  + " " + pid);
-
-            // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("ProjectID", pid));
-            params.add(new BasicNameValuePair("ProjectSubject", subject));
-            params.add(new BasicNameValuePair("ProjectType", type));
-            params.add(new BasicNameValuePair("ProjectTitle", toTitleCase(title)));
-            params.add(new BasicNameValuePair("ProjectWorth", worth));
-            params.add(new BasicNameValuePair("ProjectDueDate", dueDate));
-            params.add(new BasicNameValuePair("ProjectDetails", details));
-            params.add(new BasicNameValuePair("ProjectEmail", projectEmail));
-
-            // getting JSON Object
-            // Note that create product url accepts POST method
-            Log.d("PARAMS HERE ", params.toString());
-            JSONObject json = jsonParser.makeHttpRequest(urlUpdate,
-                    "POST", params);
-
-            // check log cat fro response
-            Log.d("Create Response", json.toString());
-
-            // check for success tag
-            try {
-                int success = json.getInt("success");
-
-                if (success == 1) {
-                    // successfully created product
-                    Intent i = new Intent(UpdateProjectActivity.this, SummaryActivity.class);
-                    startActivity(i);
-
-                    // closing this screen
-                    finish();
-                } else {
-                    // failed to create product
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            String subject = subjectSpinner.getSelectedItem().toString();
+//            String type = typeSpinner.getSelectedItem().toString();
+//            String title = titleText.getText().toString();
+//            String worth = worthSpinner.getSelectedItem().toString();
+//            String details = detailsText.getText().toString();
+//            String dueDate = dueDateText.getText().toString();
+//            String projectEmail = session.getUserEmail();
+//
+//            if (title.equalsIgnoreCase("")) {
+//                title = "NA";
+//            }
+//            if (details.equalsIgnoreCase("")) {
+//                details = "NA";
+//            }
+//
+//            Log.e("Parameters", subject + " " + type + " " + title + " " + worth + " " + details + " " + dueDate + " " + projectEmail  + " " + pid);
+//
+//            // Building Parameters
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();
+//            params.add(new BasicNameValuePair("ProjectID", pid));
+//            params.add(new BasicNameValuePair("ProjectSubject", subject));
+//            params.add(new BasicNameValuePair("ProjectType", type));
+//            params.add(new BasicNameValuePair("ProjectTitle", toTitleCase(title)));
+//            params.add(new BasicNameValuePair("ProjectWorth", worth));
+//            params.add(new BasicNameValuePair("ProjectDueDate", dueDate));
+//            params.add(new BasicNameValuePair("ProjectDetails", details));
+//            params.add(new BasicNameValuePair("ProjectEmail", projectEmail));
+//
+//            // getting JSON Object
+//            // Note that create product url accepts POST method
+//            Log.d("PARAMS HERE ", params.toString());
+//            JSONObject json = jsonParser.makeHttpRequest(urlUpdate,
+//                    "POST", params);
+//
+//            // check log cat fro response
+//            Log.d("Create Response", json.toString());
+//
+//            // check for success tag
+//            try {
+//                int success = json.getInt("success");
+//
+//                if (success == 1) {
+//                    // successfully created product
+//                    Intent i = new Intent(UpdateProjectActivity.this, SummaryActivity.class);
+//                    startActivity(i);
+//
+//                    // closing this screen
+//                    finish();
+//                } else {
+//                    // failed to create product
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
 
             return null;
         }

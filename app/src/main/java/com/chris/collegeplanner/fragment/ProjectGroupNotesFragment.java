@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.fragments;
+package com.chris.collegeplanner.fragment;
 
 /**
  * Created by Chris on 07/02/2015.

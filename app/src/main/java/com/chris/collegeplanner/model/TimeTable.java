@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.objects;
+package com.chris.collegeplanner.model;
 
 /**
  * Created by Chris on 22/02/2015.

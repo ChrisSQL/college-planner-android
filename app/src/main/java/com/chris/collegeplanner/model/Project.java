@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.objects;
+package com.chris.collegeplanner.model;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,22 +11,22 @@ import java.util.Date;
 
 public class Project {
 
-    private int ProjectID;
-    private String ProjectSubject;
-    private String ProjectType;
-    private String ProjectTitle;
-    private String ProjectWorth;
-    private Date ProjectDueDate;
-    private String ProjectDetails;
+    private int projectID;
+    private String projectSubject;
+    private String projectType;
+    private String projectTitle;
+    private String projectWorth;
+    private Date projectDueDate;
+    private String projectDetails;
 
     public Project(int projectID, String projectSubject, String projectType, String projectTitle, String projectWorth, Date projectDueDate, String projectDetails) {
-        ProjectID = projectID;
-        ProjectSubject = projectSubject;
-        ProjectType = projectType;
-        ProjectTitle = projectTitle;
-        ProjectWorth = projectWorth;
-        ProjectDueDate = projectDueDate;
-        ProjectDetails = projectDetails;
+        this.projectID = projectID;
+        this.projectSubject = projectSubject;
+        this.projectType = projectType;
+        this.projectTitle = projectTitle;
+        this.projectWorth = projectWorth;
+        this.projectDueDate = projectDueDate;
+        this.projectDetails = projectDetails;
     }
 
     public Project(){
@@ -34,61 +34,61 @@ public class Project {
     }
 
     public int getProjectID() {
-        return ProjectID;
+        return projectID;
     }
 
     public void setProjectID(int projectID) {
-        ProjectID = projectID;
+        this.projectID = projectID;
     }
 
     public String getProjectSubject() {
-        return ProjectSubject;
+        return projectSubject;
     }
 
     public void setProjectSubject(String projectSubject) {
-        ProjectSubject = projectSubject;
+        this.projectSubject = projectSubject;
     }
 
     public String getProjectType() {
-        return ProjectType;
+        return projectType;
     }
 
     public void setProjectType(String projectType) {
-        ProjectType = projectType;
+        this.projectType = projectType;
     }
 
     public String getProjectTitle() {
-        return ProjectTitle;
+        return projectTitle;
     }
 
     public void setProjectTitle(String projectTitle) {
-        ProjectTitle = projectTitle;
+        this.projectTitle = projectTitle;
     }
 
     public String getProjectWorth() {
-        return ProjectWorth;
+        return projectWorth;
     }
 
     public void setProjectWorth(String projectWorth) {
-        ProjectWorth = projectWorth;
+        this.projectWorth = projectWorth;
     }
 
     public Date getProjectDueDate() {
-        return ProjectDueDate;
+        return projectDueDate;
     }
 
     public void setProjectDueDate(String projectDueDate) throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = format.parse(projectDueDate);
 
-        ProjectDueDate = date;
+        this.projectDueDate = date;
     }
 
     public String getProjectDetails() {
-        return ProjectDetails;
+        return projectDetails;
     }
 
     public void setProjectDetails(String projectDetails) {
-        ProjectDetails = projectDetails;
+        this.projectDetails = projectDetails;
     }
 }

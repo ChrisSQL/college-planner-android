@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.controller;
 
 import android.app.Application;
 import android.text.TextUtils;

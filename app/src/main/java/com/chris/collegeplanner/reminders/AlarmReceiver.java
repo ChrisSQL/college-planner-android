@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
-import com.chris.collegeplanner.app.SummaryActivity;
+import com.chris.collegeplanner.view.SummaryActivity;
 
 /**
  * Created by Chris on 16/02/2015.
@@ -39,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, SummaryActivity.class), 0);
         // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(context, context.getText(R.string.title_section1), subject + " - " + title+" : Due in 2 days.", contentIntent);
+    //    notification.setLatestEventInfo(context, context.getText(R.string.title_section1), subject + " - " + title+" : Due in 2 days.", contentIntent);
         // Send the notification.
         // We use a layout id because it is a unique number. We use it later to cancel.
         mNM.notify(R.string.title_section2, notification);

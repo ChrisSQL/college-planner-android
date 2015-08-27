@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -25,17 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
-import com.chris.collegeplanner.helper.JSONParser;
 import com.chris.collegeplanner.helper.SessionManager;
+import com.chris.collegeplanner.model.Subject;
 import com.chris.collegeplanner.reminders.AlarmReceiver;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+//import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +50,7 @@ import java.util.Map;
 
 public class AddNewProjectActivity extends ActionBarActivity {
 
-    JSONParser jsonParser = new JSONParser();
+
 
 
     // Date For DueDate
@@ -86,12 +80,19 @@ public class AddNewProjectActivity extends ActionBarActivity {
     private Button saveButton2;
     private Button selectDateButton;
     List<String> subjectsArray = new ArrayList<>();
-    AutoCompleteTextView subject;
+  //  AutoCompleteTextView subject;
     private String urlUpload = "http://chrismaher.info/AndroidProjects2/project_upload.php";
     private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
     // Progress Dialog
     private ProgressDialog pDialog;
     List<HashMap<String, String>> fillSubjectsArray;
+    AutoCompleteTextView subject;
+    String type;
+    String title;
+    String worth;
+    String details;
+    String dueDate;
+    String projectEmail;
 
 
     // This is the date picker used to select the date for our notification
@@ -150,6 +151,14 @@ public class AddNewProjectActivity extends ActionBarActivity {
                     Toast.makeText(getApplicationContext(), "Internet Connection Required.", Toast.LENGTH_LONG).show();
 
                 }
+
+              //  subject = subjectSpinner.getText().toString();
+                type = typeSpinner.getSelectedItem().toString();
+                title = titleText.getText().toString();
+                worth = worthSpinner.getSelectedItem().toString();
+                details = detailsText.getText().toString();
+                dueDate = dueDateText.getText().toString();
+                projectEmail = session.getUserEmail();
 
             }
         });
@@ -215,17 +224,20 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(params[0]);
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                jsonResult = inputStreamToString(
-                        response.getEntity().getContent()).toString();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+//            HttpClient httpclient = new DefaultHttpClient();
+//            HttpPost httppost = new HttpPost(params[0]);
+//            try {
+//                HttpResponse response = httpclient.execute(httppost);
+//                jsonResult = inputStreamToString(
+//                        response.getEntity().getContent()).toString();
+//            } catch (ClientProtocolException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+
             return null;
         }
 
@@ -363,13 +375,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
          */
         protected String doInBackground(String... args) {
 
-            String subject = subjectSpinner.getText().toString();
-            String type = typeSpinner.getSelectedItem().toString();
-            String title = titleText.getText().toString();
-            String worth = worthSpinner.getSelectedItem().toString();
-            String details = detailsText.getText().toString();
-            String dueDate = dueDateText.getText().toString();
-            String projectEmail = session.getUserEmail();
+
 
             if (title.equalsIgnoreCase("")) {
                 title = "NA";
@@ -382,42 +388,42 @@ public class AddNewProjectActivity extends ActionBarActivity {
             Log.e("Parameters", subject + " " + type + " " + title + " " + worth + " " + details + " " + dueDate);
 
             // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("ProjectID", 0 + ""));
-            params.add(new BasicNameValuePair("ProjectSubject", subject));
-            params.add(new BasicNameValuePair("ProjectType", type));
-            params.add(new BasicNameValuePair("ProjectTitle", title));
-            params.add(new BasicNameValuePair("ProjectWorth", worth));
-            params.add(new BasicNameValuePair("ProjectDueDate", dueDate));
-            params.add(new BasicNameValuePair("ProjectDetails", details));
-            params.add(new BasicNameValuePair("ProjectEmail", projectEmail));
+//            List<BasicNameValuePair> params = new ArrayList<>();
+//            params.add(new BasicNameValuePair("ProjectID", 0 + ""));
+//        //    params.add(new BasicNameValuePair("ProjectSubject", subject));
+//            params.add(new BasicNameValuePair("ProjectType", type));
+//            params.add(new BasicNameValuePair("ProjectTitle", title));
+//            params.add(new BasicNameValuePair("ProjectWorth", worth));
+//            params.add(new BasicNameValuePair("ProjectDueDate", dueDate));
+//            params.add(new BasicNameValuePair("ProjectDetails", details));
+//            params.add(new BasicNameValuePair("ProjectEmail", projectEmail));
 
-            // getting JSON Object
-            // Note that create product url accepts POST method
-            Log.d("PARAMS HERE ", params.toString());
-            JSONObject json = jsonParser.makeHttpRequest(urlUpload,
-                    "POST", params);
-
-            // check log cat fro response
-            Log.d("Create Response", json.toString());
-
-            // check for success tag
-            try {
-                int success = json.getInt("success");
-
-                if (success == 1) {
-                    // successfully created product
-                    Intent i = new Intent(getApplicationContext(), SummaryActivity.class);
-                    startActivity(i);
-
-                    // closing this screen
-                    finish();
-                } else {
-                    // failed to create product
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            // getting JSON Object
+//            // Note that create product url accepts POST method
+//            Log.d("PARAMS HERE ", params.toString());
+//            JSONObject json = jsonParser.makeHttpRequest(urlUpload,
+//                    "POST", params);
+//
+//            // check log cat fro response
+//            Log.d("Create Response", json.toString());
+//
+//            // check for success tag
+//            try {
+//                int success = json.getInt("success");
+//
+//                if (success == 1) {
+//                    // successfully created product
+//                    Intent i = new Intent(getApplicationContext(), SummaryActivity.class);
+//                    startActivity(i);
+//
+//                    // closing this screen
+//                    finish();
+//                } else {
+//                    // failed to create product
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
 
 
             return null;

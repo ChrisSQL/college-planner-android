@@ -1,5 +1,5 @@
 // Chris Maher 20059304
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,18 +24,14 @@ import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.TabsPagerAdapter;
-import com.chris.collegeplanner.helper.JSONParser;
+//import com.chris.collegeplanner.helper.JSONParser;
 import com.chris.collegeplanner.helper.SQLiteHandler;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+//import org.apache.http.NameValuePair;
+//import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -299,65 +294,65 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
          */
         protected String doInBackground(String... params) {
 
-            // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    // Check for success tag
-                    int success;
-                    try {
-                        // Building Parameters
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        //   Toast.makeText(getApplicationContext(), "PID " + pid, Toast.LENGTH_LONG).show();
-                        params.add(new BasicNameValuePair("ProjectID", pid));
-
-                        // getting product details by making HTTP request
-                        // Note that product details url will use GET request
-                        JSONParser jsonParser = new JSONParser();
-                        JSONObject json = jsonParser.makeHttpRequest(urlSingleProject, "GET", params);
-
-
-                        // check your log for json response
-                        Log.d("Single Product Details", json.toString());
-
-                        // json success tag
-                        success = json.getInt("success");
-
-                        if (success == 1) {
-
-                            // successfully received product details
-                            JSONArray productObj = json.getJSONArray("project"); // JSON Array
-
-
-                            // get first product object from JSON Array
-                            JSONObject project = productObj.getJSONObject(0);
-                            //        Toast.makeText(ViewProjectActivity.this, project.toString(), Toast.LENGTH_LONG).show();
-                            //        Toast.makeText(ViewProjectActivity.this, project.getString("ProjectTitle"), Toast.LENGTH_LONG).show();
-
-                            subjectSpinner = (EditText) findViewById(R.id.SubjectText);
-                            typeSpinner = (EditText) findViewById(R.id.TypeText);
-                            worthSpinner = (EditText) findViewById(R.id.WorthText);
-                            detailsText = (EditText) findViewById(R.id.DetailsTextFragment);
-                            titleText = (EditText) findViewById(R.id.TitleTextFragment);
-                            dueDateText = (EditText) findViewById(R.id.DueDateTextFragment);
-
-                            titleText.setText(project.getString("ProjectTitle"));
-                            detailsText.setText(project.getString("ProjectDetails"));
-                            dueDateText.setText(project.getString("ProjectDueDate"));
-                            worthSpinner.setText(project.getString("ProjectWorth"));
-                            titleText.setText(project.getString("ProjectTitle"));
-                            dueDateText.setText(project.getString("ProjectDueDate"));
-                            subjectSpinner.setText(project.getString("ProjectSubject"));
-                            typeSpinner.setText(project.getString("ProjectType"));
-
-
-                        } else {
-                            // product with pid not found
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+//            // updating UI from Background Thread
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    // Check for success tag
+//                    int success;
+//                    try {
+//                        // Building Parameters
+//                        List<NameValuePair> params = new ArrayList<NameValuePair>();
+//                        //   Toast.makeText(getApplicationContext(), "PID " + pid, Toast.LENGTH_LONG).show();
+//                        params.add(new BasicNameValuePair("ProjectID", pid));
+//
+//                        // getting product details by making HTTP request
+//                        // Note that product details url will use GET request
+////                        JSONParser jsonParser = new JSONParser();
+////                        JSONObject json = jsonParser.makeHttpRequest(urlSingleProject, "GET", params);
+//
+//
+//                        // check your log for json response
+////                        Log.d("Single Product Details", json.toString());
+//
+//                        // json success tag
+//                        success = json.getInt("success");
+//
+//                        if (success == 1) {
+//
+//                            // successfully received product details
+//                            JSONArray productObj = json.getJSONArray("project"); // JSON Array
+//
+//
+//                            // get first product object from JSON Array
+//                            JSONObject project = productObj.getJSONObject(0);
+//                            //        Toast.makeText(ViewProjectActivity.this, project.toString(), Toast.LENGTH_LONG).show();
+//                            //        Toast.makeText(ViewProjectActivity.this, project.getString("ProjectTitle"), Toast.LENGTH_LONG).show();
+//
+//                            subjectSpinner = (EditText) findViewById(R.id.SubjectText);
+//                            typeSpinner = (EditText) findViewById(R.id.TypeText);
+//                            worthSpinner = (EditText) findViewById(R.id.WorthText);
+//                            detailsText = (EditText) findViewById(R.id.DetailsTextFragment);
+//                            titleText = (EditText) findViewById(R.id.TitleTextFragment);
+//                            dueDateText = (EditText) findViewById(R.id.DueDateTextFragment);
+//
+//                            titleText.setText(project.getString("ProjectTitle"));
+//                            detailsText.setText(project.getString("ProjectDetails"));
+//                            dueDateText.setText(project.getString("ProjectDueDate"));
+//                            worthSpinner.setText(project.getString("ProjectWorth"));
+//                            titleText.setText(project.getString("ProjectTitle"));
+//                            dueDateText.setText(project.getString("ProjectDueDate"));
+//                            subjectSpinner.setText(project.getString("ProjectSubject"));
+//                            typeSpinner.setText(project.getString("ProjectType"));
+//
+//
+//                        } else {
+//                            // product with pid not found
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
 
             return null;
         }

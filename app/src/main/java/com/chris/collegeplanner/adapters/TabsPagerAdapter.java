@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.chris.collegeplanner.fragments.ProjectDetailsFragment;
+import com.chris.collegeplanner.fragment.ProjectDetailsFragment;
 
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {

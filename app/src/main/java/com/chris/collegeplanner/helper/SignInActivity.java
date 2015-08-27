@@ -4,10 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.HttpResponse;
+
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,64 +34,64 @@ public class SignInActivity extends AsyncTask<String,Void,String>{
     }
     @Override
     protected String doInBackground(String... arg0) {
-        if(byGetOrPost == 0){ //means by Get Method
-            try{
-                String username = (String)arg0[0];
-                String password = (String)arg0[1];
-                String link = "http://www.chrismaher.info/AndroidProjects2/login.php?username="
-                        +username+"&password="+password;
-                URL url = new URL(link);
-                HttpClient client = new DefaultHttpClient();
-                HttpGet request = new HttpGet();
-                request.setURI(new URI(link));
-                HttpResponse response = client.execute(request);
-                BufferedReader in = new BufferedReader
-                        (new InputStreamReader(response.getEntity().getContent()));
-
-                StringBuffer sb = new StringBuffer("");
-                String line="";
-                while ((line = in.readLine()) != null) {
-                    sb.append(line);
-                    break;
-                }
-                in.close();
-                return sb.toString();
-            }catch(Exception e){
-                return new String("Exception: " + e.getMessage());
-            }
-        }
-        else{
-            try{
-                String username = (String)arg0[0];
-                String password = (String)arg0[1];
-                String link="http://www.chrismaher.info/AndroidProjects2/loginpost.php";
-                String data  = URLEncoder.encode("username", "UTF-8")
-                        + "=" + URLEncoder.encode(username, "UTF-8");
-                data += "&" + URLEncoder.encode("password", "UTF-8")
-                        + "=" + URLEncoder.encode(password, "UTF-8");
-                URL url = new URL(link);
-                URLConnection conn = url.openConnection();
-                conn.setDoOutput(true);
-                OutputStreamWriter wr = new OutputStreamWriter
-                        (conn.getOutputStream());
-                wr.write( data );
-                wr.flush();
-                BufferedReader reader = new BufferedReader
-                        (new InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                // Read Server Response
-                while((line = reader.readLine()) != null)
-                {
-                    sb.append(line);
-                    break;
-                }
-                return sb.toString();
-            }catch(Exception e){
-                return new String("");
-
-            }
-        }
+//        if(byGetOrPost == 0){ //means by Get Method
+//            try{
+//                String username = (String)arg0[0];
+//                String password = (String)arg0[1];
+//                String link = "http://www.chrismaher.info/AndroidProjects2/login.php?username="
+//                        +username+"&password="+password;
+//                URL url = new URL(link);
+//                HttpClient client = new DefaultHttpClient();
+//                HttpGet request = new HttpGet();
+//                request.setURI(new URI(link));
+//                HttpResponse response = client.execute(request);
+//                BufferedReader in = new BufferedReader
+//                        (new InputStreamReader(response.getEntity().getContent()));
+//
+//                StringBuffer sb = new StringBuffer("");
+//                String line="";
+//                while ((line = in.readLine()) != null) {
+//                    sb.append(line);
+//                    break;
+//                }
+//                in.close();
+//                return sb.toString();
+//            }catch(Exception e){
+//                return new String("Exception: " + e.getMessage());
+//            }
+//        }
+//        else{
+//            try{
+//                String username = (String)arg0[0];
+//                String password = (String)arg0[1];
+//                String link="http://www.chrismaher.info/AndroidProjects2/loginpost.php";
+//                String data  = URLEncoder.encode("username", "UTF-8")
+//                        + "=" + URLEncoder.encode(username, "UTF-8");
+//                data += "&" + URLEncoder.encode("password", "UTF-8")
+//                        + "=" + URLEncoder.encode(password, "UTF-8");
+//                URL url = new URL(link);
+//                URLConnection conn = url.openConnection();
+//                conn.setDoOutput(true);
+//                OutputStreamWriter wr = new OutputStreamWriter
+//                        (conn.getOutputStream());
+//                wr.write( data );
+//                wr.flush();
+//                BufferedReader reader = new BufferedReader
+//                        (new InputStreamReader(conn.getInputStream()));
+//                StringBuilder sb = new StringBuilder();
+//                String line = null;
+//                // Read Server Response
+//                while((line = reader.readLine()) != null)
+//                {
+//                    sb.append(line);
+//                    break;
+//                }
+//                return sb.toString();
+//            }catch(Exception e){
+               return new String("");
+//
+//            }
+//        }
     }
     @Override
     protected void onPostExecute(String result){

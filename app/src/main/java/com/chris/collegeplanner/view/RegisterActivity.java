@@ -3,7 +3,7 @@
  * URL: www.androidhive.info
  * twitter: http://twitter.com/ravitamada
  * */
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -27,15 +27,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.chris.collegeplanner.R;
+import com.chris.collegeplanner.controller.AppConfig;
+import com.chris.collegeplanner.controller.AppController;
 import com.chris.collegeplanner.helper.SQLiteHandler;
 import com.chris.collegeplanner.helper.SessionManager;
-import com.chris.collegeplanner.objects.College;
+import com.chris.collegeplanner.model.College;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,27 +128,27 @@ public class RegisterActivity extends Activity {
                 }
 
 
-                // Register User
-                if(isNetworkAvailable()){
-
-                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty() && !displayName.isEmpty() && !phoneNumber.isEmpty()) {
-                        registerCourse(courseText);
-                        registerCollege(collegeText);
-                        registerUser(email, password, confirmPassword, collegeText, courseText, displayName, phoneNumber);
-
-
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Please enter your details!", Toast.LENGTH_LONG)
-                                .show();
-                    }
-
-                } else{
-
-                    Toast.makeText(getApplicationContext(), "Internet Connection Required to Register!", Toast.LENGTH_LONG).show();
-
-                }
+//                // Register User
+//                if(isNetworkAvailable()){
+//
+//                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty() && !displayName.isEmpty() && !phoneNumber.isEmpty()) {
+//                        registerCourse(courseText);
+//                        registerCollege(collegeText);
+//                        registerUser(email, password, confirmPassword, collegeText, courseText, displayName, phoneNumber);
+//
+//
+//
+//                    } else {
+//                        Toast.makeText(getApplicationContext(),
+//                                "Please enter your details!", Toast.LENGTH_LONG)
+//                                .show();
+//                    }
+//
+//                } else{
+//
+//                    Toast.makeText(getApplicationContext(), "Internet Connection Required to Register!", Toast.LENGTH_LONG).show();
+//
+//                }
 
 
 			}
@@ -192,7 +190,7 @@ public class RegisterActivity extends Activity {
 					@Override
 					public void onResponse(String response) {
 						Log.d(TAG, "Register Response: " + response.toString());
-						hideDialog();
+						// hideDialog();
 
 						try {
 							JSONObject jObj = new JSONObject(response);
@@ -237,7 +235,7 @@ public class RegisterActivity extends Activity {
 						Log.e(TAG, "Registration Error: " + error.getMessage());
 						Toast.makeText(getApplicationContext(),
 								error.getMessage(), Toast.LENGTH_LONG).show();
-						hideDialog();
+						// hideDialog();
 					}
 				}) {
 
@@ -285,7 +283,7 @@ public class RegisterActivity extends Activity {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "College Response: " + response.toString());
-                hideDialog();
+                // hideDialog();
 
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -365,7 +363,7 @@ public class RegisterActivity extends Activity {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Course Response: " + response.toString());
-                hideDialog();
+ //               hideDialog();
 
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -431,8 +429,8 @@ public class RegisterActivity extends Activity {
         addCollegesToListBackgroundTask task = new addCollegesToListBackgroundTask();
         task.execute(new String[]{collegesURL});
 
-        addCoursesToListBackgroundTask task2 = new addCoursesToListBackgroundTask();
-        task2.execute(new String[]{coursesURL});
+//        addCoursesToListBackgroundTask task2 = new addCoursesToListBackgroundTask();
+//        task2.execute(new String[]{coursesURL});
 
 
     }
@@ -444,17 +442,7 @@ public class RegisterActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(params[0]);
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                jsonResult = inputStreamToString(
-                        response.getEntity().getContent()).toString();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
             return null;
         }
 
@@ -488,49 +476,7 @@ public class RegisterActivity extends Activity {
             int[] to = new int[]{R.id.collegeName};
 
 
-            try {
-                JSONObject jsonResponse = new JSONObject(jsonResult);
-                JSONArray jsonMainNode = jsonResponse.optJSONArray("colleges");
-
-                College colleges = new College();
-
-
-                for (int i = 0; i < jsonMainNode.length(); i++) {
-                    JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-
-                    colleges.setCollegeName(jsonChildNode.optString("collegeName"));
-
-
-
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put("collegeName", colleges.getCollegeName());
-                    collegesArray.add(map.get("collegeName"));
-
-
-                    fillCollegesArray.add(map);
-
-                }
-
-
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Nothing Added Yet.", Toast.LENGTH_SHORT).show();
-            }
-
-
-            //   adapter = new SimpleAdapter(getApplicationContext(), fillCollegesArray, R.layout.layout_college_list, from, to);
-            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(RegisterActivity.this, android.R.layout.simple_dropdown_item_1line, collegesArray);
-
-            college.setAdapter(adapter2);
-
-
-
-
-
-
         }
-
-        ;
-
 
     }
 
@@ -542,18 +488,9 @@ public class RegisterActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(params[0]);
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                jsonResult = inputStreamToString(
-                        response.getEntity().getContent()).toString();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+
+            return new String("");
+
         }
 
         private StringBuilder inputStreamToString(InputStream is) {

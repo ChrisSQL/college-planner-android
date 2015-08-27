@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.app;
+package com.chris.collegeplanner.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,14 +16,10 @@ import android.widget.Toast;
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.helper.SQLiteHandler;
 import com.chris.collegeplanner.helper.SessionManager;
-import com.chris.collegeplanner.objects.GroupNote;
+import com.chris.collegeplanner.model.GroupNote;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,18 +146,9 @@ public class GroupNotesActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(params[0]);
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                jsonResult = inputStreamToString(
-                        response.getEntity().getContent()).toString();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+
+
+        return new String("");
         }
 
         private StringBuilder inputStreamToString(InputStream is) {
