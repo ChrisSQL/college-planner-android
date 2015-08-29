@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.view.util;
+package com.chris.collegeplanner.activity.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

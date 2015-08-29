@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.view;
+package com.chris.collegeplanner.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;

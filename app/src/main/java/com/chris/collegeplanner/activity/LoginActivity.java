@@ -1,5 +1,5 @@
 
-package com.chris.collegeplanner.view;
+package com.chris.collegeplanner.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -20,6 +20,12 @@ import com.chris.collegeplanner.controller.AppConfig;
 import com.chris.collegeplanner.controller.AppController;
 import com.chris.collegeplanner.helper.SessionManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 //import org.apache.http.HttpResponse;
 //import org.apache.http.NameValuePair;
 //import org.apache.http.client.ClientProtocolException;
@@ -28,25 +34,17 @@ import com.chris.collegeplanner.helper.SessionManager;
 //import org.apache.http.client.methods.HttpPost;
 //import org.apache.http.impl.client.DefaultHttpClient;
 //import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class LoginActivity extends Activity {
     // LogCat tag
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private Button btnLogin;
-    private Button btnLinkToRegister;
-    private EditText inputEmail;
-    private EditText inputPassword;
+    private Button btnLogin, btnLinkToRegister, btnSkipLogin;
+    private EditText inputEmail, inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
     String email = "";
     private String url = "";
-
 
 
     @Override
@@ -58,26 +56,20 @@ public class LoginActivity extends Activity {
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
+        btnSkipLogin = (Button) findViewById(R.id.btnSkipSignin);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        url = "http://chrismaher.info/AndroidProjects2/get_login_course.php?email="+email;
+        url = "http://chrismaher.info/AndroidProjects2/get_login_course.php?email=" + email;
 
-        // Session manager
-        session = new SessionManager(getApplicationContext());
+        initialiseOnClickListeners();
 
-        // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(LoginActivity.this, SummaryActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
-        //   session.setLogin(false);
+    }
 
+    private void initialiseOnClickListeners() {
         // Login button Click Event
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -111,11 +103,19 @@ public class LoginActivity extends Activity {
             }
         });
 
+        // Link to Register Screen
+        btnSkipLogin.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),
+                        SummaryActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
-    /**
-     * function to verify login details in mysql db
-     * */
+    // Checks the login through SQL Database.
     private void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
@@ -140,14 +140,14 @@ public class LoginActivity extends Activity {
                     if (!error) {
                         // user successfully logged in
                         // Create login session
-                        session.setLogin(true);
-                        session.getUserEmail();
+                    //    session.setLogin(true);
 
                         // Launch main activity
-                        Intent intent = new Intent(LoginActivity.this,SummaryActivity.class);
-                        intent.putExtra("email", session.getUserEmail());
+                        Intent intent = new Intent(LoginActivity.this, SummaryActivity.class);
+                        intent.putExtra("email", email);
                         startActivity(intent);
                         finish();
+
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
@@ -165,7 +165,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
         }) {
@@ -184,101 +184,18 @@ public class LoginActivity extends Activity {
         };
 
         // Adding request to request queue
-        session.createLoginSession(email);
-        session.setLoginCourse("Software Systems Development");
+    //    session.createLoginSession(email);
+    //    session.setLoginCourse("Software Systems Development");
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
 //        String urlUser = "http://chrismaher.info/AndroidProjects2/user_details.php?email=" + session.getUserEmail() + "";
 //        Log.d("URLUSER : ", urlUser);
-    //    setSessionDetails task = new setSessionDetails();
+        //    setSessionDetails task = new setSessionDetails();
         // passes values for the urls string array
-    //    task.execute(new String[]{urlUser});
+        //    task.execute(new String[]{urlUser});
 
 
     }
-
-
-//    // Background Async Task to Fill List with WebServer Data
-//    class setSessionDetails extends AsyncTask<String, Void, String> {
-//
-////        // Send session.getUserEmail() to filter List by LoggedIn user
-////
-////        private String jsonResult;
-////
-////        @Override
-////        protected String doInBackground(String... params) {
-////            HttpClient httpclient = new DefaultHttpClient();
-////            HttpPost httppost = new HttpPost(params[0]);
-////            try {
-////                HttpResponse response = httpclient.execute(httppost);
-////                jsonResult = inputStreamToString(
-////                        response.getEntity().getContent()).toString();
-////            } catch (ClientProtocolException e) {
-////                e.printStackTrace();
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////            return null;
-////        }
-////
-////        private StringBuilder inputStreamToString(InputStream is) {
-////            String rLine = "";
-////            StringBuilder answer = new StringBuilder();
-////            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-////
-////            try {
-////                while ((rLine = rd.readLine()) != null) {
-////                    answer.append(rLine);
-////                }
-////            } catch (IOException e) {
-////                // e.printStackTrace();
-//////                Toast.makeText(getApplicationContext(),
-//////                        "Error..." + e.toString(), Toast.LENGTH_LONG).show();
-////            }
-////            return answer;
-////        }
-////
-////        @Override
-////        protected void onPostExecute(String result) {
-////            ListMaker();
-////
-////
-////        }
-////
-////        public void ListMaker() {
-////
-////            try {
-////                JSONObject jsonResponse = new JSONObject(jsonResult);
-////                JSONArray jsonMainNode = jsonResponse.optJSONArray("users");
-////
-////                for (int i = 0; i < jsonMainNode.length(); i++) {
-////                    JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-////
-////                    String email1 = jsonChildNode.optString("email");
-////                    String name1 = jsonChildNode.optString("name");
-////                    String phone1 = jsonChildNode.optString("phone");
-////
-////                    session.createLoginSession(email1, name1, phone1);
-////
-////                    Log.d("EMAIL : ", email1);
-////                    Log.d("NAME : ", name1);
-////                    Log.d("PHONE : ", phone1);
-////
-////
-////                }
-////
-////
-////            } catch (JSONException e) {
-////                //  Toast.makeText(getApplicationContext(), "Nothing Added Yet.", Toast.LENGTH_SHORT).show();
-////            }
-////
-////
-////        }
-////
-////        ;
-////
-//
-//    }
 
     private void showDialog() {
         if (!pDialog.isShowing())

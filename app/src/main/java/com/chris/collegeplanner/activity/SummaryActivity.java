@@ -1,20 +1,21 @@
 
-package com.chris.collegeplanner.view;
+package com.chris.collegeplanner.activity;
 
-import android.app.ProgressDialog;
+// If Logged in and theres Internet connection download online projects and merge with offline projects then save all online again.
+
+// If logged out just get projects from SQLIte
+
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,8 +25,22 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.chris.collegeplanner.R;
+import com.chris.collegeplanner.adapters.ProjectsAdapter;
+import com.chris.collegeplanner.controller.AppConfig;
+import com.chris.collegeplanner.controller.AppController;
+import com.chris.collegeplanner.helper.SessionManager;
+import com.chris.collegeplanner.model.Project;
+import com.chris.collegeplanner.model.User;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -33,33 +48,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.chris.collegeplanner.R;
-import com.chris.collegeplanner.controller.AppConfig;
-import com.chris.collegeplanner.controller.AppController;
-import com.chris.collegeplanner.helper.SQLiteHandler;
-import com.chris.collegeplanner.helper.SessionManager;
-import com.chris.collegeplanner.model.Project;
-import com.chris.collegeplanner.model.User;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
-
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,41 +60,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SummaryActivity extends AppCompatActivity {
+public class SummaryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static String url = "";
-    private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
+    //  private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
     private static final int SELECT_PHOTO = 100;
     ListView list;
     Context context;
     SimpleAdapter adapter;
     List<HashMap<String, String>> fillMaps;
     HashMap map;
-    String[] projectArray;
     String pid;
-    //    JSONParser jsonParser = new JSONParser();
     int id;
     RelativeLayout relLayout;
     ImageView img;
-    private ProgressDialog pDialog;
     AlphaInAnimationAdapter animationAdapter;
-    private SQLiteHandler db;
+    private ProjectsAdapter db;
     private SessionManager session;
-    public static final String MyPREFERENCES = "MySettings";
-    private ProgressDialog dialog;
-    JSONObject jobj = null;
-    //    ClientServerInterface clientServerInterface = new ClientServerInterface();
-    String ab, extraEmail;
-    int i = 0, count = 0;
-    String[] listOfMenus;
-    String listdetails;
-    Connection xyz;
-    Statement st;
-    ResultSet rs;
+    String extraEmail;
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private User user;
-    final List<String> returnArray = new ArrayList<>();
-    private Project project;
+    private ProjectsAdapter dbHelper;
+    private SimpleCursorAdapter dataAdapter;
+    private TextView dueDateText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,82 +92,49 @@ public class SummaryActivity extends AppCompatActivity {
 
         // Setup User
         user = new User();
-        project = new Project();
 
         // Get Intent extra sent through
         getExtras(savedInstanceState);
         user.setEmail(extraEmail);
 
+        // Offline Projects
+        dbHelper = new ProjectsAdapter(this);
+        dbHelper.open();
+
         // Start Session manager
         session = new SessionManager(getApplicationContext());
 
-        // Get User Data
-        getUserData(user.getEmail());
-
-        // Get Data from Server
-        if (session.isLoggedIn()) {
-
-
-        } else {
-            // Fill With SQLite
-        }
-
         // Context
         context = getApplicationContext();
-        // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
         // session manager
         session = new SessionManager(getApplicationContext());
 
-        //  url = "http://chrismaher.info/AndroidProjects2/project_details.php?email=" + session.getUserEmail();
-
-        //  url = "http://chrismaher.info/AndroidProjects2/project_details.php";
-
-//        if (!session.isLoggedIn()) {
-//            logoutUser();
-//        }
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        projectArray = new String[7];
-
         // Initialise Variables
         list = (ListView) findViewById(R.id.SummaryListView);
-        registerForContextMenu(list);
-        img = (ImageView) findViewById(R.id.fullscreen_content);
+        list.setOnItemClickListener(this);
 
+        img = (ImageView) findViewById(R.id.fullscreen_content);
         relLayout = (RelativeLayout) findViewById(R.id.RelBackGround);
 
-        // Check if Internet is connected before syncing
-        if (isNetworkAvailable()) {
+        // Check if Internet is connected and email is available before syncing
+        if (isNetworkAvailable() && user.getEmail() != null) {
 
-            //    Toast.makeText(getApplicationContext(), "Online and Syncing!", Toast.LENGTH_SHORT).show();
+            getOfflineProjects();
 
+//            getUserData(user.getEmail());
+//         // TODO merge with offline projects - Upload SQLite to Cloud.
+//             mergeSQLiteProjectsToCloud();
+//            Toast.makeText(getApplicationContext(), "Syncing with Cloud.", Toast.LENGTH_LONG).show();
 
         } else {
 
-            Toast.makeText(getApplicationContext(), "Internet Connection Required!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Offline Mode.", Toast.LENGTH_LONG).show();
+            // Get projects from SQLite
+            getOfflineProjects();
+
+
         }
 
-        list.setTextFilterEnabled(true);
-        registerForContextMenu(list);
-        list.setLongClickable(true);
-        list.setClickable(true);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
-                                    long id) {
-
-
-                // We know the View is a TextView so we can cast it
-                TextView clickedView = (TextView) view;
-
-                Toast.makeText(SummaryActivity.this, "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        //    new RetreiveData().execute();
 
     }
 
@@ -204,6 +151,16 @@ public class SummaryActivity extends AppCompatActivity {
         } else {
             extraEmail = (String) savedInstanceState.getSerializable("email");
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        dataAdapter.getItem(position);
+        Intent intent = new Intent(this, ViewSingleProject.class);
+        intent.putExtra("id", (int) id);
+        startActivity(intent);
+
     }
 
     @Override
@@ -228,74 +185,6 @@ public class SummaryActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    // Context Menu for Long Click on ListItems
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-
-        super.onCreateContextMenu(menu, v, menuInfo);
-        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
-        // We know that each row in the adapter is a Map
-        map = (HashMap) adapter.getItem(aInfo.position);
-
-        menu.setHeaderTitle(map.get("SubjectTextList") + "");
-
-        menu.add(1, 1, 1, "Delete");
-        menu.add(1, 2, 2, "Update");
-        menu.add(1, 3, 3, "View");
-
-    }
-
-    // ActionListeners for the ContextItems
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getTitle() == "Update") {
-
-            if (isNetworkAvailable()) {
-                pid = map.get("IdText") + "";
-            } else {
-                Toast.makeText(getApplicationContext(), "Internet Connection Required!", Toast.LENGTH_LONG).show();
-            }
-            Intent intent = new Intent(SummaryActivity.this, UpdateProjectActivity.class);
-            intent.putExtra("ProjectID", map.get("IdText") + "");
-
-            startActivity(intent);
-        } else if (item.getTitle() == "Delete") {
-
-            if (isNetworkAvailable()) {
-
-                pid = map.get("IdText") + "";
-                deleteProject();
-
-                Intent intent = new Intent(SummaryActivity.this, SummaryActivity.class);
-                startActivity(intent);
-
-            } else {
-                Toast.makeText(getApplicationContext(), "Internet Connection Required!", Toast.LENGTH_LONG).show();
-            }
-
-
-        } else if (item.getTitle() == "View") {
-
-            if (isNetworkAvailable()) {
-
-                pid = map.get("IdText") + "";
-                Intent intent = new Intent(SummaryActivity.this, ViewProjectActivity.class);
-                //    Toast.makeText(getApplicationContext(), pid, Toast.LENGTH_LONG).show();
-                intent.putExtra("ProjectID", pid);
-                startActivity(intent);
-
-            } else {
-                Toast.makeText(getApplicationContext(), "Internet Connection Required!", Toast.LENGTH_LONG).show();
-            }
-
-
-        } else {
-            return false;
-        }
-        return true;
     }
 
     // Method to check if device has internet connection.
@@ -332,7 +221,9 @@ public class SummaryActivity extends AppCompatActivity {
     public void addNewEntryIntentClick(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
+        intent.putExtra("email", extraEmail);
         startActivity(intent);
+        finish();
 
     }
 
@@ -356,17 +247,20 @@ public class SummaryActivity extends AppCompatActivity {
     public void launchGroupNotesScreen(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, GroupNotesActivity.class);
+        intent.putExtra("name", user.getName());
+        intent.putExtra("course", user.getCourse());
+        intent.putExtra("email", user.getEmail());
         startActivity(intent);
 
     }
 
-//    // Launches The Settings Screen
-//    public void launchSettings(MenuItem item) {
+    // Launches The Settings Screen
+    public void launchSettings(MenuItem item) {
 //
 //        Intent intent = new Intent(SummaryActivity.this, SettingsActivity.class);
 //        startActivity(intent);
-//
-//    }
+
+    }
 
     // handles the Pictures selected from Gallery or Camera
     @Override
@@ -409,6 +303,11 @@ public class SummaryActivity extends AppCompatActivity {
         logoutUser();
     }
 
+    public void loginUserProxy(MenuItem item) {
+
+        loginUser();
+    }
+
     public void addNewProject(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
@@ -417,7 +316,7 @@ public class SummaryActivity extends AppCompatActivity {
 
     }
 
-    private void getProjects(final String email) {
+    private void getOnlineProjects(final String email) {
 
         List<Map<String, String>> projectList = new ArrayList<Map<String, String>>();
         fillMaps = new ArrayList<HashMap<String, String>>();
@@ -427,10 +326,10 @@ public class SummaryActivity extends AppCompatActivity {
         // Tag used to cancel the request
         String tag_string_req = "req_projects";
 
-        String projectUrl = "http://chrismaher.info/AndroidProjects2/project_details.php?email="+email+"";
+        String projectUrl = "http://chrismaher.info/college_planner/project_details.php?email=" + email + "";
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                 projectUrl, new Response.Listener<String>() {
+                projectUrl, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -440,7 +339,7 @@ public class SummaryActivity extends AppCompatActivity {
                     JSONObject jObj = new JSONObject(response);
                     JSONArray jsonMainNode = jObj.optJSONArray("projects");
 
-            //        boolean error = jObj.getBoolean("error");
+                    //        boolean error = jObj.getBoolean("error");
 
                     // Check for error node in json
                     if (jsonMainNode.length() > 0) {
@@ -451,7 +350,7 @@ public class SummaryActivity extends AppCompatActivity {
                             for (int i = 0; i < jsonMainNode.length(); i++) {
                                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
 
-                                project.setProjectID(jsonChildNode.optInt("ProjectID"));
+                                project.set_id(jsonChildNode.optInt("ProjectID"));
                                 id = jsonChildNode.optInt("ProjectID");
 
                                 project.setProjectSubject(jsonChildNode.optString("ProjectSubject"));
@@ -459,6 +358,7 @@ public class SummaryActivity extends AppCompatActivity {
                                 project.setProjectTitle(jsonChildNode.optString("ProjectTitle"));
                                 project.setProjectWorth(jsonChildNode.optString("ProjectWorth"));
                                 project.setProjectDetails(jsonChildNode.optString("ProjectDetails"));
+                                project.setProjectType(jsonChildNode.optString("ProjectType"));
                                 String s = project.getProjectDetails().substring(0, Math.min(project.getProjectDetails().length(), 28)) + "...";
 
 
@@ -480,12 +380,32 @@ public class SummaryActivity extends AppCompatActivity {
                                 HashMap<String, String> map = new HashMap<String, String>();
                                 map.put("SubjectTextList", project.getProjectSubject());
                                 map.put("DueDateTextList", "" + days);
-                                map.put("IdText", "" + project.getProjectID());
+                                map.put("IdText", "" + project.get_id());
                                 map.put("ProjectTitleTextList", "" + ConvertStringToTitleCase(project.getProjectTitle()));
                                 map.put("WorthText", "" + "(" + project.getProjectWorth() + "%)");
                                 map.put("DetailsTextList", "" + s);
 
                                 fillMaps.add(map);
+
+                                String subject = project.getProjectSubject();
+                                Date dateDue = project.getProjectDueDate();
+                                String details = s;
+                                String type = project.getProjectType();
+
+//                                if(dbHelper.fetchProjectBySubjectDetails(subject, details) == false){
+//
+//                                    dbHelper.createProject(
+//                                            0,
+//                                            subject,
+//                                            type,
+//                                            ConvertStringToTitleCase(project.getProjectTitle()),
+//                                            "" + "(" + project.getProjectWorth() + "%)",
+//                                            days,
+//                                            s,
+//                                            "");
+//
+//                                }
+
 
                             }
 
@@ -508,11 +428,16 @@ public class SummaryActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                adapter = new SimpleAdapter(getApplicationContext(), fillMaps, R.layout.summary_list_item, from, to);
+//                adapter = new SimpleAdapter(getApplicationContext(), fillMaps, R.layout.summary_list_item, from, to);
+//
+//                animationAdapter = new AlphaInAnimationAdapter(adapter);
+//                animationAdapter.setAbsListView(list);
+//                list.setAdapter(animationAdapter);
 
-                animationAdapter = new AlphaInAnimationAdapter(adapter);
-                animationAdapter.setAbsListView(list);
-                list.setAdapter(animationAdapter);
+                Cursor cursor = dbHelper.fetchAllProjects();
+                dataAdapter = new SimpleCursorAdapter(SummaryActivity.this, R.layout.summary_list_item, cursor, from, to, 0);
+
+                list.setAdapter(dataAdapter);
 
             }
         }, new Response.ErrorListener() {
@@ -550,10 +475,79 @@ public class SummaryActivity extends AppCompatActivity {
 
     }
 
+    private void getOfflineProjects() {
+
+////        //Clean all data
+//        dbHelper.deleteAllProjects();
+////        //Add some data
+//        dbHelper.insertSomeProjects();
+
+//      final String[] from = new String[]{"SubjectTextList", "DueDateTextList", "IdText", "ProjectTitleTextList", "WorthText", "DetailsTextList"};
+//      final int[] to = new int[]{R.id.SubjectTextList, R.id.DueDateTextList, R.id.IdText, R.id.ProjectTitleTextList, R.id.WorthText, R.id.DetailsTextList};
+//
+
+
+        final String[] from = new String[]{"_id", "ProjectSubject", "ProjectTitle", "ProjectWorth", "ProjectDueDate", "ProjectDetails"};
+        final int[] to = new int[]{R.id.IdText, R.id.SubjectTextList, R.id.ProjectTitleTextList, R.id.WorthText, R.id.DueDateTextList, R.id.DetailsTextList};
+
+        Cursor cursor = dbHelper.fetchAllProjects();
+        dataAdapter = new SimpleCursorAdapter(context, R.layout.summary_list_item, cursor, from, to, 0);
+
+        dueDateText = (TextView) findViewById(R.id.DueDateTextList);
+
+        dataAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+                                      public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                                          if (columnIndex == 5) {
+
+                                              Date date = new Date();
+                                              String dtStart = cursor.getString(columnIndex);
+                                              SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                              try {
+                                                  date = format.parse(dtStart);
+                                                  System.out.println(date);
+                                              } catch (ParseException e) {
+                                                  // TODO Auto-generated catch block
+                                                  e.printStackTrace();
+                                              }
+
+                                              Date today = new Date();
+                                              String days = (Days.daysBetween(new DateTime(today), new DateTime(date)).getDays()) + "";
+                                              if (Integer.valueOf(days) < 0) {
+                                                  days = "-";
+
+                                              }
+
+
+                                              ((TextView) view).setText(days);
+
+
+                                              return true;
+                                          } else {
+                                              return false;
+                                          }
+                                      }
+                                  });
+
+
+                list.setAdapter(dataAdapter);
+
+
+    }
+
     private void logoutUser() {
         session.setLogin(false);
 
-        db.deleteUsers();
+        //    db.deleteAllProjects();
+        Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_LONG).show();
+
+        // Launching the login activity
+        Intent intent = new Intent(SummaryActivity.this, SummaryActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void loginUser() {
+        session.setLogin(false);
 
         // Launching the login activity
         Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
@@ -585,7 +579,8 @@ public class SummaryActivity extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(), user.getCourse(), Toast.LENGTH_LONG).show();
 
-                        getProjects(user.getEmail());
+
+                        getOnlineProjects(user.getEmail());
 
 
                     } else {
@@ -627,7 +622,18 @@ public class SummaryActivity extends AppCompatActivity {
 
     }
 
+    private void shareList(MenuItem item) {
 
+
+    }
+
+    private void viewProject(int id) {
+
+        Intent intent = new Intent(SummaryActivity.this, ViewProjectActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+
+    }
 
 }// Main Program Ends..
 

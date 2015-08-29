@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.view;
+package com.chris.collegeplanner.activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.chris.collegeplanner.activity.ViewSingleProject">
+
+
+    <!--<item android:id="@+id/action_settings"-->
+    <!--android:title="@string/action_settings"-->
+    <!--android:orderInCategory="100"-->
+    <!--app:showAsAction="never" />-->
+
+    <item android:id="@+id/viewSingleProjectDeleteButton"
+        android:title="Delete"
+        android:orderInCategory="101"
+        app:showAsAction="never"
+        android:onClick="deleteProject"
+        />
+
+    <item android:id="@+id/viewSingleProjectUpdateButton"
+        android:title="Update"
+        android:orderInCategory="102"
+        app:showAsAction="never" />
+
+
+
+
+</menu>

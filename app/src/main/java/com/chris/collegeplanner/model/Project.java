@@ -11,34 +11,48 @@ import java.util.Date;
 
 public class Project {
 
-    private int projectID;
+    private int _id;
     private String projectSubject;
     private String projectType;
     private String projectTitle;
     private String projectWorth;
     private Date projectDueDate;
     private String projectDetails;
+    private String projectEmail;
 
-    public Project(int projectID, String projectSubject, String projectType, String projectTitle, String projectWorth, Date projectDueDate, String projectDetails) {
-        this.projectID = projectID;
+    public void setProjectDueDate(Date projectDueDate) {
+        this.projectDueDate = projectDueDate;
+    }
+
+    public String getProjectEmail() {
+        return projectEmail;
+    }
+
+    public void setProjectEmail(String projectEmail) {
+        this.projectEmail = projectEmail;
+    }
+
+    public Project(int _id, String projectSubject, String projectType, String projectTitle, String projectWorth, Date projectDueDate, String projectDetails, String projectEmail) {
+        this._id = _id;
         this.projectSubject = projectSubject;
         this.projectType = projectType;
         this.projectTitle = projectTitle;
         this.projectWorth = projectWorth;
         this.projectDueDate = projectDueDate;
         this.projectDetails = projectDetails;
+        this.projectEmail = projectEmail;
     }
 
     public Project(){
 
     }
 
-    public int getProjectID() {
-        return projectID;
+    public int get_id() {
+        return _id;
     }
 
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     public String getProjectSubject() {
@@ -90,5 +104,19 @@ public class Project {
 
     public void setProjectDetails(String projectDetails) {
         this.projectDetails = projectDetails;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "_id=" + _id +
+                ", projectSubject='" + projectSubject + '\'' +
+                ", projectType='" + projectType + '\'' +
+                ", projectTitle='" + projectTitle + '\'' +
+                ", projectWorth='" + projectWorth + '\'' +
+                ", projectDueDate=" + projectDueDate +
+                ", projectDetails='" + projectDetails + '\'' +
+                ", projectEmail='" + projectEmail + '\'' +
+                '}';
     }
 }

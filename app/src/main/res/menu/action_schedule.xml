@@ -10,14 +10,15 @@
         android:title="TimeTable"
         android:onClick="launchSchedule"/>
 
-    <item
+    <!--<item-->
 
-        android:id="@+id/action_group"
-        android:icon="@drawable/ic_launcher"
-        android:orderInCategory="101"
-        yourapp:showAsAction="always"
-        android:title="TimeTable"
-        android:onClick="launchGroupNotesScreen"/>
+        <!--android:id="@+id/action_group"-->
+        <!--android:icon="@drawable/ic_launcher"-->
+        <!--android:orderInCategory="101"-->
+        <!--yourapp:showAsAction="always"-->
+        <!--android:title="TimeTable"-->
+        <!--android:onClick="launchGroupNotesScreen"/>-->
+
     <item
 
         android:id="@+id/action_add_new"

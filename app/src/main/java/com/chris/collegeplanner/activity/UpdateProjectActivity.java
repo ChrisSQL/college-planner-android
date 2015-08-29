@@ -1,5 +1,5 @@
 // Chris Maher 20059304
-package com.chris.collegeplanner.view;
+package com.chris.collegeplanner.activity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;

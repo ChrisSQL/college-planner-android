@@ -3,7 +3,7 @@
  * URL: www.androidhive.info
  * twitter: http://twitter.com/ravitamada
  * */
-package com.chris.collegeplanner.view;
+package com.chris.collegeplanner.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

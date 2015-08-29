@@ -1,4 +1,4 @@
-package com.chris.collegeplanner.view.util;
+package com.chris.collegeplanner.activity.util;
 
 import android.app.Activity;
 import android.view.View;

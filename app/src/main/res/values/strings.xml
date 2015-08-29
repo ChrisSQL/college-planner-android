@@ -7,7 +7,7 @@
     <string name="hint_name">Fullname</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_register">REGISTER</string>
-    <string name="btn_link_to_register">Not a member? Sign up now.</string>
+    <string name="btn_link_to_register">Not a member? Sign up now</string>
     <string name="btn_link_to_login">Already registered! Login.</string>
     <string name="welcome">Welcome</string>
     <string name="btn_logout">LOGOUT</string>
@@ -32,6 +32,7 @@
         <item>Exam</item>
         <item>Presentation</item>
         <item>Event</item>
+        <item>Essay</item>
         <item>Other</item>
     </string-array>
     <string-array name="percentage_array">
@@ -184,5 +185,7 @@
     <string name="hint_username">Full Name</string>
     <string name="hint_phone">Phone Number</string>
     <string name="btn_save">Save</string>
+    <string name="sendList">Send list to Classmate</string>
+    <string name="title_activity_view_single_project">ViewSingleProject</string>
 
 </resources>

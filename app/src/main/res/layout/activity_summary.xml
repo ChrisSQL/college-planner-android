@@ -11,8 +11,9 @@
         android:id="@+id/SummaryListView"
         android:choiceMode="singleChoice"
         android:layout_alignParentStart="false"
-        android:longClickable="true"
-/>
+
+        />
+    <!--android:descendantFocusability="blocksDescendants"-->
 
     <!--<GridLayout-->
         <!--android:layout_width="fill_parent"-->

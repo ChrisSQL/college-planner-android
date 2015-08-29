@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
-import com.chris.collegeplanner.view.SummaryActivity;
+import com.chris.collegeplanner.activity.SummaryActivity;
 
 /**
  * Created by Chris on 16/02/2015.

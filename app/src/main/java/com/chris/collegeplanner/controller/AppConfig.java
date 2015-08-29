@@ -10,6 +10,4 @@ public class AppConfig {
 	// Server user details url
 	public static String URL_USERDATA = "http://chrismaher.info/college_planner/get_user_details_by_email.php";
 
-	// Server user details url
-	public static String URL_USERPROJECTS = "http://chrismaher.info/college_planner/get_user_details_by_email.php";
 }
