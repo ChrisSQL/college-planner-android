@@ -10,15 +10,16 @@
     <!--app:showAsAction="never" />-->
 
     <item android:id="@+id/viewSingleProjectDeleteButton"
-        android:title="Delete"
-        android:orderInCategory="101"
-        app:showAsAction="never"
         android:onClick="deleteProject"
+        android:orderInCategory="101"
+        android:title="Delete"
+        app:showAsAction="never"
         />
 
     <item android:id="@+id/viewSingleProjectUpdateButton"
-        android:title="Update"
+        android:onClick="updateProject"
         android:orderInCategory="102"
+        android:title="Update"
         app:showAsAction="never" />
 
 

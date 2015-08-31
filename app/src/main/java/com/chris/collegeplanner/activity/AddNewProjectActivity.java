@@ -24,24 +24,34 @@ import com.chris.collegeplanner.adapters.ProjectsAdapter;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Project;
 
-//import org.apache.http.message.BasicNameValuePair;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+//import org.apache.http.message.BasicNameValuePair;
 
 
 public class AddNewProjectActivity extends ActionBarActivity {
 
 
-
-
+    private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
     // Date For DueDate
     Calendar myCalendar = Calendar.getInstance();
+    List<String> subjectsArray = new ArrayList<>();
+    List<HashMap<String, String>> fillSubjectsArray;
+    AutoCompleteTextView subject;
+    String type;
+    String title;
+    String worth;
+    String details;
+    String dueDate;
+    String extraEmail;
+    private SessionManager session;
+    private EditText detailsText;
+    private EditText dueDateText;
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         @Override
@@ -56,30 +66,15 @@ public class AddNewProjectActivity extends ActionBarActivity {
         }
 
     };
-    private SessionManager session;
-    private EditText detailsText;
-    private EditText dueDateText;
     private TextView titleText;
     private AutoCompleteTextView subjectSpinner;
-
     private Spinner typeSpinner;
     private Spinner worthSpinner;
-    private Button saveButton2;
-    private Button selectDateButton;
-    List<String> subjectsArray = new ArrayList<>();
+    private Button saveButton2, backButton, selectDateButton;
   //  AutoCompleteTextView subject;
     private String urlUpload = "http://chrismaher.info/AndroidProjects2/project_upload.php";
-    private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
     // Progress Dialog
     private ProgressDialog pDialog;
-    List<HashMap<String, String>> fillSubjectsArray;
-    AutoCompleteTextView subject;
-    String type;
-    String title;
-    String worth;
-    String details;
-    String dueDate;
-    String extraEmail;
     private ProjectsAdapter projectsAdapter;
     private Project project;
     private ProjectsAdapter dbHelper;
@@ -110,6 +105,15 @@ public class AddNewProjectActivity extends ActionBarActivity {
         titleText = (EditText) findViewById(R.id.TitleText);
         dueDateText = (EditText) findViewById(R.id.DueDateText);
         saveButton2 = (Button) findViewById(R.id.SaveButton);
+        selectDateButton = (Button) findViewById(R.id.DueDateButton);
+        backButton = (Button) findViewById(R.id.backButton);
+        backButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(AddNewProjectActivity.this, SummaryActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         saveButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,18 +139,25 @@ public class AddNewProjectActivity extends ActionBarActivity {
                             e.printStackTrace();
                         }
 
+                        type = typeSpinner.getSelectedItem().toString();
+                        title = titleText.getText().toString();
+                        worth = worthSpinner.getSelectedItem().toString();
+                        details = detailsText.getText().toString();
+                        dueDate = dueDateText.getText().toString();
+
                         project.set_id(0);
                         project.setProjectSubject(subjectSpinner.getText().toString());
                         project.setProjectType(typeSpinner.getSelectedItem().toString());
                         project.setProjectTitle(titleText.getText().toString());
                         project.setProjectWorth(worthSpinner.getSelectedItem().toString());
-                        project.setProjectDueDate(new Date());
+                        project.setProjectDetails(detailsText.getText().toString());
+
                         try {
                             project.setProjectDueDate(dueDateText.getText().toString());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        //project.setProjectDetails(detailsText.getText().toString());
+
                         project.setProjectEmail(extraEmail);
 
                         dbHelper.createProject(project);
@@ -173,7 +184,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
             }
         });
-        selectDateButton = (Button) findViewById(R.id.DueDateButton);
+
         selectDateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -242,6 +253,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
 
         dueDateText.setText(sdf.format(myCalendar.getTime()));
+
     }
     // Schedules the Alarm after Project is entered
     public void scheduleAlarm() throws ParseException {

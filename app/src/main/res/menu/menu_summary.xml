@@ -43,13 +43,14 @@
         android:title="@string/login"
         app:showAsAction="never" />
 
-    <item
+    <!--<item-->
 
-        android:id="@+id/share"
-        android:title="@string/sendList"
-        android:orderInCategory="104"
-        app:showAsAction="never" />
-        <!--android:onClick=""-->
+    <!--android:id="@+id/share"-->
+    <!--android:onClick="shareList"-->
+    <!--android:title="Share List"-->
+    <!--android:orderInCategory="104"-->
+    <!--app:showAsAction="never" />-->
+    <!--&lt;!&ndash;android:onClick=""&ndash;&gt;-->
 
 
 

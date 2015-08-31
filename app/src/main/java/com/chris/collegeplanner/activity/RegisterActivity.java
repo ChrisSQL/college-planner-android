@@ -2,7 +2,7 @@
  * Author: Ravi Tamada
  * URL: www.androidhive.info
  * twitter: http://twitter.com/ravitamada
- * */
+ */
 package com.chris.collegeplanner.activity;
 
 import android.app.Activity;
@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -27,13 +28,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.chris.collegeplanner.R;
+import com.chris.collegeplanner.adapters.UserAdapter;
 import com.chris.collegeplanner.controller.AppConfig;
 import com.chris.collegeplanner.controller.AppController;
 import com.chris.collegeplanner.helper.SQLiteHandler;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.College;
+import com.chris.collegeplanner.model.User;
 
-//import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,226 +45,260 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//import org.apache.http.HttpResponse;
+
 public class RegisterActivity extends Activity {
-	private static final String TAG = RegisterActivity.class.getSimpleName();
-	private Button btnRegister;
-	private Button btnLinkToLogin;
-    private EditText inputEmail, inputDisplayName, inputPhoneNumber;
-    private EditText inputPassword, inputConfirmPassword;
-	private ProgressDialog pDialog;
-	private SessionManager session;
-	private SQLiteHandler db;
-    AutoCompleteTextView college, course;
+    public static final String MyPREFERENCES = "MySettings";
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final String collegesURL = "http://chrismaher.info/AndroidProjects2/colleges.php";
     private static final String coursesURL = "http://chrismaher.info/AndroidProjects2/courses.php";
+    AutoCompleteTextView college, course;
     List<String> collegesArray = new ArrayList<>();
     List<String> courseArray = new ArrayList<>();
     List<HashMap<String, String>> fillCollegesArray, fillCoursesArray;
     SharedPreferences sharedpreferences;
-    public static final String MyPREFERENCES = "MySettings" ;
+    private Button btnRegister;
+    private Button btnLinkToLogin;
+    private EditText inputEmail, inputDisplayName, inputPhoneNumber;
+    private EditText inputPassword, inputConfirmPassword;
+    private ProgressDialog pDialog;
+    private SessionManager session;
+    private SQLiteHandler db;
+    private UserAdapter dbHelper;
+    private SimpleCursorAdapter dataAdapter;
+    private User user;
+    private String email, password, confirmPassword, displayName;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_register);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
 
-		inputEmail = (EditText) findViewById(R.id.email);
-		inputPassword = (EditText) findViewById(R.id.password);
+        // Offline Projects
+        dbHelper = new UserAdapter(this);
+        dbHelper.open();
+        user = new User();
+
+        inputEmail = (EditText) findViewById(R.id.email);
+        inputPassword = (EditText) findViewById(R.id.password);
         inputConfirmPassword = (EditText) findViewById(R.id.confirmPassword);
-		btnRegister = (Button) findViewById(R.id.btnRegister);
-		btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
-
         inputDisplayName = (EditText) findViewById(R.id.displayName);
-        inputPhoneNumber = (EditText) findViewById(R.id.phoneNumber);
 
-        college = (AutoCompleteTextView) findViewById(R.id.college);
-        college.setThreshold(1);
-        course = (AutoCompleteTextView) findViewById(R.id.course);
-        course.setThreshold(1);
-
-        getWebData();
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
 
-		// Progress dialog
-		pDialog = new ProgressDialog(this);
-		pDialog.setCancelable(false);
+//        inputPhoneNumber = (EditText) findViewById(R.id.phoneNumber);
+//
+//        college = (AutoCompleteTextView) findViewById(R.id.college);
+//        college.setThreshold(1);
+//        course = (AutoCompleteTextView) findViewById(R.id.course);
+//        course.setThreshold(1);
 
-		// Session manager
-		session = new SessionManager(getApplicationContext());
+        //       getWebData();
 
-		// SQLite database handler
-		db = new SQLiteHandler(getApplicationContext());
 
-		// Check if user is already logged in or not
-		if (session.isLoggedIn()) {
-			// User is already logged in. Take him to main activity
+        // Progress dialog
+        pDialog = new ProgressDialog(this);
+        pDialog.setCancelable(false);
+
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
+        // SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        // Check if user is already logged in or not
+        if (session.isLoggedIn()) {
+            // User is already logged in. Take him to main activity
 
             Toast.makeText(getApplicationContext(), session.getUserEmail(), Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(RegisterActivity.this, SummaryActivity.class);
-			startActivity(intent);
-			finish();
-		}
+            Intent intent = new Intent(RegisterActivity.this, SummaryActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
-		// Register Button Click event
-		btnRegister.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
+        // Register Button Click event
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
 
-				String email = inputEmail.getText().toString();
-				String password = inputPassword.getText().toString();
-                String confirmPassword = inputConfirmPassword.getText().toString();
-                String collegeText = college.getText().toString();
-                String courseText = course.getText().toString();
-                String displayName = inputDisplayName.getText().toString();
-                String phoneNumber = inputPhoneNumber.getText().toString();
+                email = inputEmail.getText().toString();
+                password = inputPassword.getText().toString();
+                confirmPassword = inputConfirmPassword.getText().toString();
+//                String collegeText = college.getText().toString();
+//                String courseText = course.getText().toString();
+                displayName = inputDisplayName.getText().toString();
+//                String phoneNumber = inputPhoneNumber.getText().toString();
 
                 // Check if college exists already
 
-                if(!collegeText.isEmpty()){
-
-
-
-                }
-
-
-//                // Register User
-//                if(isNetworkAvailable()){
-//
-//                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !collegeText.isEmpty() && !courseText.isEmpty() && !displayName.isEmpty() && !phoneNumber.isEmpty()) {
-//                        registerCourse(courseText);
-//                        registerCollege(collegeText);
-//                        registerUser(email, password, confirmPassword, collegeText, courseText, displayName, phoneNumber);
+//                if(!collegeText.isEmpty()){
 //
 //
-//
-//                    } else {
-//                        Toast.makeText(getApplicationContext(),
-//                                "Please enter your details!", Toast.LENGTH_LONG)
-//                                .show();
-//                    }
-//
-//                } else{
-//
-//                    Toast.makeText(getApplicationContext(), "Internet Connection Required to Register!", Toast.LENGTH_LONG).show();
 //
 //                }
 
 
-			}
-		});
+                if (confirmPassword.equals(password)) {
 
-		// Link to Login Screen
-		btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
+                    // Register User
 
-			public void onClick(View view) {
-				Intent i = new Intent(getApplicationContext(),
-						LoginActivity.class);
-				startActivity(i);
-				finish();
-			}
-		});
+                    if (!confirmPassword.isEmpty() && !email.isEmpty() && !password.isEmpty() && !displayName.isEmpty()) {
+//                        registerCourse(courseText);
+//                        registerCollege(collegeText);
 
-	}
-
-	/**
-	 * Function to store user in MySQL database will post params(tag, name,
-	 * email, password) to register url
-	 * */
-    private void registerUser(final String email, final String password, final String confirmPassword, final String collegeIn, final String courseIn, final String nameIn, final String phoneIn) {
+                        user.setEmail(email);
+                        user.setPassword(password);
+                        user.setName(displayName);
+                        user.setRegistrationDate(new Date());
 
 
-		// Tag used to cancel the request
-		String tag_string_req = "req_register";
+//                            createUser(email, password, confirmPassword, displayName);
+//                            registerUser(email, password, confirmPassword, displayName);
 
-		pDialog.setMessage("Registering ...");
-		showDialog();
+                        if (isNetworkAvailable()) {
+
+                            Log.d("DETAILS : ", email + password + displayName);
+
+                            registerUser(email, password, displayName);
+
+                        }
+
+                        dbHelper.createUser(user);
+                        session.createLoginSession(email);
+                        Intent intent = new Intent(RegisterActivity.this, SummaryActivity.class);
+                        startActivity(intent);
+                        finish();
 
 
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Please enter your details!", Toast.LENGTH_LONG)
+                                .show();
+                    }
 
-		StringRequest strReq = new StringRequest(Method.POST,
-				AppConfig.URL_REGISTER, new Response.Listener<String>() {
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+
+
+                }
+
+            }
+        });
+
+        // Link to Login Screen
+        btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),
+                        LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
+    }
+
+    private void createUser(String email, String password, String confirmPassword, String displayName) {
+
+
+    }
+
+    /**
+     * Function to store user in MySQL database will post params(tag, name,
+     * email, password) to register url
+     */
+    private void registerUser(final String email, final String password, final String nameIn) {
+
+
+        // Tag used to cancel the request
+        String tag_string_req = "register";
+
+        pDialog.setMessage("Registering ...");
+        showDialog();
+
+
+        StringRequest strReq = new StringRequest(Method.POST,
+                AppConfig.URL_REGISTER_2, new Response.Listener<String>() {
 
 //
 
-					@Override
-					public void onResponse(String response) {
-						Log.d(TAG, "Register Response: " + response.toString());
-						// hideDialog();
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Register Response: " + response.toString());
+                // hideDialog();
 
-						try {
-							JSONObject jObj = new JSONObject(response);
-							boolean error = jObj.getBoolean("error");
-							if (!error) {
-								// User successfully stored in MySQL
-								// Now store the user in sqlite
-								String uid = jObj.getString("uid");
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        // User successfully stored in MySQL
+                        // Now store the user in sqlite
+                        String uid = jObj.getString("uid");
 
-								JSONObject user = jObj.getJSONObject("user");
+                        JSONObject user = jObj.getJSONObject("user");
 
-								String email = user.getString("email");
-                            //    String confirmPassword = user.getString("confirmPassword");
+                        String email = user.getString("email");
+                        //    String confirmPassword = user.getString("confirmPassword");
 
-								// Inserting row in users table
-                                db.addUser(email, uid, nameIn, phoneIn);
+                        // Inserting row in users table
+//                                db.addUser(email, uid, nameIn);
 
 
+                        // Launch login activity
 
-								// Launch login activity
 
-								Intent intent = new Intent( RegisterActivity.this, SummaryActivity.class);
-								startActivity(intent);
-								finish();
-							} else {
+                    } else {
 
-								// Error occurred in registration. Get the error
-								// message
-								String errorMsg = jObj.getString("error_msg");
-								Toast.makeText(getApplicationContext(),
-										errorMsg, Toast.LENGTH_LONG).show();
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
+                        // Error occurred in registration. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-					}
-				}, new Response.ErrorListener() {
+            }
+        }, new Response.ErrorListener() {
 
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Log.e(TAG, "Registration Error: " + error.getMessage());
-						Toast.makeText(getApplicationContext(),
-								error.getMessage(), Toast.LENGTH_LONG).show();
-						// hideDialog();
-					}
-				}) {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Registration Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                // hideDialog();
+            }
+        }) {
 
-			@Override
-			protected Map<String, String> getParams() {
-				// Posting params to register url
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("tag", "register");
-				params.put("email", email);
-				params.put("password", password);
-                params.put("college", collegeIn);
-                params.put("course", courseIn);
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("tag", "register");
+                params.put("email", email);
+                params.put("password", password);
                 params.put("name", nameIn);
-                params.put("phone", phoneIn);
 
 
+                return params;
+            }
 
-				return params;
-			}
+        };
 
-		};
-
-		// Adding request to request queue
-        session.createLoginSession(email, nameIn, phoneIn);
+        // Adding request to request queue
+        // session.createLoginSession(email);
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
-	}
+    }
 
     private void registerCollege(final String collegeIn) {
 
@@ -272,7 +308,6 @@ public class RegisterActivity extends Activity {
 
         pDialog.setMessage("Registering ...");
         showDialog();
-
 
 
         StringRequest strReq = new StringRequest(Method.POST,
@@ -333,7 +368,6 @@ public class RegisterActivity extends Activity {
                 params.put("college", collegeIn);
 
 
-
                 return params;
             }
 
@@ -354,7 +388,6 @@ public class RegisterActivity extends Activity {
         showDialog();
 
 
-
         StringRequest strReq = new StringRequest(Method.POST,
                 AppConfig.URL_REGISTER, new Response.Listener<String>() {
 
@@ -363,7 +396,7 @@ public class RegisterActivity extends Activity {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Course Response: " + response.toString());
- //               hideDialog();
+                //               hideDialog();
 
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -413,7 +446,6 @@ public class RegisterActivity extends Activity {
                 params.put("course", courseIn);
 
 
-
                 return params;
             }
 
@@ -426,13 +458,31 @@ public class RegisterActivity extends Activity {
 
     private void getWebData() {
 
-        addCollegesToListBackgroundTask task = new addCollegesToListBackgroundTask();
-        task.execute(new String[]{collegesURL});
+//        addCollegesToListBackgroundTask task = new addCollegesToListBackgroundTask();
+//        task.execute(new String[]{collegesURL});
 
 //        addCoursesToListBackgroundTask task2 = new addCoursesToListBackgroundTask();
 //        task2.execute(new String[]{coursesURL});
 
 
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }
+
+    // Method to check if device has internet connection.
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     class addCollegesToListBackgroundTask extends AsyncTask<String, Void, String> {
@@ -479,7 +529,6 @@ public class RegisterActivity extends Activity {
         }
 
     }
-
 
     class addCoursesToListBackgroundTask extends AsyncTask<String, Void, String> {
 
@@ -536,7 +585,6 @@ public class RegisterActivity extends Activity {
                     colleges.setCollegeName(jsonChildNode.optString("courseName"));
 
 
-
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("courseName", colleges.getCollegeName());
                     courseArray.add(map.get("courseName"));
@@ -558,32 +606,8 @@ public class RegisterActivity extends Activity {
             course.setAdapter(adapter2);
 
 
-
-
-
-
         }
 
-        ;
 
-
-    }
-
-    private void showDialog() {
-		if (!pDialog.isShowing())
-			pDialog.show();
-	}
-
-	private void hideDialog() {
-		if (pDialog.isShowing())
-			pDialog.dismiss();
-	}
-
-    // Method to check if device has internet connection.
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

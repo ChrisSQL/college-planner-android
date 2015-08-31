@@ -5,6 +5,7 @@ package com.chris.collegeplanner.activity;
 
 // If logged out just get projects from SQLIte
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,12 +16,14 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -62,9 +65,10 @@ import java.util.Map;
 
 public class SummaryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private static String url = "";
     //  private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
     private static final int SELECT_PHOTO = 100;
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static String url = "";
     ListView list;
     Context context;
     SimpleAdapter adapter;
@@ -75,15 +79,25 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     RelativeLayout relLayout;
     ImageView img;
     AlphaInAnimationAdapter animationAdapter;
+    String extraEmail;
     private ProjectsAdapter db;
     private SessionManager session;
-    String extraEmail;
-    private static final String TAG = RegisterActivity.class.getSimpleName();
     private User user;
     private ProjectsAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private TextView dueDateText;
 
+    // Method to convert Strings to Title Case for use in ListView
+    public static String ConvertStringToTitleCase(String givenString) {
+        String[] arr = givenString.split(" ");
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(Character.toUpperCase(arr[i].charAt(0)))
+                    .append(arr[i].substring(1)).append(" ");
+        }
+        return sb.toString().trim();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +109,10 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         // Get Intent extra sent through
         getExtras(savedInstanceState);
+
         user.setEmail(extraEmail);
+
+        //       Toast.makeText(getApplicationContext(), "User logged in : " + extraEmail, Toast.LENGTH_LONG).show();
 
         // Offline Projects
         dbHelper = new ProjectsAdapter(this);
@@ -113,6 +130,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         list = (ListView) findViewById(R.id.SummaryListView);
         list.setOnItemClickListener(this);
 
+
         img = (ImageView) findViewById(R.id.fullscreen_content);
         relLayout = (RelativeLayout) findViewById(R.id.RelBackGround);
 
@@ -128,7 +146,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         } else {
 
-            Toast.makeText(getApplicationContext(), "Offline Mode.", Toast.LENGTH_LONG).show();
+
             // Get projects from SQLite
             getOfflineProjects();
 
@@ -169,6 +187,18 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         getMenuInflater().inflate(R.menu.menu_summary, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_schedule, menu);
+        MenuItem login = menu.findItem(R.id.login);
+        MenuItem logout = menu.findItem(R.id.logout);
+        if (session.isLoggedIn()) {
+            login.setVisible(false);
+            logout.setVisible(true);
+
+        } else {
+            login.setVisible(true);
+            logout.setVisible(false);
+
+        }
+
         return true;
     }
 
@@ -193,18 +223,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    // Method to convert Strings to Title Case for use in ListView
-    public static String ConvertStringToTitleCase(String givenString) {
-        String[] arr = givenString.split(" ");
-        StringBuffer sb = new StringBuffer();
-
-        for (int i = 0; i < arr.length; i++) {
-            sb.append(Character.toUpperCase(arr[i].charAt(0)))
-                    .append(arr[i].substring(1)).append(" ");
-        }
-        return sb.toString().trim();
     }
 
     // Method to start the Delete of an Individual listItem
@@ -496,46 +514,56 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         dueDateText = (TextView) findViewById(R.id.DueDateTextList);
 
         dataAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-                                      public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                                          if (columnIndex == 5) {
-
-                                              Date date = new Date();
-                                              String dtStart = cursor.getString(columnIndex);
-                                              SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                                              try {
-                                                  date = format.parse(dtStart);
-                                                  System.out.println(date);
-                                              } catch (ParseException e) {
-                                                  // TODO Auto-generated catch block
-                                                  e.printStackTrace();
-                                              }
-
-                                              Date today = new Date();
-                                              String days = (Days.daysBetween(new DateTime(today), new DateTime(date)).getDays()) + "";
-                                              if (Integer.valueOf(days) < 0) {
-                                                  days = "-";
-
-                                              }
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                if (columnIndex == 5) {
 
 
-                                              ((TextView) view).setText(days);
+                    // Chosen Date as Date
+                    Date chosenDate = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    String dtStart = cursor.getString(columnIndex);
+                    try {
+                        chosenDate = format.parse(dtStart);
+                        System.out.println(chosenDate);
+                    } catch (ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    //                    Date today = new Date();
+                    String days = (Days.daysBetween(new DateTime(new Date()), new DateTime(chosenDate)).getDays()) + "";
+                    if (Integer.valueOf(days) < 0) {
+                        days = "-";
+
+                    }
+
+                    ((TextView) view).setText(days);
 
 
-                                              return true;
-                                          } else {
-                                              return false;
-                                          }
-                                      }
-                                  });
+                    return true;
+                } else if (columnIndex == 4) {
+
+                    String worthFormat = "(" + cursor.getString(columnIndex) + "%)";
+                    ((TextView) view).setText(worthFormat);
+
+                    return true;
+
+                } else {
+                    return false;
+                }
+            }
+        });
 
 
-                list.setAdapter(dataAdapter);
+        list.setAdapter(dataAdapter);
 
 
     }
 
     private void logoutUser() {
+
         session.setLogin(false);
+        user.setEmail("");
 
         //    db.deleteAllProjects();
         Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_LONG).show();
@@ -547,7 +575,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void loginUser() {
-        session.setLogin(false);
+        session.setLogin(true);
 
         // Launching the login activity
         Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
@@ -622,11 +650,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-    private void shareList(MenuItem item) {
-
-
-    }
-
     private void viewProject(int id) {
 
         Intent intent = new Intent(SummaryActivity.this, ViewProjectActivity.class);
@@ -635,6 +658,40 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
+    public void shareList(MenuItem item) {
+
+        if (extraEmail == null || extraEmail.equals("")) {
+
+            Toast.makeText(getApplicationContext(), "Login to send list.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
+            startActivity(intent);
+
+        } else {
+
+//            Intent intent = new Intent(SummaryActivity.this, ShareActivity.class);
+//            startActivity(intent);
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+            alert.setMessage("Classmates Email?");
+
+            final EditText email = new EditText(this);
+            email.setInputType(InputType.TYPE_CLASS_TEXT
+                    | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+            email.setHint("Email...");
+
+            alert.setView(email);
+
+            alert.setPositiveButton("Ok", null);
+
+            alert.setNegativeButton("Cancel", null);
+
+            alert.show();
+
+
+        }
+
+    }
 }// Main Program Ends..
 
 

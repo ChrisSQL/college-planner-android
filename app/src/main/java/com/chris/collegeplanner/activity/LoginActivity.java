@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.chris.collegeplanner.R;
+import com.chris.collegeplanner.adapters.UserAdapter;
 import com.chris.collegeplanner.controller.AppConfig;
 import com.chris.collegeplanner.controller.AppController;
 import com.chris.collegeplanner.helper.SessionManager;
@@ -39,18 +41,25 @@ import java.util.Map;
 public class LoginActivity extends Activity {
     // LogCat tag
     private static final String TAG = RegisterActivity.class.getSimpleName();
+    String email = "";
     private Button btnLogin, btnLinkToRegister, btnSkipLogin;
     private EditText inputEmail, inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
-    String email = "";
     private String url = "";
+    private UserAdapter dbHelper;
+    private SimpleCursorAdapter dataAdapter;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        dbHelper = new UserAdapter(this);
+        dbHelper.open();
+
+        session = new SessionManager(this);
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -70,6 +79,8 @@ public class LoginActivity extends Activity {
     }
 
     private void initialiseOnClickListeners() {
+
+
         // Login button Click Event
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -81,7 +92,24 @@ public class LoginActivity extends Activity {
                 // Check for empty data in the form
                 if (email.trim().length() > 0 && password.trim().length() > 0) {
                     // login user
-                    checkLogin(email, password);
+                    if (dbHelper.checkLoginOffline(email, password)) {
+
+                        session.setLogin(true);
+
+
+                        Intent i = new Intent(getApplicationContext(), SummaryActivity.class);
+                        i.putExtra("email", email);
+                        startActivity(i);
+                        finish();
+
+                    } else {
+
+                        Toast.makeText(getApplicationContext(),
+                                "Wrong details.", Toast.LENGTH_LONG)
+                                .show();
+
+                    }
+                    // checkLoginOnline(email, password);
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(getApplicationContext(),
@@ -95,11 +123,15 @@ public class LoginActivity extends Activity {
         // Link to Register Screen
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
+
             public void onClick(View view) {
+
+                session.setLogin(false);
+
                 Intent i = new Intent(getApplicationContext(),
                         RegisterActivity.class);
                 startActivity(i);
-                finish();
+
             }
         });
 
@@ -107,16 +139,21 @@ public class LoginActivity extends Activity {
         btnSkipLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
+
+                session.setLogin(false);
+
                 Intent i = new Intent(getApplicationContext(),
                         SummaryActivity.class);
                 startActivity(i);
-                finish();
+
             }
         });
     }
 
     // Checks the login through SQL Database.
-    private void checkLogin(final String email, final String password) {
+    private void checkLoginOnline(final String email, final String password) {
+
+
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
@@ -140,7 +177,7 @@ public class LoginActivity extends Activity {
                     if (!error) {
                         // user successfully logged in
                         // Create login session
-                    //    session.setLogin(true);
+                        session.setLogin(true);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this, SummaryActivity.class);
@@ -184,8 +221,8 @@ public class LoginActivity extends Activity {
         };
 
         // Adding request to request queue
-    //    session.createLoginSession(email);
-    //    session.setLoginCourse("Software Systems Development");
+        //    session.createLoginSession(email);
+        //    session.setLoginCourse("Software Systems Development");
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
 //        String urlUser = "http://chrismaher.info/AndroidProjects2/user_details.php?email=" + session.getUserEmail() + "";
@@ -196,6 +233,7 @@ public class LoginActivity extends Activity {
 
 
     }
+
 
     private void showDialog() {
         if (!pDialog.isShowing())

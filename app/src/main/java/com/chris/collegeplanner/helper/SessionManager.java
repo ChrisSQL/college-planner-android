@@ -9,30 +9,25 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SessionManager {
-	// LogCat tag
-	private static String TAG = SessionManager.class.getSimpleName();
-    List<HashMap<String, String>> fillMaps;
-
-	// Shared Preferences
-	SharedPreferences pref;
-
-	Editor editor;
-	Context _context;
-
-	// Shared pref mode
-	int PRIVATE_MODE = 0;
-
-	// Shared preferences file name
-
-	private static final String PREF_NAME = "MySettings";
-	private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
-
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
     public static final String KEY_COURSE = "course";
     public static final String KEY_COLLEGE = "college";
     public static final String KEY_NAME = "name";
     public static final String KEY_PHONE = "phone";
+    private static final String PREF_NAME = "MySettings";
+
+    // Shared preferences file name
+    private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    // LogCat tag
+    private static String TAG = SessionManager.class.getSimpleName();
+    List<HashMap<String, String>> fillMaps;
+	// Shared Preferences
+	SharedPreferences pref;
+	Editor editor;
+	Context _context;
+	// Shared pref mode
+	int PRIVATE_MODE = 0;
 
 	public SessionManager(Context context) {
 		this._context = context;
@@ -53,19 +48,6 @@ public class SessionManager {
 	public boolean isLoggedIn(){
 		return pref.getBoolean(KEY_IS_LOGGEDIN, false);
 	}
-
-    public void createLoginSession(String email, String name, String phone) {
-        // Storing login value as TRUE
-        editor.putBoolean(KEY_IS_LOGGEDIN, true);
-
-        // Storing email in pref
-        editor.putString(KEY_EMAIL, email);
-        editor.putString(KEY_NAME, name);
-        editor.putString(KEY_PHONE, phone);
-
-        // commit changes
-        editor.commit();
-    }
 
     public void createLoginSession(String email) {
 

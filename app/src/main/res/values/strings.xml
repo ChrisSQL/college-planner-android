@@ -187,5 +187,6 @@
     <string name="btn_save">Save</string>
     <string name="sendList">Send list to Classmate</string>
     <string name="title_activity_view_single_project">ViewSingleProject</string>
+    <string name="title_activity_share">ShareActivity</string>
 
 </resources>

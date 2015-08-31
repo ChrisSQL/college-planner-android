@@ -29,15 +29,9 @@ public class ProjectsAdapter {
     private static final String KEY_EMAIL = "ProjectEmail";
 
     private static final String TAG = "ProjectsDbAdapter";
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
     private static final String DATABASE_NAME = "chrinrim_bbb";
     private static final String SQLITE_TABLE = "Projects";
-    private static final int DATABASE_VERSION = 1;
-
-    private final Context mCtx;
-
+    private static final int DATABASE_VERSION = 2;
     private static final String CREATE_PROJECTS_TABLE =
             "CREATE TABLE "
                     + SQLITE_TABLE + "(" +
@@ -50,28 +44,9 @@ public class ProjectsAdapter {
                     + KEY_DETAILS + " TEXT,"
                     + KEY_EMAIL + " TEXT"
                     + ")";
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            Log.w(TAG, CREATE_PROJECTS_TABLE);
-            db.execSQL(CREATE_PROJECTS_TABLE);
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
-            onCreate(db);
-        }
-    }
+    private final Context mCtx;
+    private DatabaseHelper mDbHelper;
+    private SQLiteDatabase mDb;
 
     public ProjectsAdapter(Context ctx) {
         this.mCtx = ctx;
@@ -110,6 +85,27 @@ public class ProjectsAdapter {
         mDb.insert(SQLITE_TABLE, null, values);
         mDb.close(); // Closing database connection
 
+
+    }
+
+    public int updateProject(Project project) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(project.getProjectDueDate());
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID, project.get_id()); // Email
+        values.put(KEY_SUBJECT, project.getProjectSubject()); // Email
+        values.put(KEY_TYPE, project.getProjectType()); // Email
+        values.put(KEY_TITLE, project.getProjectTitle()); // Email
+        values.put(KEY_WORTH, project.getProjectWorth()); // Email
+        values.put(KEY_DUEDATE, date); // Email
+        values.put(KEY_DETAILS, project.getProjectDetails()); // Email
+        values.put(KEY_EMAIL, project.getProjectEmail()); // Email
+
+        // updating row
+        return mDb.update(SQLITE_TABLE, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(project.get_id())});
 
     }
 
@@ -218,6 +214,7 @@ public class ProjectsAdapter {
     {
         return mDb.delete(SQLITE_TABLE, KEY_ID + "=" + id, null) > 0;
     }
+
     // Getting single contact
     public Project getProject(int id) {
 
@@ -266,6 +263,28 @@ public class ProjectsAdapter {
 
         // return contact
         return project;
+    }
+
+    private static class DatabaseHelper extends SQLiteOpenHelper {
+
+        DatabaseHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            Log.w(TAG, CREATE_PROJECTS_TABLE);
+            db.execSQL(CREATE_PROJECTS_TABLE);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+                    + newVersion + ", which will destroy all old data");
+            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
+            onCreate(db);
+        }
     }
 }
 

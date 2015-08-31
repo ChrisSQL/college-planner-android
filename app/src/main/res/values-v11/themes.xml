@@ -6,6 +6,11 @@
         <item name="colorAccent">@color/green2</item>
         <item name="windowActionBar">true</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:popupBackground">#ff000000</item>
+    </style>
+
+    <style name="AppTheme.Base.PopupMenu" parent="@style/Theme.AppCompat">
+        <item name="android:popupBackground">#ff000000</item>
     </style>
 
     <color name="red">#CC0000</color>

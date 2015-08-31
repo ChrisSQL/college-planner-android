@@ -10,8 +10,13 @@
         <item name="colorPrimaryDark">@color/green1</item>
         <item name="colorAccent">@color/green2</item>
         <item name="windowActionBar">true</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <!--<item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>-->
+        <!--<item name="android:actionMenuTextColor">#ff000000</item>-->
+        <!--<item name="textAppearanceLargePopupMenu">@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large</item>-->
+        <!--<item name="textAppearanceSmallPopupMenu">@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small</item>-->
+        <!--<item name="android:popupBackground">#ff000000</item>-->
     </style>
+
 
     <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
         <item name="colorPrimary">@color/green1</item>
@@ -21,6 +26,7 @@
         <item name="android:windowBackground">@null</item>
         <item name="metaButtonBarStyle">@style/ButtonBar</item>
         <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
+        <item name="android:actionMenuTextColor">#ff000000</item>
     </style>
 
     <color name="red">#CC0000</color>

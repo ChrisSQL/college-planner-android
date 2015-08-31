@@ -7,35 +7,47 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.chris.collegeplanner.R;
-//import com.chris.collegeplanner.helper.JSONParser;
+import com.chris.collegeplanner.adapters.ProjectsAdapter;
 import com.chris.collegeplanner.helper.SessionManager;
+import com.chris.collegeplanner.model.Project;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+//import com.chris.collegeplanner.helper.JSONParser;
 //import org.apache.http.NameValuePair;
 //import org.apache.http.message.BasicNameValuePair;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
-
-public class UpdateProjectActivity extends ActionBarActivity {
+public class UpdateProjectActivity extends AppCompatActivity {
 
     // single product url
     private static final String urlSingleProject = "http://chrismaher.info/AndroidProjects2/project_details_single_row.php";
 //    JSONParser jsonParser = new JSONParser();
-    String pid;
+int pid;
     // Date For DueDate
     Calendar myCalendar = Calendar.getInstance();
+    String[] projectArray;
+    Project project;
+    private SessionManager session;
+    private EditText detailsText;
+    private EditText dueDateText;
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         @Override
@@ -50,13 +62,8 @@ public class UpdateProjectActivity extends ActionBarActivity {
         }
 
     };
-    String[] projectArray;
-
-    private SessionManager session;
-    private EditText detailsText;
-    private EditText dueDateText;
     private TextView titleText;
-    private Spinner subjectSpinner;
+    private EditText subjectSpinner;
     private Spinner typeSpinner;
     private Spinner worthSpinner;
     private Button updateButton;
@@ -64,6 +71,8 @@ public class UpdateProjectActivity extends ActionBarActivity {
     private String urlUpdate = "http://chrismaher.info/AndroidProjects2/project_update.php";
     // Progress Dialog
     private ProgressDialog pDialog;
+    private ProjectsAdapter dbHelper;
+    private SimpleCursorAdapter dataAdapter;
 
     public static String toTitleCase(String givenString) {
         String[] arr = givenString.split(" ");
@@ -82,8 +91,12 @@ public class UpdateProjectActivity extends ActionBarActivity {
         setContentView(R.layout.activity_update_project);
         setTitle("Update Project");
 
+        project = new Project();
+        // Offline Projects
+        dbHelper = new ProjectsAdapter(this);
+        dbHelper.open();
         session = new SessionManager(getApplicationContext());
-        subjectSpinner = (Spinner) findViewById(R.id.SubjectSpinner);
+        subjectSpinner = (EditText) findViewById(R.id.SubjectSpinner);
         typeSpinner = (Spinner) findViewById(R.id.TypeSpinner);
         worthSpinner = (Spinner) findViewById(R.id.WorthSpinner);
         detailsText = (EditText) findViewById(R.id.DetailsText);
@@ -94,7 +107,10 @@ public class UpdateProjectActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                new UpdateProject().execute();
+                updateProject();
+                Intent i = new Intent(UpdateProjectActivity.this, SummaryActivity.class);
+                startActivity(i);
+                finish();
 
             }
         });
@@ -121,8 +137,9 @@ public class UpdateProjectActivity extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            pid = extras.getString("ProjectID");
-            getWebData();
+            pid = extras.getInt("id");
+            getOfflineProjectDetails(pid);
+            // getWebData();
            // Toast.makeText(getApplicationContext(), "ID :  " + pid, Toast.LENGTH_LONG).show();
         }
 
@@ -130,9 +147,9 @@ public class UpdateProjectActivity extends ActionBarActivity {
 
     private void getWebData() {
 
-        GetProductDetails task = new GetProductDetails();
-        // passes values for the urls string array
-        task.execute(new String[]{urlSingleProject});
+//        GetProductDetails task = new GetProductDetails();
+//        // passes values for the urls string array
+//        task.execute(new String[]{urlSingleProject});
 
 
     }
@@ -161,9 +178,66 @@ public class UpdateProjectActivity extends ActionBarActivity {
 
     private void updateLabel() {
 
-        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         dueDateText.setText(sdf.format(myCalendar.getTime()));
+
+        String localDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(myCalendar.getTime());
+        dueDateText.setText(localDateString);
+    }
+
+    private void getOfflineProjectDetails(int id) {
+
+
+        project = dbHelper.getProject(Integer.valueOf(id));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(project.getProjectDueDate());
+
+        subjectSpinner.setText(project.getProjectSubject());
+        typeSpinner.setSelection(getIndex(typeSpinner, project.getProjectType()));
+        worthSpinner.setSelection(getIndex(worthSpinner, project.getProjectWorth()));
+        detailsText.setText(project.getProjectDetails());
+        titleText.setText(project.getProjectTitle());
+        dueDateText.setText(date);
+
+
+    }
+
+    //private method of your class
+    private int getIndex(Spinner spinner, String myString) {
+        int index = 0;
+
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    private void updateProject() {
+
+        project = new Project();
+
+        project.set_id(pid);
+        project.setProjectSubject(subjectSpinner.getText().toString());
+        project.setProjectType(typeSpinner.getSelectedItem().toString());
+        project.setProjectTitle(titleText.getText().toString());
+        project.setProjectWorth(worthSpinner.getSelectedItem().toString());
+        project.setProjectDetails(detailsText.getText().toString());
+        project.setProjectDueDate(new Date());
+        try {
+            project.setProjectDueDate(dueDateText.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("PROJECT", project.toString());
+
+        dbHelper.updateProject(project);
+
     }
 
     /**
@@ -369,4 +443,6 @@ public class UpdateProjectActivity extends ActionBarActivity {
         }
 
     }
+
+
 }

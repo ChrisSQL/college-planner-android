@@ -3,8 +3,8 @@ package com.chris.collegeplanner.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SimpleCursorAdapter;
@@ -17,7 +17,6 @@ import com.chris.collegeplanner.model.Project;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,22 +24,18 @@ import java.util.List;
 
 public class ViewSingleProject extends AppCompatActivity {
 
+    private static final String TAG = ViewSingleProject.class.getSimpleName();
+    List<HashMap<String, String>> fillMaps;
     private int id;
-
     private TextView subjectSpinner;
     private TextView typeSpinner;
     private TextView titleText;
     private TextView worthText;
     private TextView detailsText;
     private TextView dueDateText;
-
-    List<HashMap<String, String>> fillMaps;
     private ProjectsAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
-
     private Project project;
-
-    private static final String TAG = ViewSingleProject.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +65,6 @@ public class ViewSingleProject extends AppCompatActivity {
     private void getOfflineProjectDetails() {
 
 
-
         project = dbHelper.getProject(id);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -81,7 +75,6 @@ public class ViewSingleProject extends AppCompatActivity {
             days = "-";
 
         }
-
 
         subjectSpinner.setText(project.getProjectSubject());
         typeSpinner.setText(project.getProjectType());
@@ -136,13 +129,13 @@ public class ViewSingleProject extends AppCompatActivity {
         final int idIn = id;
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Write your message here.");
+        builder1.setMessage("Are you sure?.");
         builder1.setCancelable(true);
         builder1.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        dbHelper.deleteTitle(idIn+"");
+                        dbHelper.deleteTitle(idIn + "");
                         // Launching the login activity
                         Intent intent = new Intent(ViewSingleProject.this, SummaryActivity.class);
                         startActivity(intent);
@@ -161,7 +154,13 @@ public class ViewSingleProject extends AppCompatActivity {
 
     }
 
+    public void updateProject(MenuItem item) {
 
+        Intent intent = new Intent(ViewSingleProject.this, UpdateProjectActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+        finish();
 
+    }
 }
 
