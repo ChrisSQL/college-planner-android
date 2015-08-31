@@ -1,6 +1,8 @@
 package com.chris.collegeplanner.activity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,13 +23,16 @@ import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.ProjectsAdapter;
+import com.chris.collegeplanner.helper.IcsCalendarHelper;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Project;
+import com.chris.collegeplanner.reminders.AlarmReceiver;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,6 +54,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
     String details;
     String dueDate;
     String extraEmail;
+    IcsCalendarHelper icsCalendarHelper;
     private SessionManager session;
     private EditText detailsText;
     private EditText dueDateText;
@@ -66,12 +72,14 @@ public class AddNewProjectActivity extends ActionBarActivity {
         }
 
     };
+
+
     private TextView titleText;
     private AutoCompleteTextView subjectSpinner;
     private Spinner typeSpinner;
     private Spinner worthSpinner;
     private Button saveButton2, backButton, selectDateButton;
-  //  AutoCompleteTextView subject;
+    //  AutoCompleteTextView subject;
     private String urlUpload = "http://chrismaher.info/AndroidProjects2/project_upload.php";
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -93,6 +101,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
         dbHelper.open();
 
         getExtras(savedInstanceState);
+        IcsCalendarHelper.initActivityObj(this);
         projectsAdapter = new ProjectsAdapter(getApplicationContext());
         project = new Project();
         subject = (AutoCompleteTextView) findViewById(R.id.SubjectSpinner);
@@ -133,12 +142,6 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
                     } else {
 
-                        try {
-                            scheduleAlarm();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
                         type = typeSpinner.getSelectedItem().toString();
                         title = titleText.getText().toString();
                         worth = worthSpinner.getSelectedItem().toString();
@@ -163,6 +166,10 @@ public class AddNewProjectActivity extends ActionBarActivity {
                         dbHelper.createProject(project);
                         dbHelper.close();
 
+                        setCalendarReminder();
+
+                        scheduleAlarm();
+
                         Intent intent = new Intent(AddNewProjectActivity.this, SummaryActivity.class);
                         startActivity(intent);
                         finish();
@@ -175,7 +182,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
                 }
 
-              //  subject = subjectSpinner.getText().toString();
+                //  subject = subjectSpinner.getText().toString();
                 type = typeSpinner.getSelectedItem().toString();
                 title = titleText.getText().toString();
                 worth = worthSpinner.getSelectedItem().toString();
@@ -196,10 +203,11 @@ public class AddNewProjectActivity extends ActionBarActivity {
             }
         });
 
-    //    getWebData();
+        //    getWebData();
 
 
     }
+
 
     private void getExtras(Bundle savedInstanceState) {
 
@@ -255,37 +263,76 @@ public class AddNewProjectActivity extends ActionBarActivity {
         dueDateText.setText(sdf.format(myCalendar.getTime()));
 
     }
-    // Schedules the Alarm after Project is entered
-    public void scheduleAlarm() throws ParseException {
 
-//        // Get date in milliseconds
-//
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String dateInString = dueDateText.getText().toString();
-//        Date date = sdf.parse(dateInString);
-//        //  Toast.makeText(this, dateInString, Toast.LENGTH_LONG).show();
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//
-//        // Send Message 48 hours before Due Date
-//        Long time = (calendar.getTimeInMillis()) - (86400000 + 86400000);
-//
-//        Intent intentAlarm = new Intent(this, AlarmReceiver.class);
-//        intentAlarm.putExtra("Subject", subjectSpinner.getText().toString());
-//        intentAlarm.putExtra("Title", titleText.getText().toString());
-//        intentAlarm.putExtra("PhoneNumber", session.getUserPhone());
-//
-//        // create the object
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//
-//        //set the alarm for particular time
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-//        Toast.makeText(this, "Project Reminder Added", Toast.LENGTH_SHORT).show();
+    // Schedules the Alarm after Project is entered
+    public void scheduleAlarm() {
+
+        // Get date in milliseconds
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateInString = dueDateText.getText().toString();
+        Date date = null;
+        try {
+            date = sdf.parse(dateInString);
+
+            //  Toast.makeText(this, dateInString, Toast.LENGTH_LONG).show();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            // Send Message 48 hours before Due Date
+            Long time = (calendar.getTimeInMillis()) - (86400000 + 86400000);
+
+            Intent intentAlarm = new Intent(this, AlarmReceiver.class);
+            intentAlarm.putExtra("Subject", subjectSpinner.getText().toString());
+            intentAlarm.putExtra("Title", titleText.getText().toString());
+
+            // create the object
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            //set the alarm for particular time
+            alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+            Toast.makeText(this, "Project Reminder Added", Toast.LENGTH_SHORT).show();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
-    // Background task to Enter Details into Database
 
+    private void setCalendarReminder() {
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateInString = dueDateText.getText().toString();
+        Date date = null;
+        try {
+            date = sdf.parse(dateInString);
+
+            //  Toast.makeText(this, dateInString, Toast.LENGTH_LONG).show();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            // Send Message 48 hours before Due Date
+            Long time = (calendar.getTimeInMillis()) - (86400000 + 86400000);
+
+            IcsCalendarHelper.IcsMakeNewCalendarEntry(
+                    title,
+                    details + " - Reminder set by the College Planner App",
+                    "College",
+                    time,
+                    time + 10000,
+                    1,
+                    1,
+                    1,
+                    20);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
