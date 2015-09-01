@@ -5,31 +5,32 @@ package com.chris.collegeplanner.model;
  */
 public class TimeTable {
 
-    int TimeTableID;
-    String image;
+    int _id;
+    String TimetableURL;
 
-    public TimeTable(int projectID, String image) {
-        this.TimeTableID = projectID;
-        this.image = image;
+    public TimeTable(int _id, String timetableURL) {
+        this._id = _id;
+        TimetableURL = timetableURL;
     }
 
     public TimeTable() {
 
+
     }
 
-    public int getTimeTableID() {
-        return TimeTableID;
+    public int get_id() {
+        return _id;
     }
 
-    public void setTimeTableID(int timeTableID) {
-        this.TimeTableID = timeTableID;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
-    public String getImage() {
-        return image;
+    public String getTimetableURL() {
+        return TimetableURL;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setTimetableURL(String timetableURL) {
+        TimetableURL = timetableURL;
     }
 }

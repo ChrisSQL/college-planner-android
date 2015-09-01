@@ -23,7 +23,7 @@ public class UserAdapter {
     private static final String TAG = "UserDbAdapter";
     private static final String DATABASE_NAME = "chrinrim_bbb";
     private static final String SQLITE_TABLE = "Users";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String CREATE_USERS_TABLE =
             "CREATE TABLE "
                     + SQLITE_TABLE + "(" +
@@ -31,7 +31,7 @@ public class UserAdapter {
                     + KEY_EMAIL + " TEXT,"
                     + KEY_PASSWORD + " TEXT,"
                     + KEY_NAME + " TEXT,"
-                    + KEY_REGISTRATION_DATE + " TEXT "
+                    + KEY_REGISTRATION_DATE + " TEXTz "
 
                     + ")";
     private final Context mCtx;

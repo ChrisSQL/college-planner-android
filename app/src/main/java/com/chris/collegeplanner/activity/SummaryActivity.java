@@ -6,11 +6,13 @@ package com.chris.collegeplanner.activity;
 // If logged out just get projects from SQLIte
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -22,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -105,6 +108,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_summary);
 
         ShortcutIcon();
+        //    onCoachMark();
 
         // Setup User
         user = new User();
@@ -258,7 +262,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     // Launches The TimeTable Screen
     public void launchSchedule(MenuItem item) {
 
-        Intent intent = new Intent(SummaryActivity.this, TimeTableActivity.class);
+        Intent intent = new Intent(SummaryActivity.this, TimeTableWebView.class);
         startActivity(intent);
 
     }
@@ -709,6 +713,23 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         getApplicationContext().sendBroadcast(addIntent);
     }
 
+    public void onCoachMark() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.coach_mark);
+        dialog.setCanceledOnTouchOutside(true);
+        //for dismissing anywhere you touch
+        View masterView = dialog.findViewById(R.id.coach_mark_master_view);
+        masterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
 }// Main Program Ends..
 

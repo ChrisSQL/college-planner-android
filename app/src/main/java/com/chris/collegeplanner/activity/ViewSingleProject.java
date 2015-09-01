@@ -17,10 +17,12 @@ import com.chris.collegeplanner.model.Project;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ViewSingleProject extends AppCompatActivity {
 
@@ -32,7 +34,7 @@ public class ViewSingleProject extends AppCompatActivity {
     private TextView titleText;
     private TextView worthText;
     private TextView detailsText;
-    private TextView dueDateText;
+    private TextView dueDateText, dueDateText2;
     private ProjectsAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private Project project;
@@ -56,6 +58,7 @@ public class ViewSingleProject extends AppCompatActivity {
         detailsText = (TextView) findViewById(R.id.detailsTextSingleProject);
         titleText = (TextView) findViewById(R.id.titleTextSingleProject);
         dueDateText = (TextView) findViewById(R.id.dueDateTextSingleProject);
+        dueDateText2 = (TextView) findViewById(R.id.DueDateTextSingleProject2);
 
         getOfflineProjectDetails();
 
@@ -76,12 +79,17 @@ public class ViewSingleProject extends AppCompatActivity {
 
         }
 
+        DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        String formattedDate = f.format(project.getProjectDueDate());
+
+
         subjectSpinner.setText(project.getProjectSubject());
         typeSpinner.setText(project.getProjectType());
         worthText.setText(project.getProjectWorth());
         detailsText.setText(project.getProjectDetails());
         titleText.setText(project.getProjectTitle());
         dueDateText.setText(days);
+        dueDateText2.setText(formattedDate);
 
     }
 
@@ -162,5 +170,7 @@ public class ViewSingleProject extends AppCompatActivity {
         finish();
 
     }
+
+
 }
 

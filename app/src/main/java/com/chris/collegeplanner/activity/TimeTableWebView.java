@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
@@ -16,15 +17,36 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
+import com.chris.collegeplanner.adapters.TimeTableAdapter;
+import com.chris.collegeplanner.model.TimeTable;
 
 public class TimeTableWebView extends ActionBarActivity {
 
     WebView webview;
     String imageURL = "";
     SharedPreferences preferences;
+    private String selectedImagePath;
+    private String htmlImagePath;
+
+    private TimeTableAdapter dbHelper;
+    private SimpleCursorAdapter dataAdapter;
+
+    private TimeTable timetable;
+
+    private static String getScreenResolution(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+
+        return "" + width + " x " + height + "";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +54,37 @@ public class TimeTableWebView extends ActionBarActivity {
         setContentView(R.layout.activity_time_table_web_view);
         setTitle("TimeTable");
 
+        timetable = new TimeTable();
+
+        dbHelper = new TimeTableAdapter(this);
+        dbHelper.open();
+
         webview = (WebView) findViewById(R.id.webView);
         webview.setBackgroundColor(0);
-
         webview.getSettings().setSupportZoom(true);
         webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setUseWideViewPort(true);
+        webview.getSettings().setDisplayZoomControls(true);
+        webview.setInitialScale(2);
+        //    Toast.makeText(getApplicationContext(), "URL - " + timetable.getTimetableURL(), Toast.LENGTH_LONG).show();
 
-        // Set Webview Image to a SharedPreference Option.
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        imageURL = preferences.getString("imageURL","");
+        if (dbHelper.exists(1)) {
+
+            timetable = dbHelper.getTimeTable(1);
+            webview.loadDataWithBaseURL("", timetable.getTimetableURL(), "text/html", "utf-8", "");
+
+        } else {
+
+            timetable.set_id(1);
+            timetable.setTimetableURL("Add an image of your timetable from the gallery.");
+
+            webview.loadUrl("file:///android_asset/webview.html");
+
+        }
+
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,7 +116,7 @@ public class TimeTableWebView extends ActionBarActivity {
         final CharSequence[] options = {"Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(TimeTableWebView.this);
-        builder.setTitle("Add New Timetable");
+        builder.setTitle("Add New TimeTable");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -113,31 +153,54 @@ public class TimeTableWebView extends ActionBarActivity {
 
             } else if (requestCode == 2) {
 
-
+                Uri selectedImageUri = data.getData();
+                selectedImagePath = getPath(selectedImageUri);
 
                 Toast.makeText(getApplicationContext(), "Gallery Image Selected", Toast.LENGTH_LONG).show();
 
-                // Set SharedPreference ImageURL to Image URL
+                //////////////////////////////////////////////
+                //   String base = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+                String imagePath = "file://" + selectedImagePath;
+                htmlImagePath = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
+                webview.loadDataWithBaseURL("", htmlImagePath, "text/html", "utf-8", "");
+                //////////////////////////////////////////////
 
-                String selectedImageURL = "";
-
-
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("ImageURL",selectedImageURL);
-                editor.apply();
+                saveImagePathToDatabase(htmlImagePath);
 
             }
         }
     }
 
-    private static String getScreenResolution(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
+    private void saveImagePathToDatabase(String htmlImagePath) {
 
-        return "" + width + " x " + height + "";
+        timetable.set_id(1);
+        timetable.setTimetableURL(htmlImagePath);
+
+        if (dbHelper.exists(timetable.get_id())) {
+            dbHelper.updateTimeTable(timetable);
+        } else {
+            dbHelper.createTimeTable(1, timetable.getTimetableURL());
+        }
+
+    }
+
+    public String getPath(Uri uri) {
+        // just some safety built in
+        if (uri == null) {
+            // TODO perform some logging or show user feedback
+            return null;
+        }
+        // try to retrieve the image from the media store first
+        // this will only work for images selected from gallery
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        // this is our fallback here
+        return uri.getPath();
     }
 }

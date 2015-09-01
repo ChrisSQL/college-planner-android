@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:columnCount="2"
             android:padding="5dp"
-            android:rowCount="5">
+            android:rowCount="6">
 
             <TextView
                 android:id="@+id/t1"
@@ -181,6 +181,33 @@
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/t6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnWeight="10"
+                android:layout_row="5"
+                android:layout_rowWeight="50"
+                android:gravity="left|center"
+                android:padding="3dp"
+                android:text="Date Due :"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/DueDateTextSingleProject2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnWeight="50"
+                android:layout_row="5"
+                android:gravity="left|center"
+                android:padding="3dp"
+                android:text="Medium Text"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </GridLayout>
 
     </LinearLayout>
@@ -193,7 +220,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout2"
+        android:cursorVisible="true"
         android:ems="10"
+        android:focusable="false"
         android:gravity="top|left"
         android:hint="Details..."
         android:inputType="none"

@@ -9,7 +9,7 @@ public class User {
 
     int id;
     Date registrationDate;
-        private String name, email, password, salt, course;
+    private String name, email, password, salt, course;
 
     public User(String name, String email, String password, String salt, String course, int id, Date registrationDate) {
         this.name = name;

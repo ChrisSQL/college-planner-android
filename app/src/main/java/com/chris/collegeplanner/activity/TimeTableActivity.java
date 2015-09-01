@@ -56,6 +56,23 @@ public class TimeTableActivity extends Activity {
 
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final boolean TOGGLE_ON_CLICK = true;
+    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
+    ImageView img;
+    Bitmap bitmap;
+    Button addNewButton;
+    ImageView viewImage;
+    Handler mHideHandler = new Handler();
+    /**
+     * The instance of the {@link SystemUiHider} for this activity.
+     */
+    private SystemUiHider mSystemUiHider;
+    Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mSystemUiHider.hide();
+        }
+    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -70,25 +87,6 @@ public class TimeTableActivity extends Activity {
             return false;
         }
     };
-
-    private static final boolean TOGGLE_ON_CLICK = true;
-    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-    ImageView img;
-    Bitmap bitmap;
-
-    Button addNewButton;
-    ImageView viewImage;
-    Handler mHideHandler = new Handler();
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mSystemUiHider.hide();
-        }
-    };
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    private SystemUiHider mSystemUiHider;
 
     /**
      * Rotate an image if required.
@@ -466,7 +464,7 @@ public class TimeTableActivity extends Activity {
         final CharSequence[] options = {"Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(TimeTableActivity.this);
-        builder.setTitle("Add New Timetable");
+        builder.setTitle("Add New TimeTable");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {

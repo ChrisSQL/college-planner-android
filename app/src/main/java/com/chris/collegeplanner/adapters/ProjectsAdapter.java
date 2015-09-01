@@ -31,7 +31,7 @@ public class ProjectsAdapter {
     private static final String TAG = "ProjectsDbAdapter";
     private static final String DATABASE_NAME = "chrinrim_bbb";
     private static final String SQLITE_TABLE = "Projects";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String CREATE_PROJECTS_TABLE =
             "CREATE TABLE "
                     + SQLITE_TABLE + "(" +
@@ -187,7 +187,7 @@ public class ProjectsAdapter {
                         KEY_DUEDATE,
                         KEY_DETAILS,
                         KEY_EMAIL},
-                null, null, null, null, null, null);
+                null, null, null, null, KEY_DUEDATE + " ASC", null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
