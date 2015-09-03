@@ -25,104 +25,104 @@
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
-            android:text="Subject 1" />
+            android:text="Subject 1"
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 2"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 3"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 4"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 5"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 6"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 7"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 8"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <AutoCompleteTextView
             android:id="@+id/subject9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:background="#ffffffff"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
             android:text="Subject 9"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/input_register" />
 
         <Button
             android:id="@+id/btnContinue2"

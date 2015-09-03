@@ -6,15 +6,6 @@ import android.widget.TextView;
 
 //import org.apache.http.HttpResponse;
 
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-
 public class SignInActivity extends AsyncTask<String,Void,String>{
 
     private TextView statusField,roleField;

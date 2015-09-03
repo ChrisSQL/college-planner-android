@@ -32,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver
         // Setup Notification Details.
 
         NotificationManager mNM;
-        mNM = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
+        mNM = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Set the icon, scrolling text and timestamp
         Notification notification = new Notification(R.drawable.ic_launcher, intent.getStringExtra("Title")+" Due Soon",
                 System.currentTimeMillis());

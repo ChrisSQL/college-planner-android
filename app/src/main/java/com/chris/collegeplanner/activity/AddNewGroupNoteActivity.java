@@ -21,7 +21,6 @@ import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Subject;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,21 +40,17 @@ import java.util.Map;
 public class AddNewGroupNoteActivity extends ActionBarActivity {
 
 
-    private SessionManager session;
-    private EditText detailsText;
-
-    private Button saveButton2;
+    private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
     List<String> subjectsArray = new ArrayList<>();
     AutoCompleteTextView subjectGroupText;
+    List<HashMap<String, String>> fillSubjectsArray;
+    String subject, details, projectEmail, groupNoteCourse, date;
+    private SessionManager session;
+    private EditText detailsText;
+    private Button saveButton2;
     private String urlUpload = "http://chrismaher.info/AndroidProjects2/group_note_upload.php";
-    private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
     // Progress Dialog
     private ProgressDialog pDialog;
-    List<HashMap<String, String>> fillSubjectsArray;
-
-    String subject, details, projectEmail, groupNoteCourse, date;
-
-
     // This is the date picker used to select the date for our notification
     private DatePicker picker;
 
@@ -155,7 +150,7 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
     private void getWebData() {
 
         addSubjectsToListBackgroundTask task = new addSubjectsToListBackgroundTask();
-        task.execute(new String[]{subjectsURL});
+        task.execute(subjectsURL);
 
     }
 
@@ -254,8 +249,6 @@ public class AddNewGroupNoteActivity extends ActionBarActivity {
 
 
         }
-
-        ;
 
 
     }

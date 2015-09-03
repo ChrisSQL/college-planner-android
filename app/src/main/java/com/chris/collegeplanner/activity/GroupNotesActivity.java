@@ -25,7 +25,6 @@ import com.chris.collegeplanner.model.GroupNote;
 import com.chris.collegeplanner.model.User;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
-//import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,20 +40,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//import org.apache.http.HttpResponse;
+
 public class GroupNotesActivity extends AppCompatActivity {
 
+    public static final String MyPREFERENCES = "MySettings";
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     private static String url = "";
     List<HashMap<String, String>> fillMaps;
-    private int id = 0;
     SimpleAdapter adapter;
     AlphaInAnimationAdapter animationAdapter;
     ListView list;
+    private int id = 0;
     private SQLiteHandler db;
     private SessionManager session;
-    public static final String MyPREFERENCES = "MySettings";
     private ProgressDialog pDialog;
     private User user;
-    private static final String TAG = RegisterActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -379,8 +380,6 @@ public class GroupNotesActivity extends AppCompatActivity {
 
 
         }
-
-        ;
 
 
     }

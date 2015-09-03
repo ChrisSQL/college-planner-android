@@ -6,119 +6,131 @@
     android:paddingBottom="5dp"
     android:paddingTop="20dp">
 
-    <RelativeLayout
-        android:id="@+id/RelBackGround"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="0dp"
-        android:background="#ffffffff"
-        android:padding="10dp"
-        >
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/SubjectTextList"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="0dp"
+            android:background="#008D7F" />
+
+        <RelativeLayout
+            android:id="@+id/RelBackGround"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_column="1"
-            android:layout_row="0"
-            android:focusable="false"
-            android:padding="2dp"
-            android:text="Subject"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#ff000000"
-            android:textStyle="bold" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="0dp"
+            android:background="#ffffffff"
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/DueDateTextList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_column="6"
-            android:layout_row="0"
-            android:focusable="false"
-            android:padding="10dp"
-            android:text="Due"
-            android:textAlignment="gravity"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ff000000"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/SubjectTextList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_column="1"
+                android:layout_row="0"
+                android:focusable="false"
+                android:padding="2dp"
+                android:text="Subject"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ff000000"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/ProjectTitleTextList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="false"
-            android:layout_below="@+id/SubjectTextList"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:capitalize="words"
-            android:focusable="false"
-            android:padding="2dp"
-            android:text="Project Title"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#008D7F" />
+            <TextView
+                android:id="@+id/DueDateTextList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_column="6"
+                android:layout_row="0"
+                android:focusable="false"
+                android:padding="10dp"
+                android:text="Due"
+                android:textAlignment="gravity"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ff000000"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/IdText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/ProjectTitleTextList"
-            android:layout_toEndOf="@+id/ProjectTitleTextList"
-            android:focusable="false"
-            android:padding="2dp"
-            android:text="11"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold"
-            android:visibility="invisible" />
+            <TextView
+                android:id="@+id/ProjectTitleTextList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/SubjectTextList"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:capitalize="words"
+                android:focusable="false"
+                android:padding="2dp"
+                android:text="Project Title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#008D7F" />
 
-        <TextView
-            android:id="@+id/WorthText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/ProjectTitleTextList"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/SubjectTextList"
-            android:focusable="false"
-            android:padding="2dp"
-            android:text="Worth"
-            android:textAlignment="textEnd"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#ff000000"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/IdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ProjectTitleTextList"
+                android:layout_toEndOf="@+id/ProjectTitleTextList"
+                android:focusable="false"
+                android:padding="2dp"
+                android:text="11"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
-        <TextView
-            android:id="@+id/DetailsTextList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ProjectTitleTextList"
-            android:focusable="false"
-            android:maxLines="1"
-            android:padding="2dp"
-            android:scrollbars = "vertical"
-            android:text="Details scrolling text will go here."
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#ff000000" />
+            <TextView
+                android:id="@+id/WorthText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/ProjectTitleTextList"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/SubjectTextList"
+                android:focusable="false"
+                android:padding="2dp"
+                android:text="Worth"
+                android:textAlignment="textEnd"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ff000000"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/daysText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/DueDateTextList"
-            android:layout_alignStart="@+id/DueDateTextList"
-            android:layout_alignTop="@+id/DetailsTextList"
-            android:gravity="center"
-            android:text="days"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#a1a1a1"
-            android:textSize="7dp" />
+            <TextView
+                android:id="@+id/DetailsTextList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/ProjectTitleTextList"
+                android:focusable="false"
+                android:maxLines="1"
+                android:padding="2dp"
+                android:scrollbars="vertical"
+                android:text="Details scrolling text will go here."
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ff000000" />
 
-        <!--<ImageButton-->
+            <TextView
+                android:id="@+id/daysText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/DueDateTextList"
+                android:layout_alignStart="@+id/DueDateTextList"
+                android:layout_alignTop="@+id/DetailsTextList"
+                android:gravity="center"
+                android:text="days"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#a1a1a1"
+                android:textSize="7dp" />
+
+            <!--<ImageButton-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:id="@+id/imageButton"-->
@@ -128,5 +140,7 @@
             <!--android:layout_alignEnd="@+id/BBB"
               android:focusable="false"/>-->
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>

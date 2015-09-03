@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -148,12 +149,19 @@ public class AddNewProjectActivity extends ActionBarActivity {
                         details = detailsText.getText().toString();
                         dueDate = dueDateText.getText().toString();
 
+                        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                        String email = prefs.getString("email", null);
+                        if (email != null) {
+                            project.setProjectEmail(email);
+                        }
+
                         project.set_id(0);
                         project.setProjectSubject(subjectSpinner.getText().toString());
                         project.setProjectType(typeSpinner.getSelectedItem().toString());
                         project.setProjectTitle(titleText.getText().toString());
                         project.setProjectWorth(worthSpinner.getSelectedItem().toString());
                         project.setProjectDetails(detailsText.getText().toString());
+
 
                         try {
                             project.setProjectDueDate(dueDateText.getText().toString());

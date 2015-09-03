@@ -5,10 +5,10 @@
 
         android:id="@+id/action_cart"
         android:icon="@drawable/timetable_icon"
+        android:onClick="launchSchedule"
         android:orderInCategory="100"
-        yourapp:showAsAction="always"
         android:title="TimeTable"
-        android:onClick="launchSchedule"/>
+        yourapp:showAsAction="always" />
 
     <!--<item-->
 
@@ -23,9 +23,9 @@
 
         android:id="@+id/action_add_new"
         android:icon="@drawable/green_add_icon_fixed"
+        android:onClick="addNewProject"
         android:orderInCategory="102"
-        yourapp:showAsAction="always"
         android:title="TimeTable"
-        android:onClick="addNewProject"/>
+        yourapp:showAsAction="always" />
 
 </menu>

@@ -20,18 +20,6 @@ public class Project {
     private String projectDetails;
     private String projectEmail;
 
-    public void setProjectDueDate(Date projectDueDate) {
-        this.projectDueDate = projectDueDate;
-    }
-
-    public String getProjectEmail() {
-        return projectEmail;
-    }
-
-    public void setProjectEmail(String projectEmail) {
-        this.projectEmail = projectEmail;
-    }
-
     public Project(int _id, String projectSubject, String projectType, String projectTitle, String projectWorth, Date projectDueDate, String projectDetails, String projectEmail) {
         this._id = _id;
         this.projectSubject = projectSubject;
@@ -45,6 +33,18 @@ public class Project {
 
     public Project(){
 
+    }
+
+    public void setProjectDueDate(Date projectDueDate) {
+        this.projectDueDate = projectDueDate;
+    }
+
+    public String getProjectEmail() {
+        return projectEmail;
+    }
+
+    public void setProjectEmail(String projectEmail) {
+        this.projectEmail = projectEmail;
     }
 
     public int get_id() {

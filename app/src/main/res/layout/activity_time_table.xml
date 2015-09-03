@@ -10,20 +10,22 @@
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        android:textColor="#33b5e5"
-        android:textStyle="bold"
-        android:textSize="50sp"
         android:gravity="center"
+        android:keepScreenOn="true"
+        android:src="@drawable/aaa"
         android:text="@string/dummy_content"
-        android:src="@drawable/aaa"/>
+        android:textColor="#33b5e5"
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
-        android:fitsSystemWindows="true"
-        android:id="@+id/qqq">
+    <FrameLayout
+        android:id="@+id/qqq"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fitsSystemWindows="true">
 
         <LinearLayout android:id="@+id/fullscreen_content_controls" style="?metaButtonBarStyle"
             android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -37,8 +39,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/add_new_timetable_string"
-                android:onClick="changeTimetable"/>
+                android:onClick="changeTimetable"
+                android:text="@string/add_new_timetable_string" />
 
         </LinearLayout>
 

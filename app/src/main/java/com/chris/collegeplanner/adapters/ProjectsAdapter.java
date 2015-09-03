@@ -123,12 +123,12 @@ public class ProjectsAdapter {
         Cursor mCursor = null;
         if (inputText == null || inputText.length() == 0) {
             mCursor = mDb.query(SQLITE_TABLE, new String[]{
-                            KEY_SUBJECT, KEY_TYPE, KEY_TITLE, KEY_WORTH, KEY_DUEDATE, KEY_DETAILS},
+                            KEY_SUBJECT, KEY_TYPE, KEY_TITLE, KEY_WORTH, KEY_DUEDATE, KEY_DETAILS, KEY_EMAIL},
                     null, null, null, null, null, null);
 
         } else {
             mCursor = mDb.query(true, SQLITE_TABLE, new String[]{
-                            KEY_SUBJECT, KEY_TYPE, KEY_TITLE, KEY_WORTH, KEY_DUEDATE, KEY_DETAILS},
+                            KEY_SUBJECT, KEY_TYPE, KEY_TITLE, KEY_WORTH, KEY_DUEDATE, KEY_DETAILS, KEY_EMAIL},
                     KEY_TITLE + " like '%" + inputText + "%'", null, null, null, null, null, null);
         }
         if (mCursor != null) {
@@ -138,7 +138,7 @@ public class ProjectsAdapter {
 
     }
 
-    public Cursor fetchProjectsByID(String inputText) throws SQLException {
+    public Cursor fetchProjectsByEmail(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
         if (inputText == null || inputText.length() == 0) {
@@ -149,7 +149,7 @@ public class ProjectsAdapter {
         } else {
             mCursor = mDb.query(true, SQLITE_TABLE, new String[]{
                             KEY_ID, KEY_SUBJECT, KEY_TYPE, KEY_TITLE, KEY_WORTH, KEY_DUEDATE, KEY_DETAILS, KEY_EMAIL},
-                    KEY_ID + " = " + inputText + " ", null, null, null, null, null, null);
+                    KEY_EMAIL + " = " + inputText + " ", null, null, null, null, null, null);
         }
         if (mCursor != null) {
             mCursor.moveToFirst();

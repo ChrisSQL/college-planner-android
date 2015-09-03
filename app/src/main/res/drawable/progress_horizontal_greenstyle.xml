@@ -23,13 +23,15 @@
           android:drawable="@drawable/progress_bg_greenstyle" />
 
     <item android:id="@android:id/secondaryProgress">
-        <scale android:scaleWidth="100%"
-               android:drawable="@drawable/progress_secondary_greenstyle" />
+        <scale
+            android:drawable="@drawable/progress_secondary_greenstyle"
+            android:scaleWidth="100%" />
     </item>
 
     <item android:id="@android:id/progress">
-        <scale android:scaleWidth="100%"
-               android:drawable="@drawable/progress_primary_greenstyle" />
+        <scale
+            android:drawable="@drawable/progress_primary_greenstyle"
+            android:scaleWidth="100%" />
     </item>
 
 </layer-list>

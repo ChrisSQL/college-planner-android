@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelLayoutAddNotes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#ffffffff"
-    android:id="@+id/RelLayoutAddNotes">
+    android:orientation="vertical">
 
     <Button
+        android:id="@+id/addProjectGroupNoteButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Course Group Note"
-        android:id="@+id/addProjectGroupNoteButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="addGroupNote"/>
+        android:onClick="addGroupNote"
+        android:text="Add Course Group Note" />
 
     <ListView
+        android:id="@+id/groupNotesListView"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:id="@+id/groupNotesListView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

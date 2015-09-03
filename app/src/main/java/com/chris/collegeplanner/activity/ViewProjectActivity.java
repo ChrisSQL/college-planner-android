@@ -24,22 +24,24 @@ import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.TabsPagerAdapter;
-//import com.chris.collegeplanner.helper.JSONParser;
 import com.chris.collegeplanner.helper.SQLiteHandler;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
-
-//import org.apache.http.NameValuePair;
-//import org.apache.http.message.BasicNameValuePair;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+//import com.chris.collegeplanner.helper.JSONParser;
+//import org.apache.http.NameValuePair;
+//import org.apache.http.message.BasicNameValuePair;
+
 public class ViewProjectActivity extends ActionBarActivity implements ActionBar.TabListener {
 
 
+    public static final String MyPREFERENCES = "MySettings";
     private static final String urlSingleProject = "http://chrismaher.info/AndroidProjects2/project_details_single_row.php";
+    private static String url = "";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -54,6 +56,10 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    List<HashMap<String, String>> fillMaps;
+    SimpleAdapter adapter;
+    AlphaInAnimationAdapter animationAdapter;
+    ListView list;
     private TabsPagerAdapter mAdapter;
     private ViewPager viewPager;
     private EditText detailsText;
@@ -64,15 +70,9 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
     private EditText worthSpinner;
     private ProgressDialog pDialog;
     private String[] tabs = {"Project Details"};
-    private static String url = "";
-    List<HashMap<String, String>> fillMaps;
     private int id = 0;
-    SimpleAdapter adapter;
-    AlphaInAnimationAdapter animationAdapter;
-    ListView list;
     private SQLiteHandler db;
     private SessionManager session;
-    public static final String MyPREFERENCES = "MySettings" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +189,7 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
 
         GetProductDetails task = new GetProductDetails();
         // passes values for the urls string array
-        task.execute(new String[]{urlSingleProject});
+        task.execute(urlSingleProject);
 
 //        String urlurl = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email="+session.getUserEmail()+"";
 //    //    url = "http://chrismaher.info/AndroidProjects2/project_group_notes_details.php?email=chrismaher.wit@gmail.com";
@@ -198,6 +198,13 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
 //        ReadAllProjectGroupNotesBackgroundTask task2 = new ReadAllProjectGroupNotesBackgroundTask();
 //        // passes values for the urls string array
 //        task2.execute(new String[]{url});
+
+
+    }
+
+    public void addGroupNote(View view) {
+
+        Toast.makeText(getApplicationContext(), "Clicked!!!", Toast.LENGTH_LONG).show();
 
 
     }
@@ -365,13 +372,6 @@ public class ViewProjectActivity extends ActionBarActivity implements ActionBar.
             // dismiss the dialog once got all details
             pDialog.dismiss();
         }
-    }
-
-    public void addGroupNote(View view){
-
-        Toast.makeText(getApplicationContext(), "Clicked!!!", Toast.LENGTH_LONG).show();
-
-
     }
 
 

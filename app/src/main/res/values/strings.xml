@@ -189,4 +189,8 @@
     <string name="title_activity_view_single_project">ViewSingleProject</string>
     <string name="title_activity_share">ShareActivity</string>
 
+    <!-- Button text -->
+    <string name="btn_logout_from_google">Logout from Google</string>
+    <string name="btn_revoke_access">Revoke Access</string>
+
 </resources>

@@ -96,6 +96,10 @@ public class LoginActivity extends Activity {
 
                         session.setLogin(true);
 
+                        Toast.makeText(getApplicationContext(),
+                                "Correct!", Toast.LENGTH_LONG)
+                                .show();
+
 
                         Intent i = new Intent(getApplicationContext(), SummaryActivity.class);
                         i.putExtra("email", email);

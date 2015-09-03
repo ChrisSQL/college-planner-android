@@ -15,8 +15,6 @@ import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.model.College;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
-//import org.apache.http.HttpResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +28,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//import org.apache.http.HttpResponse;
+
 public class RegisterActivityTwo extends ActionBarActivity {
 
+    private static final String collegesURL = "http://chrismaher.info/AndroidProjects2/colleges.php";
+    private static final String coursesURL = "http://chrismaher.info/AndroidProjects2/courses.php";
     AutoCompleteTextView college, course;
     InputStream is=null;
     String result=null;
@@ -40,8 +42,6 @@ public class RegisterActivityTwo extends ActionBarActivity {
     List<HashMap<String, String>> fillCollegesArray, fillCoursesArray;
     int id;
     SimpleAdapter adapter;
-    private static final String collegesURL = "http://chrismaher.info/AndroidProjects2/colleges.php";
-    private static final String coursesURL = "http://chrismaher.info/AndroidProjects2/courses.php";
     AlphaInAnimationAdapter animationAdapter;
     String[] collegeNames;
     List<String> collegesArray = new ArrayList<>();
@@ -108,10 +108,10 @@ public class RegisterActivityTwo extends ActionBarActivity {
     private void getWebData() {
 
         addCollegesToListBackgroundTask task = new addCollegesToListBackgroundTask();
-        task.execute(new String[]{collegesURL});
+        task.execute(collegesURL);
 
         addCoursesToListBackgroundTask task2 = new addCoursesToListBackgroundTask();
-        task2.execute(new String[]{coursesURL});
+        task2.execute(coursesURL);
 
 
     }
@@ -199,8 +199,6 @@ public class RegisterActivityTwo extends ActionBarActivity {
 
         }
 
-        ;
-
 
     }
 
@@ -286,8 +284,6 @@ public class RegisterActivityTwo extends ActionBarActivity {
 
 
         }
-
-        ;
 
 
     }

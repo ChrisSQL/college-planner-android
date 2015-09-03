@@ -21,7 +21,7 @@ public class UserAdapter {
     private static final String KEY_NAME = "UserName";
     private static final String KEY_REGISTRATION_DATE = "UserRegistrationDate";
     private static final String TAG = "UserDbAdapter";
-    private static final String DATABASE_NAME = "chrinrim_bbb";
+    private static final String DATABASE_NAME = "chrinrim_ddd";
     private static final String SQLITE_TABLE = "Users";
     private static final int DATABASE_VERSION = 3;
     private static final String CREATE_USERS_TABLE =
@@ -31,7 +31,7 @@ public class UserAdapter {
                     + KEY_EMAIL + " TEXT,"
                     + KEY_PASSWORD + " TEXT,"
                     + KEY_NAME + " TEXT,"
-                    + KEY_REGISTRATION_DATE + " TEXTz "
+                    + KEY_REGISTRATION_DATE + " TEXT "
 
                     + ")";
     private final Context mCtx;
@@ -110,11 +110,10 @@ public class UserAdapter {
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{
                         KEY_EMAIL},
                 selection, null, null, null, null);
-        if (cursor != null)
-            return true;
+        return cursor != null;
 
         // return contact
-        return false;
+
     }
 
     public Cursor fetchAllUsers() {

@@ -5,10 +5,11 @@ package com.chris.collegeplanner.activity;
 
 // If logged out just get projects from SQLIte
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +19,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -43,9 +42,14 @@ import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.ProjectsAdapter;
 import com.chris.collegeplanner.controller.AppConfig;
 import com.chris.collegeplanner.controller.AppController;
-import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Project;
 import com.chris.collegeplanner.model.User;
+import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 import org.joda.time.DateTime;
@@ -66,12 +70,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SummaryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class SummaryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     //  private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
     private static final int SELECT_PHOTO = 100;
     private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final int RC_SIGN_IN = 0;
     private static String url = "";
+    public GoogleApiClient mGoogleApiClient;
     ListView list;
     Context context;
     SimpleAdapter adapter;
@@ -84,11 +91,16 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     AlphaInAnimationAdapter animationAdapter;
     String extraEmail;
     private ProjectsAdapter db;
-    private SessionManager session;
     private User user;
     private ProjectsAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private TextView dueDateText;
+    private Boolean loggedIn;
+    private boolean mSignInClicked;
+    private ConnectionResult mConnectionResult;
+    private boolean mIntentInProgress;
+    private MenuItem logout;
+    private Tracker mTracker;
 
     // Method to convert Strings to Title Case for use in ListView
     public static String ConvertStringToTitleCase(String givenString) {
@@ -113,24 +125,12 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         // Setup User
         user = new User();
 
-        // Get Intent extra sent through
-        getExtras(savedInstanceState);
-
-        user.setEmail(extraEmail);
-
-        //       Toast.makeText(getApplicationContext(), "User logged in : " + extraEmail, Toast.LENGTH_LONG).show();
-
         // Offline Projects
         dbHelper = new ProjectsAdapter(this);
         dbHelper.open();
 
-        // Start Session manager
-        session = new SessionManager(getApplicationContext());
-
         // Context
         context = getApplicationContext();
-        // session manager
-        session = new SessionManager(getApplicationContext());
 
         // Initialise Variables
         list = (ListView) findViewById(R.id.SummaryListView);
@@ -140,25 +140,13 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         img = (ImageView) findViewById(R.id.fullscreen_content);
         relLayout = (RelativeLayout) findViewById(R.id.RelBackGround);
 
-        // Check if Internet is connected and email is available before syncing
-        if (isNetworkAvailable() && user.getEmail() != null) {
+        // Get projects from SQLite
+        getOfflineProjects();
 
-            getOfflineProjects();
-
-//            getUserData(user.getEmail());
-//         // TODO merge with offline projects - Upload SQLite to Cloud.
-//             mergeSQLiteProjectsToCloud();
-//            Toast.makeText(getApplicationContext(), "Syncing with Cloud.", Toast.LENGTH_LONG).show();
-
-        } else {
-
-
-            // Get projects from SQLite
-            getOfflineProjects();
-
-
-        }
-
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
     }
 
@@ -193,17 +181,17 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         getMenuInflater().inflate(R.menu.menu_summary, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_schedule, menu);
-        MenuItem login = menu.findItem(R.id.login);
-        MenuItem logout = menu.findItem(R.id.logout);
-        if (session.isLoggedIn()) {
-            login.setVisible(false);
-            logout.setVisible(true);
+        logout = menu.findItem(R.id.logout);
 
-        } else {
-            login.setVisible(true);
-            logout.setVisible(false);
-
-        }
+//        if (loginCheck == false) {
+//            login.setVisible(true);
+//            logout.setVisible(false);
+//
+//        } else {
+//            login.setVisible(false);
+//            logout.setVisible(true);
+//
+//        }
 
         return true;
     }
@@ -319,6 +307,18 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 }
         }
 
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode != RESULT_OK) {
+                mSignInClicked = false;
+            }
+
+            mIntentInProgress = false;
+
+            if (!mGoogleApiClient.isConnecting()) {
+                mGoogleApiClient.connect();
+            }
+        }
+
 
     }
 
@@ -329,14 +329,14 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void loginUserProxy(MenuItem item) {
 
-        loginUser();
+        // loginUser();
+        signInWithGplus();
     }
 
     public void addNewProject(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
         startActivity(intent);
-
 
     }
 
@@ -485,9 +485,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         };
 
-        // Adding request to request queue
-        session.createLoginSession(email);
-        session.setLoginCourse("Software Systems Development");
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
 //        String urlUser = "http://chrismaher.info/AndroidProjects2/user_details.php?email=" + session.getUserEmail() + "";
@@ -568,20 +565,10 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     private void logoutUser() {
 
-        session.setLogin(false);
-        user.setEmail("");
-
-        //    db.deleteAllProjects();
-        Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_LONG).show();
-
-        // Launching the login activity
-        Intent intent = new Intent(SummaryActivity.this, SummaryActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void loginUser() {
-        session.setLogin(true);
+
 
         // Launching the login activity
         Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
@@ -664,41 +651,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-    public void shareList(MenuItem item) {
-
-        if (extraEmail == null || extraEmail.equals("")) {
-
-            Toast.makeText(getApplicationContext(), "Login to send list.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
-            startActivity(intent);
-
-        } else {
-
-//            Intent intent = new Intent(SummaryActivity.this, ShareActivity.class);
-//            startActivity(intent);
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-            alert.setMessage("Classmates Email?");
-
-            final EditText email = new EditText(this);
-            email.setInputType(InputType.TYPE_CLASS_TEXT
-                    | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-            email.setHint("Email...");
-
-            alert.setView(email);
-
-            alert.setPositiveButton("Ok", null);
-
-            alert.setNegativeButton("Cancel", null);
-
-            alert.show();
-
-
-        }
-
-    }
-
     private void ShortcutIcon() {
 
         Intent shortcutIntent = new Intent(getApplicationContext(), SummaryActivity.class);
@@ -729,6 +681,167 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        mSignInClicked = false;
+        // Get user's information
+        getProfileInformation();
+        // Update the UI after signin
+        updateUI(true);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+        updateUI(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+
+        if (!result.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+                    0).show();
+            return;
+        }
+
+        if (!mIntentInProgress) {
+            // Store the ConnectionResult for later usage
+            mConnectionResult = result;
+
+            if (mSignInClicked) {
+                // The user has already clicked 'sign-in' so we attempt to
+                // resolve all
+                // errors until the user is signed in, or they cancel.
+                resolveSignInError();
+            }
+        }
+
+    }
+
+    /**
+     * Sign-in into google
+     */
+    public void signInWithGplus() {
+        if (!mGoogleApiClient.isConnecting()) {
+            mSignInClicked = true;
+            resolveSignInError();
+
+        }
+    }
+
+    /**
+     * Sign-out from google
+     */
+    private void signOutFromGplus() {
+        if (mGoogleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+            mGoogleApiClient.connect();
+            updateUI(false);
+        }
+    }
+
+    /**
+     * Method to resolve any signin errors
+     */
+    private void resolveSignInError() {
+        if (mConnectionResult.hasResolution()) {
+            try {
+                mIntentInProgress = true;
+                mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
+            } catch (IntentSender.SendIntentException e) {
+                mIntentInProgress = false;
+                mGoogleApiClient.connect();
+            }
+        }
+    }
+
+    /**
+     * Updating the UI, showing/hiding buttons and profile layout
+     */
+    private void updateUI(boolean isSignedIn) {
+
+        logout.setVisible(false);
+
+    }
+
+    /**
+     * Fetching user's information name, email, profile pic
+     */
+    private void getProfileInformation() {
+        try {
+            if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+                Person currentPerson = Plus.PeopleApi
+                        .getCurrentPerson(mGoogleApiClient);
+                String personName = currentPerson.getDisplayName();
+                String personPhotoUrl = currentPerson.getImage().getUrl();
+                String personGooglePlusProfile = currentPerson.getUrl();
+                String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+
+                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                editor.putString("personName", personName);
+                editor.putString("email", email);
+                editor.apply();
+
+
+                Log.e(TAG, "Name: " + personName + ", plusProfile: "
+                        + personGooglePlusProfile + ", email: " + email
+                        + ", Image: " + personPhotoUrl);
+
+
+//                SuperToast superToast = new SuperToast(getActivity());
+//                superToast.setDuration(SuperToast.DURATION_LONG);
+//                superToast.setText("Hello world!");
+//                superToast.setIconResource(R.drawable.image, SuperToast.IconPosition.LEFT);
+//                superToast.show();
+
+
+//                txtName.setText(personName);
+//                txtEmail.setText(email);
+
+
+                // by default the profile url gives 50x50 px image only
+                // we can replace the value with whatever dimension we want by
+                // replacing sz=X
+
+//                personPhotoUrl = personPhotoUrl.substring(0,
+//                        personPhotoUrl.length() - 2)
+//                        + PROFILE_PIC_SIZE;
+//
+//                new LoadProfileImage(imgProfilePic).execute(personPhotoUrl);
+
+//                Intent intent = new Intent(SignIn.this, SummaryActivity.class);
+//                startActivity(intent);
+
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Person information is null", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
 }// Main Program Ends..

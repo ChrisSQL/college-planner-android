@@ -5,10 +5,10 @@
 
         android:id="@+id/action_cart"
         android:icon="@drawable/green_add_icon_fixed"
+        android:onClick="addNewTimetable"
         android:orderInCategory="100"
-        yourapp:showAsAction="always"
         android:title="TimeTable"
-        android:onClick="addNewTimetable"/>
+        yourapp:showAsAction="always" />
 
 
 

@@ -39,13 +39,13 @@
         <!-- Login Button -->
 
         <Spinner
+            android:id="@+id/noOfSubjects"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:id="@+id/noOfSubjects"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            android:spinnerMode="dropdown"
-            android:background="#ffffffff" />
+            android:background="#ffffffff"
+            android:spinnerMode="dropdown" />
 
         <Button
             android:id="@+id/btnContinue"
