@@ -12,7 +12,9 @@ import com.chris.collegeplanner.model.Project;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ProjectsAdapter {
 
@@ -263,6 +265,24 @@ public class ProjectsAdapter {
 
         // return contact
         return project;
+    }
+
+    public List<String> getSubjects() {
+
+        Cursor crs = mDb.rawQuery("SELECT " + KEY_SUBJECT + " FROM " + SQLITE_TABLE + " ", null);
+
+
+        List<String> array = new ArrayList<String>();
+        while (crs.moveToNext()) {
+            String uname = crs.getString(crs.getColumnIndex(KEY_SUBJECT));
+            array.add(uname);
+        }
+
+        Log.d("CRS", crs.toString());
+        Log.d("ARRAY", array.toString());
+
+
+        return array;
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {

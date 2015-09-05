@@ -137,7 +137,7 @@ public class ViewSingleProject extends AppCompatActivity {
         final int idIn = id;
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Are you sure?.");
+        builder1.setMessage("Are you sure?");
         builder1.setCancelable(true);
         builder1.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {

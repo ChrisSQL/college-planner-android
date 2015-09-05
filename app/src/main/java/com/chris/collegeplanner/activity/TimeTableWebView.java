@@ -129,8 +129,11 @@ public class TimeTableWebView extends ActionBarActivity {
 //                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
 //                    startActivityForResult(intent, 1);
 //                } else
+
                 if (options[item].equals("Choose from Gallery")) {
-                    Toast.makeText(getApplicationContext(), "Screen Resolution - " + getScreenResolution(getApplicationContext()), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "For best results Crop image on Computer.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Then transfer image to Phone.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Your Screen Resolution is - " + getScreenResolution(getApplicationContext()), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
 

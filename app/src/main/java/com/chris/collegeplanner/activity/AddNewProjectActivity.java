@@ -1,19 +1,22 @@
 package com.chris.collegeplanner.activity;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,7 +43,7 @@ import java.util.List;
 //import org.apache.http.message.BasicNameValuePair;
 
 
-public class AddNewProjectActivity extends ActionBarActivity {
+public class AddNewProjectActivity extends AppCompatActivity {
 
 
     private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
@@ -87,6 +90,7 @@ public class AddNewProjectActivity extends ActionBarActivity {
     private ProjectsAdapter projectsAdapter;
     private Project project;
     private ProjectsAdapter dbHelper;
+    private List<String> subjectsList;
 
 
     // This is the date picker used to select the date for our notification
@@ -100,7 +104,9 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
         dbHelper = new ProjectsAdapter(this);
         dbHelper.open();
-
+        subjectsList = dbHelper.getSubjects();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, subjectsList);
         getExtras(savedInstanceState);
         IcsCalendarHelper.initActivityObj(this);
         projectsAdapter = new ProjectsAdapter(getApplicationContext());
@@ -108,7 +114,11 @@ public class AddNewProjectActivity extends ActionBarActivity {
         subject = (AutoCompleteTextView) findViewById(R.id.SubjectSpinner);
         subject.setThreshold(1);
         session = new SessionManager(getApplicationContext());
+
         subjectSpinner = (AutoCompleteTextView) findViewById(R.id.SubjectSpinner);
+        subjectSpinner.setAdapter(adapter);
+        subjectSpinner.setThreshold(1);
+
         typeSpinner = (Spinner) findViewById(R.id.TypeSpinner);
         worthSpinner = (Spinner) findViewById(R.id.WorthSpinner);
         detailsText = (EditText) findViewById(R.id.DetailsText);
@@ -342,5 +352,26 @@ public class AddNewProjectActivity extends ActionBarActivity {
 
     }
 
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Progress will be lost.\nAre you sure?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(AddNewProjectActivity.this, SummaryActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 
 }

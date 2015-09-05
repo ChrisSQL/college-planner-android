@@ -26,7 +26,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -73,13 +75,16 @@ import java.util.Map;
 public class SummaryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    final static public String PREFS_NAME = "PREFS_NAME";
     //  private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
     private static final int SELECT_PHOTO = 100;
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 0;
+    final static private String PREF_KEY_SHORTCUT_ADDED = "PREF_KEY_SHORTCUT_ADDED";
     private static String url = "";
     public GoogleApiClient mGoogleApiClient;
     ListView list;
+    ListView welcomeList;
     Context context;
     SimpleAdapter adapter;
     List<HashMap<String, String>> fillMaps;
@@ -101,6 +106,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private boolean mIntentInProgress;
     private MenuItem logout;
     private Tracker mTracker;
+    private Button addButton, timetableButton;
+    private LinearLayout welcomePanellayout;
+    private int projectCount = 0;
 
     // Method to convert Strings to Title Case for use in ListView
     public static String ConvertStringToTitleCase(String givenString) {
@@ -135,6 +143,30 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         // Initialise Variables
         list = (ListView) findViewById(R.id.SummaryListView);
         list.setOnItemClickListener(this);
+
+        addButton = (Button) findViewById(R.id.welcomeAddButton);
+        addButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(SummaryActivity.this, TimeTableWebView.class);
+                startActivity(intent);
+
+            }
+        });
+        timetableButton = (Button) findViewById(R.id.welcomeTimetableButton);
+        timetableButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        welcomePanellayout = (LinearLayout) this.findViewById(R.id.welcomePanel);
+        if (projectCount == 0) {
+            welcomePanellayout.setVisibility(LinearLayout.VISIBLE);
+        } else {
+            welcomePanellayout.setVisibility(LinearLayout.INVISIBLE);
+        }
+
 
 
         img = (ImageView) findViewById(R.id.fullscreen_content);
@@ -172,6 +204,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         Intent intent = new Intent(this, ViewSingleProject.class);
         intent.putExtra("id", (int) id);
         startActivity(intent);
+
 
     }
 
@@ -244,6 +277,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
         startActivity(intent);
+        finish();
 
     }
 
@@ -263,6 +297,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         intent.putExtra("course", user.getCourse());
         intent.putExtra("email", user.getEmail());
         startActivity(intent);
+
 
     }
 
@@ -512,6 +547,12 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         final int[] to = new int[]{R.id.IdText, R.id.SubjectTextList, R.id.ProjectTitleTextList, R.id.WorthText, R.id.DueDateTextList, R.id.DetailsTextList};
 
         Cursor cursor = dbHelper.fetchAllProjects();
+        projectCount = cursor.getCount();
+        if (projectCount == 0) {
+            welcomePanellayout.setVisibility(LinearLayout.VISIBLE);
+        } else {
+            welcomePanellayout.setVisibility(LinearLayout.INVISIBLE);
+        }
         dataAdapter = new SimpleCursorAdapter(context, R.layout.summary_list_item, cursor, from, to, 0);
 
         dueDateText = (TextView) findViewById(R.id.DueDateTextList);
@@ -653,6 +694,11 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     private void ShortcutIcon() {
 
+        // Checking if ShortCut was already added
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        boolean shortCutWasAlreadyAdded = sharedPreferences.getBoolean(PREF_KEY_SHORTCUT_ADDED, false);
+        if (shortCutWasAlreadyAdded) return;
+
         Intent shortcutIntent = new Intent(getApplicationContext(), SummaryActivity.class);
         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -663,6 +709,13 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher));
         addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         getApplicationContext().sendBroadcast(addIntent);
+
+        // Remembering that ShortCut was already added
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(PREF_KEY_SHORTCUT_ADDED, true);
+        editor.commit();
+
+
     }
 
     public void onCoachMark() {
@@ -843,6 +896,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
             mGoogleApiClient.disconnect();
         }
     }
+
 
 }// Main Program Ends..
 

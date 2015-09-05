@@ -1,8 +1,10 @@
 // Chris Maher 20059304
 package com.chris.collegeplanner.activity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -240,6 +242,29 @@ int pid;
 
     }
 
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Progress will be lost.\nAre you sure?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(UpdateProjectActivity.this, SummaryActivity.class);
+                                startActivity(intent);
+                                finish();
+
+                            }
+                        })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
     /**
      * Background Async Task to Get complete product details
      */
@@ -443,6 +468,5 @@ int pid;
         }
 
     }
-
 
 }
