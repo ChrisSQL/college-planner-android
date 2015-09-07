@@ -278,9 +278,6 @@ public class ProjectsAdapter {
             array.add(uname);
         }
 
-        Log.d("CRS", crs.toString());
-        Log.d("ARRAY", array.toString());
-
 
         return array;
     }

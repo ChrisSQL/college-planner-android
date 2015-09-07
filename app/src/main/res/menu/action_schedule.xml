@@ -10,22 +10,24 @@
         android:title="TimeTable"
         yourapp:showAsAction="always" />
 
-    <!--<item-->
-
-        <!--android:id="@+id/action_group"-->
-        <!--android:icon="@drawable/ic_launcher"-->
-        <!--android:orderInCategory="101"-->
-        <!--yourapp:showAsAction="always"-->
-        <!--android:title="TimeTable"-->
-        <!--android:onClick="launchGroupNotesScreen"/>-->
 
     <item
 
         android:id="@+id/action_add_new"
         android:icon="@drawable/green_add_icon_fixed"
         android:onClick="addNewProject"
+        android:orderInCategory="101"
+        android:title="Add Project"
+        yourapp:showAsAction="always" />
+
+    <item
+
+        android:id="@+id/action_group"
+        android:icon="@drawable/green_share_icon_fixed"
+        android:onClick="launchShareProjects"
         android:orderInCategory="102"
-        android:title="TimeTable"
+        android:title="Share Projects"
+        android:visible="false"
         yourapp:showAsAction="always" />
 
 </menu>

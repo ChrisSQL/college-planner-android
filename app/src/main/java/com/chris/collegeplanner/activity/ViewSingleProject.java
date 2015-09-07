@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -55,10 +57,15 @@ public class ViewSingleProject extends AppCompatActivity {
         subjectSpinner = (TextView) findViewById(R.id.subjectTextSingleProject);
         typeSpinner = (TextView) findViewById(R.id.typeTextSingleProject);
         worthText = (TextView) findViewById(R.id.worthTextSingleProject);
-        detailsText = (TextView) findViewById(R.id.detailsTextSingleProject);
         titleText = (TextView) findViewById(R.id.titleTextSingleProject);
         dueDateText = (TextView) findViewById(R.id.dueDateTextSingleProject);
         dueDateText2 = (TextView) findViewById(R.id.DueDateTextSingleProject2);
+        detailsText = (TextView) findViewById(R.id.detailsTextSingleProject);
+        detailsText.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                updateProject();
+            }
+        });
 
         getOfflineProjectDetails();
 
@@ -162,12 +169,20 @@ public class ViewSingleProject extends AppCompatActivity {
 
     }
 
-    public void updateProject(MenuItem item) {
+    public void updateProject() {
 
         Intent intent = new Intent(ViewSingleProject.this, UpdateProjectActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
         finish();
+
+    }
+
+    public void updateProject(MenuItem item) {
+
+        Intent intent = new Intent(ViewSingleProject.this, UpdateProjectActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
 
     }
 

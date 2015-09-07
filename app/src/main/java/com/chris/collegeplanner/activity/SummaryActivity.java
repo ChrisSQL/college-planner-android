@@ -6,8 +6,10 @@ package com.chris.collegeplanner.activity;
 // If logged out just get projects from SQLIte
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -18,6 +20,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +50,9 @@ import com.chris.collegeplanner.controller.AppController;
 import com.chris.collegeplanner.model.Project;
 import com.chris.collegeplanner.model.User;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -80,6 +86,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private static final int SELECT_PHOTO = 100;
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 0;
+    private static final int REQUEST_INVITE = 0;
     final static private String PREF_KEY_SHORTCUT_ADDED = "PREF_KEY_SHORTCUT_ADDED";
     private static String url = "";
     public GoogleApiClient mGoogleApiClient;
@@ -94,7 +101,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     RelativeLayout relLayout;
     ImageView img;
     AlphaInAnimationAdapter animationAdapter;
-    String extraEmail;
+    String extraEmail, intentEmail;
+    BroadcastReceiver mDeepLinkReceiver;
     private ProjectsAdapter db;
     private User user;
     private ProjectsAdapter dbHelper;
@@ -104,7 +112,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private boolean mIntentInProgress;
-    private MenuItem logout;
+    private MenuItem logout, share;
     private Tracker mTracker;
     private Button addButton, timetableButton;
     private LinearLayout welcomePanellayout;
@@ -126,6 +134,19 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
+
+        if (savedInstanceState == null) {
+            // No savedInstanceState, so it is the first launch of this activity
+            Intent intent = getIntent();
+            if (AppInviteReferral.hasReferral(intent)) {
+                // In this case the referral data is in the intent launching the MainActivity,
+                // which means this user already had the app installed. We do not have to
+                // register the Broadcast Receiver to listen for Play Store Install information
+                // launchDeepLinkActivity(intent);
+                launchDeepLinkActivity(intent);
+                // Set Referral email to sync projects
+            }
+        }
 
         ShortcutIcon();
         //    onCoachMark();
@@ -180,6 +201,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
+
     }
 
     private void getExtras(Bundle savedInstanceState) {
@@ -215,16 +237,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_schedule, menu);
         logout = menu.findItem(R.id.logout);
-
-//        if (loginCheck == false) {
-//            login.setVisible(true);
-//            logout.setVisible(false);
-//
-//        } else {
-//            login.setVisible(false);
-//            logout.setVisible(true);
-//
-//        }
+        share = menu.findItem(R.id.action_group);
 
         return true;
     }
@@ -311,13 +324,13 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     // handles the Pictures selected from Gallery or Camera
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
             case SELECT_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                    Uri selectedImage = data.getData();
                     InputStream imageStream = null;
                     try {
 
@@ -342,6 +355,22 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 }
         }
 
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Check how many invitations were sent and log a message
+                // The ids array contains the unique invitation ids for each invitation sent
+                // (one for each contact select by the user). You can use these for analytics
+                // as the ID will be consistent on the sending and receiving devices.
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                showMessage(getString(R.string.send_failed));
+            }
+        }
+
         if (requestCode == RC_SIGN_IN) {
             if (resultCode != RESULT_OK) {
                 mSignInClicked = false;
@@ -355,6 +384,10 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         }
 
 
+    }
+
+    private void showMessage(String msg) {
+        Toast.makeText(getApplicationContext(), "Message : " + msg, Toast.LENGTH_LONG).show();
     }
 
     public void logoutUserProxy(MenuItem item) {
@@ -825,6 +858,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private void updateUI(boolean isSignedIn) {
 
         logout.setVisible(false);
+        share.setVisible(true);
 
     }
 
@@ -888,6 +922,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        registerDeepLinkReceiver();
     }
 
     protected void onStop() {
@@ -895,9 +930,64 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+        unregisterDeepLinkReceiver();
     }
 
+    public void launchShareProjects(MenuItem item) {
 
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+
+    }
+
+    private void registerDeepLinkReceiver() {
+        // Create local Broadcast receiver that starts DeepLinkActivity when a deep link
+        // is found
+        mDeepLinkReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (AppInviteReferral.hasReferral(intent)) {
+                    launchDeepLinkActivity(intent);
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(getString(R.string.action_deep_link));
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mDeepLinkReceiver, intentFilter);
+    }
+
+    private void unregisterDeepLinkReceiver() {
+        if (mDeepLinkReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mDeepLinkReceiver);
+        }
+    }
+
+    private void updateInvitationStatus(Intent intent) {
+        String invitationId = AppInviteReferral.getInvitationId(intent);
+
+        // Note: these  calls return PendingResult(s), so one could also wait to see
+        // if this succeeds instead of using fire-and-forget, as is shown here
+        if (AppInviteReferral.isOpenedFromPlayStore(intent)) {
+            AppInvite.AppInviteApi.updateInvitationOnInstall(mGoogleApiClient, invitationId);
+        }
+
+        // If your invitation contains deep link information such as a coupon code, you may
+        // want to wait to call `convertInvitation` until the time when the user actually
+        // uses the deep link data, rather than immediately upon receipt
+        AppInvite.AppInviteApi.convertInvitation(mGoogleApiClient, invitationId);
+    }
+
+    private void launchDeepLinkActivity(Intent intent) {
+
+//        Log.d(TAG, "launchDeepLinkActivity:" + intent);
+//        Intent newIntent = new Intent(intent).setClass(this, DeepLinkActivity.class);
+//        startActivity(newIntent);
+
+    }
 }// Main Program Ends..
 
 

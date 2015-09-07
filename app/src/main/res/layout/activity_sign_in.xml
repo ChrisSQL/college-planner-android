@@ -52,6 +52,16 @@
             android:textSize="18dp" />
     </LinearLayout>
 
+    <!-- Twitter Login Button -->
+    <Button
+        android:id="@+id/btnLoginTwitter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="30dip"
+        android:text="Login with Twitter" />
+
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_sign_in"
         android:layout_width="fill_parent"

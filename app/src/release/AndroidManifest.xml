@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.chris.collegeplanner.ContactsActivity"
+            android:label="@string/title_activity_contacts"></activity>
+    </application>
+
+</manifest>
