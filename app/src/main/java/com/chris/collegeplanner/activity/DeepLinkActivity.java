@@ -73,6 +73,7 @@ public class DeepLinkActivity extends AppCompatActivity implements
         String invitationId = AppInviteReferral.getInvitationId(intent);
         String deepLink = AppInviteReferral.getDeepLink(intent);
 
+
         // Display referral information
         // [START_EXCLUDE]
         Log.d(TAG, "Found Referral: " + invitationId + ":" + deepLink);

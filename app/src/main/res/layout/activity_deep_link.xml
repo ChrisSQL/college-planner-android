@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@mipmap/logonew" />
+            android:src="@drawable/green_add_icon" />
 
     </LinearLayout>
 

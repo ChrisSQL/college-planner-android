@@ -1,9 +1,7 @@
 
 package com.chris.collegeplanner.activity;
 
-// If Logged in and theres Internet connection download online projects and merge with offline projects then save all online again.
-
-// If logged out just get projects from SQLIte
+// Add email to deeplink
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -103,6 +101,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     AlphaInAnimationAdapter animationAdapter;
     String extraEmail, intentEmail;
     BroadcastReceiver mDeepLinkReceiver;
+    String googleEmail;
     private ProjectsAdapter db;
     private User user;
     private ProjectsAdapter dbHelper;
@@ -135,18 +134,19 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
-        if (savedInstanceState == null) {
-            // No savedInstanceState, so it is the first launch of this activity
-            Intent intent = getIntent();
-            if (AppInviteReferral.hasReferral(intent)) {
-                // In this case the referral data is in the intent launching the MainActivity,
-                // which means this user already had the app installed. We do not have to
-                // register the Broadcast Receiver to listen for Play Store Install information
-                // launchDeepLinkActivity(intent);
-                launchDeepLinkActivity(intent);
-                // Set Referral email to sync projects
-            }
-        }
+//        if (savedInstanceState == null) {
+//            // No savedInstanceState, so it is the first launch of this activity
+//            Intent intent = getIntent();
+//            if (AppInviteReferral.hasReferral(intent)) {
+//                // In this case the referral data is in the intent launching the MainActivity,
+//                // which means this user already had the app installed. We do not have to
+//                // register the Broadcast Receiver to listen for Play Store Install information
+//                // launchDeepLinkActivity(intent);
+//                launchDeepLinkActivity(intent);
+//                // Set Referral email to sync projects
+//
+//            }
+//        }
 
         ShortcutIcon();
         //    onCoachMark();
@@ -357,19 +357,19 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
-        if (requestCode == REQUEST_INVITE) {
-            if (resultCode == RESULT_OK) {
-                // Check how many invitations were sent and log a message
-                // The ids array contains the unique invitation ids for each invitation sent
-                // (one for each contact select by the user). You can use these for analytics
-                // as the ID will be consistent on the sending and receiving devices.
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
-            } else {
-                // Sending failed or it was canceled, show failure message to the user
-                showMessage(getString(R.string.send_failed));
-            }
-        }
+//        if (requestCode == REQUEST_INVITE) {
+//            if (resultCode == RESULT_OK) {
+//                // Check how many invitations were sent and log a message
+//                // The ids array contains the unique invitation ids for each invitation sent
+//                // (one for each contact select by the user). You can use these for analytics
+//                // as the ID will be consistent on the sending and receiving devices.
+//                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+//                Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
+//            } else {
+//                // Sending failed or it was canceled, show failure message to the user
+//                showMessage(getString(R.string.send_failed));
+//            }
+//        }
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode != RESULT_OK) {
@@ -873,16 +873,16 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 String personName = currentPerson.getDisplayName();
                 String personPhotoUrl = currentPerson.getImage().getUrl();
                 String personGooglePlusProfile = currentPerson.getUrl();
-                String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+                googleEmail = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
                 SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
                 editor.putString("personName", personName);
-                editor.putString("email", email);
+                editor.putString("email", googleEmail);
                 editor.apply();
 
 
                 Log.e(TAG, "Name: " + personName + ", plusProfile: "
-                        + personGooglePlusProfile + ", email: " + email
+                        + personGooglePlusProfile + ", email: " + googleEmail
                         + ", Image: " + personPhotoUrl);
 
 
@@ -935,9 +935,13 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void launchShareProjects(MenuItem item) {
 
+        if (googleEmail == null) {
+            googleEmail = "na";
+        }
+
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                 .setMessage(getString(R.string.invitation_message))
-                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setDeepLink(Uri.parse("email-" + googleEmail))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
 
@@ -983,11 +987,13 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     private void launchDeepLinkActivity(Intent intent) {
 
-//        Log.d(TAG, "launchDeepLinkActivity:" + intent);
-//        Intent newIntent = new Intent(intent).setClass(this, DeepLinkActivity.class);
-//        startActivity(newIntent);
+        Log.d(TAG, "launchDeepLinkActivity:" + intent);
+        Intent newIntent = new Intent(intent).setClass(this, SummaryActivity.class);
+        startActivity(newIntent);
 
     }
+
+
 }// Main Program Ends..
 
 

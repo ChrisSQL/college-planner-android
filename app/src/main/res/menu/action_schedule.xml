@@ -27,7 +27,6 @@
         android:onClick="launchShareProjects"
         android:orderInCategory="102"
         android:title="Share Projects"
-        android:visible="false"
         yourapp:showAsAction="always" />
 
 </menu>
