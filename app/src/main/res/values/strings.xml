@@ -204,7 +204,7 @@
     <string name="invitation_id_default">Invitation ID not set</string>
     <string name="invite_friends">Invite Friends</string>
 
-    <string name="invitation_title">Share Projects</string>
+    <string name="invitation_title">Setup Class Sharing Group</string>
     <string name="invitation_message">Install this college planner app so i can share projects with you.</string>
     <string name="invitation_deep_link">http://chrismaher.info/college_planner/share.php</string>
 

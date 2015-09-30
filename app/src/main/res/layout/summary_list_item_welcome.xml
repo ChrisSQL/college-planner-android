@@ -55,5 +55,6 @@
             android:gravity="left|center_vertical"
             android:paddingLeft="30dp"
             android:text="Add TimeTable" />
+
     </LinearLayout>
 </LinearLayout>

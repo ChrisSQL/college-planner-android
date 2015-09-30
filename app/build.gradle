@@ -9,8 +9,8 @@ android {
         applicationId "com.chris.collegeplanner"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 22
-        versionName "22"
+        versionCode 23
+        versionName "23"
     }
 
     signingConfigs {
