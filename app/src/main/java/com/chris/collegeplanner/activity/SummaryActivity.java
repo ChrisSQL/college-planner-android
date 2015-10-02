@@ -134,19 +134,19 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
-//        if (savedInstanceState == null) {
-//            // No savedInstanceState, so it is the first launch of this activity
-//            Intent intent = getIntent();
-//            if (AppInviteReferral.hasReferral(intent)) {
-//                // In this case the referral data is in the intent launching the MainActivity,
-//                // which means this user already had the app installed. We do not have to
-//                // register the Broadcast Receiver to listen for Play Store Install information
-//                // launchDeepLinkActivity(intent);
-//                launchDeepLinkActivity(intent);
-//                // Set Referral email to sync projects
-//
-//            }
-//        }
+        if (savedInstanceState == null) {
+            // No savedInstanceState, so it is the first launch of this activity
+            Intent intent = getIntent();
+            if (AppInviteReferral.hasReferral(intent)) {
+                // In this case the referral data is in the intent launching the MainActivity,
+                // which means this user already had the app installed. We do not have to
+                // register the Broadcast Receiver to listen for Play Store Install information
+                // launchDeepLinkActivity(intent);
+                launchDeepLinkActivity(intent);
+                // Set Referral email to sync projects
+
+            }
+        }
 
         ShortcutIcon();
         //    onCoachMark();
@@ -169,7 +169,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         addButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SummaryActivity.this, TimeTableWebView.class);
-                startActivity(intent);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(new Intent(SummaryActivity.this, TimeTableWebView.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             }
         });
@@ -326,6 +328,22 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Check how many invitations were sent and log a message
+                // The ids array contains the unique invitation ids for each invitation sent
+                // (one for each contact select by the user). You can use these for analytics
+                // as the ID will be consistent on the sending and receiving devices.
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                showMessage(getString(R.string.send_failed));
+            }
+        }
 
         switch (requestCode) {
             case SELECT_PHOTO:

@@ -138,7 +138,7 @@ public class AddNewProjectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (isNetworkAvailable()) {
+//                if (isNetworkAvailable()) {
 
                     // Date Validation
                     if (dueDateText.getText().toString().matches("")) {
@@ -194,11 +194,11 @@ public class AddNewProjectActivity extends AppCompatActivity {
                     }
 
 
-                } else {
-
-                    Toast.makeText(getApplicationContext(), "Internet Connection Required.", Toast.LENGTH_LONG).show();
-
-                }
+//                } else {
+//
+//                    Toast.makeText(getApplicationContext(), "Internet Connection Required.", Toast.LENGTH_LONG).show();
+//
+//                }
 
                 //  subject = subjectSpinner.getText().toString();
                 type = typeSpinner.getSelectedItem().toString();
