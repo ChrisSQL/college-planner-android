@@ -40,6 +40,7 @@ public class ViewSingleProject extends AppCompatActivity {
     private ProjectsAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private Project project;
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,12 @@ public class ViewSingleProject extends AppCompatActivity {
             }
         });
 
+        saveButton = (Button) findViewById(R.id.sendToClassmate);
+        saveButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                updateProject();
+            }
+        });
         getOfflineProjectDetails();
 
 

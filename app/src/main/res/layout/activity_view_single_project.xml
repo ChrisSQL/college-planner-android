@@ -216,8 +216,8 @@
         android:id="@+id/detailsTextSingleProject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/sendToClassmate"
         android:layout_alignEnd="@+id/linearLayout2"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout2"
         android:cursorVisible="true"
@@ -227,5 +227,28 @@
         android:hint="Details..."
         android:inputType="none"
         android:padding="5dp" />
+
+    <Button
+        android:id="@+id/sendToClassmate"
+        android:layout_width="wrap_content"
+        android:layout_height="60px"
+        android:layout_alignEnd="@+id/detailsTextSingleProject"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/detailsTextSingleProject"
+        android:layout_toEndOf="@+id/imageView3"
+        android:layout_toRightOf="@+id/imageView3"
+        android:background="#f2f1f1"
+        android:text="Update Project"
+        android:textColor="#000000" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="10px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/detailsTextSingleProject"
+        android:background="@color/bg_login" />
 
 </RelativeLayout>

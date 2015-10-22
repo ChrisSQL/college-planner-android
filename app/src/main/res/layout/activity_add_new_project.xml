@@ -102,15 +102,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/SaveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/WorthSpinner"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="61dp"
-        android:text="Save" />
-
     <EditText
         android:id="@+id/DetailsText"
         android:layout_width="fill_parent"
@@ -129,15 +120,12 @@
     <Button
         android:id="@+id/DueDateButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60px"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/WorthSpinner"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toStartOf="@+id/SaveButton"
-        android:padding="10dp"
+        android:background="#f2f1f1"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:text="Due Date" />
 
     <EditText
@@ -146,25 +134,31 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/DueDateButton"
         android:layout_below="@+id/WorthSpinner"
-        android:layout_marginRight="15dp"
         android:layout_toEndOf="@+id/DueDateButton"
-        android:focusable="false"
-        android:padding="10dp" />
+        android:layout_toRightOf="@+id/DueDateButton"
+        android:focusable="false" />
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/SaveButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/DueDateButton"
+        android:layout_height="60px"
+        android:layout_alignEnd="@+id/DueDateText"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="34dp"
-        android:text="Back" />
+        android:layout_alignRight="@+id/DueDateText"
+        android:layout_toEndOf="@+id/imageView5"
+        android:layout_toRightOf="@+id/imageView5"
+        android:background="#f2f1f1"
+        android:text="Save"
+        android:textColor="#000000" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/DetailsText"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"></LinearLayout>
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="10px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/SaveButton"
+        android:background="@color/bg_login" />
 
 </RelativeLayout>

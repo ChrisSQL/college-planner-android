@@ -126,14 +126,6 @@ public class AddNewProjectActivity extends AppCompatActivity {
         dueDateText = (EditText) findViewById(R.id.DueDateText);
         saveButton2 = (Button) findViewById(R.id.SaveButton);
         selectDateButton = (Button) findViewById(R.id.DueDateButton);
-        backButton = (Button) findViewById(R.id.backButton);
-        backButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(AddNewProjectActivity.this, SummaryActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
         saveButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

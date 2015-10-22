@@ -14,6 +14,16 @@
         android:background="#f3f3f3"
         android:orientation="vertical">
 
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search..."
+            android:maxLines="1"
+            android:singleLine="true"
+            android:visibility="gone" />
+
         <ListView
             android:id="@+id/SummaryListView"
             android:layout_width="fill_parent"

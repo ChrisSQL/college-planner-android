@@ -20,6 +20,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -116,6 +120,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private Button addButton, timetableButton;
     private LinearLayout welcomePanellayout;
     private int projectCount = 0;
+    private EditText editText;
+    private boolean searchVisible;
 
     // Method to convert Strings to Title Case for use in ListView
     public static String ConvertStringToTitleCase(String givenString) {
@@ -134,6 +140,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+
+        // Check Deep Links
         if (savedInstanceState == null) {
             // No savedInstanceState, so it is the first launch of this activity
             Intent intent = getIntent();
@@ -148,11 +156,14 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
             }
         }
 
-        ShortcutIcon();
-        //    onCoachMark();
+//        ShortcutIcon();
+//        onCoachMark();
 
         // Setup User
         user = new User();
+
+        // Search Text
+
 
         // Offline Projects
         dbHelper = new ProjectsAdapter(this);
@@ -164,6 +175,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         // Initialise Variables
         list = (ListView) findViewById(R.id.SummaryListView);
         list.setOnItemClickListener(this);
+        list.setTextFilterEnabled(true);
+        searchVisible = false;
+
 
         addButton = (Button) findViewById(R.id.welcomeAddButton);
         addButton.setOnClickListener(new Button.OnClickListener() {
@@ -549,6 +563,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
                 list.setAdapter(dataAdapter);
 
+
             }
         }, new Response.ErrorListener() {
 
@@ -599,19 +614,25 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Cursor cursor = dbHelper.fetchAllProjects();
         projectCount = cursor.getCount();
+
+        // Show Welcome Panel if there are no projects in list //
+
         if (projectCount == 0) {
             welcomePanellayout.setVisibility(LinearLayout.VISIBLE);
         } else {
             welcomePanellayout.setVisibility(LinearLayout.INVISIBLE);
         }
+
+        /////////////////////////////////////////////////////////
+
         dataAdapter = new SimpleCursorAdapter(context, R.layout.summary_list_item, cursor, from, to, 0);
+
 
         dueDateText = (TextView) findViewById(R.id.DueDateTextList);
 
         dataAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (columnIndex == 5) {
-
 
                     // Chosen Date as Date
                     Date chosenDate = new Date();
@@ -625,7 +646,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                         e.printStackTrace();
                     }
 
-                    //                    Date today = new Date();
+                    // Calculate days left till project due
                     String days = (Days.daysBetween(new DateTime(new Date()), new DateTime(chosenDate)).getDays()) + "";
                     if (Integer.valueOf(days) < 0) {
                         days = "-";
@@ -652,6 +673,38 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         list.setAdapter(dataAdapter);
 
+        dataAdapter.setStringConversionColumn(cursor.getColumnIndex("ProjectSubject"));
+        dataAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence constraint) {
+
+                if (constraint == null || constraint.length() == 0) {
+                    return dbHelper.fetchAllProjects();
+                } else {
+                    return dbHelper.fetchProjectsByName("" + constraint);
+
+                }
+            }
+        });
+
+        editText = (EditText) findViewById(R.id.search);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                dataAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        editText.setVisibility(View.GONE);
 
     }
 
@@ -1011,7 +1064,18 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
+    public void setSearchVisibility(MenuItem item) {
 
+        if (searchVisible == false) {
+
+            editText.setVisibility(View.VISIBLE);
+            searchVisible = true;
+        } else {
+            editText.setVisibility(View.GONE);
+            searchVisible = false;
+        }
+
+    }
 }// Main Program Ends..
 
 

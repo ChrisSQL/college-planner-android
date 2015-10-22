@@ -22,10 +22,19 @@
 
     <item
 
+        android:id="@+id/search"
+        android:icon="@drawable/green_search_icon_fixed"
+        android:onClick="setSearchVisibility"
+        android:orderInCategory="102"
+        android:title="Search Projects"
+        yourapp:showAsAction="always" />
+
+    <item
+
         android:id="@+id/action_group"
         android:icon="@drawable/green_share_icon_fixed"
         android:onClick="launchShareProjects"
-        android:orderInCategory="102"
+        android:orderInCategory="103"
         android:title="Share Projects"
         yourapp:showAsAction="always" />
 
