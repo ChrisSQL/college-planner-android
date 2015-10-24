@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -39,18 +38,19 @@ import java.util.Date;
 
 public class UpdateProjectActivity extends AppCompatActivity {
 
-    // single product url
-    private static final String urlSingleProject = "http://chrismaher.info/AndroidProjects2/project_details_single_row.php";
-//    JSONParser jsonParser = new JSONParser();
-int pid;
-    // Date For DueDate
-    Calendar myCalendar = Calendar.getInstance();
-    String[] projectArray;
-    Project project;
+    //    private static final String urlSingleProject = "http://chrismaher.info/AndroidProjects2/project_details_single_row.php";
+//    private String urlUpdate = "http://chrismaher.info/AndroidProjects2/project_update.php";
+//    private SimpleCursorAdapter dataAdapter;
+//    private JSONParser jsonParser = new JSONParser();
+    private int pid;
+
     private SessionManager session;
+    private Calendar myCalendar = Calendar.getInstance();
+    private String[] projectArray;
+    private Project project;
     private EditText detailsText;
     private EditText dueDateText;
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -70,11 +70,9 @@ int pid;
     private Spinner worthSpinner;
     private Button updateButton;
     private Button selectDateButton;
-    private String urlUpdate = "http://chrismaher.info/AndroidProjects2/project_update.php";
-    // Progress Dialog
     private ProgressDialog pDialog;
     private ProjectsAdapter dbHelper;
-    private SimpleCursorAdapter dataAdapter;
+
 
     public static String toTitleCase(String givenString) {
         String[] arr = givenString.split(" ");

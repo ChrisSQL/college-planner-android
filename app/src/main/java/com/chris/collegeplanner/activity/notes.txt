@@ -1,14 +1,3 @@
 TODO
 
-Add ability to share whole list
-
-Timetable Zoom. Done
-
-Make open Source on GitHub. later
-
-Daily Reminders Overview
-
-After 5 opening or entries. Would you like to share this list with a classmate?
-
-Login with Google Done
 

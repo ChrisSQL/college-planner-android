@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.chris.collegeplanner.R;
@@ -22,14 +21,14 @@ import org.joda.time.Days;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class ViewSingleProject extends AppCompatActivity {
 
-    private static final String TAG = ViewSingleProject.class.getSimpleName();
-    List<HashMap<String, String>> fillMaps;
+//    private static final String TAG = ViewSingleProject.class.getSimpleName();
+//    private List<HashMap<String, String>> fillMaps;
+//    private SimpleCursorAdapter dataAdapter;
+
     private int id;
     private TextView subjectSpinner;
     private TextView typeSpinner;
@@ -38,7 +37,6 @@ public class ViewSingleProject extends AppCompatActivity {
     private TextView detailsText;
     private TextView dueDateText, dueDateText2;
     private ProjectsAdapter dbHelper;
-    private SimpleCursorAdapter dataAdapter;
     private Project project;
     private Button saveButton;
 
@@ -192,7 +190,6 @@ public class ViewSingleProject extends AppCompatActivity {
         startActivity(intent);
 
     }
-
 
 }
 

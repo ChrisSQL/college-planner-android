@@ -36,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +50,6 @@ import com.chris.collegeplanner.controller.AppConfig;
 import com.chris.collegeplanner.controller.AppController;
 import com.chris.collegeplanner.model.Project;
 import com.chris.collegeplanner.model.User;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.appinvite.AppInviteReferral;
@@ -60,7 +58,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -83,45 +80,48 @@ import java.util.Map;
 public class SummaryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    final static public String PREFS_NAME = "PREFS_NAME";
-    //  private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
+//    final static public String PREFS_NAME = "PREFS_NAME";
+//    private static String url = "";
+//    HashMap map;
+//    String pid;
+//    ListView welcomeList;
+//    SimpleAdapter adapter;
+//    AlphaInAnimationAdapter animationAdapter;
+
+//    private Boolean loggedIn;
+//    String intentEmail;
+//    private ProjectsAdapter db;
+//    private Tracker mTracker;
+//    private static final String urlDelete = "http://chrismaher.info/AndroidProjects2/project_delete.php";
+
     private static final int SELECT_PHOTO = 100;
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 0;
     private static final int REQUEST_INVITE = 0;
     final static private String PREF_KEY_SHORTCUT_ADDED = "PREF_KEY_SHORTCUT_ADDED";
-    private static String url = "";
     public GoogleApiClient mGoogleApiClient;
-    ListView list;
-    ListView welcomeList;
-    Context context;
-    SimpleAdapter adapter;
-    List<HashMap<String, String>> fillMaps;
-    HashMap map;
-    String pid;
-    int id;
-    RelativeLayout relLayout;
-    ImageView img;
-    AlphaInAnimationAdapter animationAdapter;
-    String extraEmail, intentEmail;
-    BroadcastReceiver mDeepLinkReceiver;
-    String googleEmail;
-    private ProjectsAdapter db;
+    private TextView dueDateText;
+    private int id;
+    private RelativeLayout relLayout;
+    private ImageView img;
+    private ListView list;
+    private Context context;
+    private List<HashMap<String, String>> fillMaps;
+    private BroadcastReceiver mDeepLinkReceiver;
+    private String googleEmail;
     private User user;
     private ProjectsAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
-    private TextView dueDateText;
-    private Boolean loggedIn;
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private boolean mIntentInProgress;
     private MenuItem logout, share;
-    private Tracker mTracker;
     private Button addButton, timetableButton;
     private LinearLayout welcomePanellayout;
     private int projectCount = 0;
     private EditText editText;
     private boolean searchVisible;
+    private String extraEmail;
 
     // Method to convert Strings to Title Case for use in ListView
     public static String ConvertStringToTitleCase(String givenString) {
@@ -193,7 +193,10 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         timetableButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
-                startActivity(intent);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(new Intent(SummaryActivity.this, AddNewProjectActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
             }
         });
 
@@ -241,7 +244,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         dataAdapter.getItem(position);
         Intent intent = new Intent(this, ViewSingleProject.class);
         intent.putExtra("id", (int) id);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, ViewSingleProject.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 
     }
@@ -296,7 +301,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
         intent.putExtra("email", extraEmail);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, AddNewProjectActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         finish();
 
     }
@@ -305,7 +312,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     public void addNewEntryIntentClick(View view) {
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, AddNewProjectActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         finish();
 
     }
@@ -314,7 +323,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     public void launchSchedule(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, TimeTableWebView.class);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, TimeTableWebView.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
     }
 
@@ -325,7 +336,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         intent.putExtra("name", user.getName());
         intent.putExtra("course", user.getCourse());
         intent.putExtra("email", user.getEmail());
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, GroupNotesActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 
     }
@@ -436,7 +449,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     public void addNewProject(MenuItem item) {
 
         Intent intent = new Intent(SummaryActivity.this, AddNewProjectActivity.class);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, AddNewProjectActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
     }
 
@@ -717,7 +732,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         // Launching the login activity
         Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, LoginActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         finish();
     }
 
@@ -792,7 +809,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Intent intent = new Intent(SummaryActivity.this, ViewProjectActivity.class);
         intent.putExtra("id", id);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(SummaryActivity.this, ViewProjectActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
     }
 

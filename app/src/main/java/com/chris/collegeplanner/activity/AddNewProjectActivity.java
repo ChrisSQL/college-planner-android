@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,10 +33,8 @@ import com.chris.collegeplanner.reminders.AlarmReceiver;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 //import org.apache.http.message.BasicNameValuePair;
@@ -45,23 +42,16 @@ import java.util.List;
 
 public class AddNewProjectActivity extends AppCompatActivity {
 
+//    private Button backButton;
+//    private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
+//    private List<String> subjectsArray = new ArrayList<>();
+//    private String urlUpload = "http://chrismaher.info/AndroidProjects2/project_upload.php";
+//    private ProgressDialog pDialog;
+//    private IcsCalendarHelper icsCalendarHelper;
+//    private List<HashMap<String, String>> fillSubjectsArray;
 
-    private static final String subjectsURL = "http://chrismaher.info/AndroidProjects2/subjects.php";
-    // Date For DueDate
+
     Calendar myCalendar = Calendar.getInstance();
-    List<String> subjectsArray = new ArrayList<>();
-    List<HashMap<String, String>> fillSubjectsArray;
-    AutoCompleteTextView subject;
-    String type;
-    String title;
-    String worth;
-    String details;
-    String dueDate;
-    String extraEmail;
-    IcsCalendarHelper icsCalendarHelper;
-    private SessionManager session;
-    private EditText detailsText;
-    private EditText dueDateText;
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         @Override
@@ -76,25 +66,19 @@ public class AddNewProjectActivity extends AppCompatActivity {
         }
 
     };
-
-
+    private AutoCompleteTextView subject;
+    private ProjectsAdapter projectsAdapter;
+    private SessionManager session;
+    private String title, details, extraEmail, type, worth, dueDate;
+    private EditText detailsText, dueDateText;
     private TextView titleText;
     private AutoCompleteTextView subjectSpinner;
-    private Spinner typeSpinner;
-    private Spinner worthSpinner;
-    private Button saveButton2, backButton, selectDateButton;
-    //  AutoCompleteTextView subject;
-    private String urlUpload = "http://chrismaher.info/AndroidProjects2/project_upload.php";
-    // Progress Dialog
-    private ProgressDialog pDialog;
-    private ProjectsAdapter projectsAdapter;
+    private Spinner typeSpinner, worthSpinner;
+    private Button saveButton2, selectDateButton;
     private Project project;
     private ProjectsAdapter dbHelper;
     private List<String> subjectsList;
 
-
-    // This is the date picker used to select the date for our notification
-    private DatePicker picker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
