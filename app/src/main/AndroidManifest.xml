@@ -47,6 +47,7 @@
             <!-- &lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt; -->
             <!-- </intent-filter> -->
         </activity>
+
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_boiVwv5XeuAT4XWYaN4BAkaorxlsZluo" />
@@ -62,6 +63,7 @@
             <intent-filter>
                 <action android:name="NOTIFICATION_SERVICE" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -131,13 +133,13 @@
         </activity>
         <activity
             android:name=".activity.RegisterActivityThree"
-            android:label="@string/title_activity_register_activity_three"></activity>
+            android:label="@string/title_activity_register_activity_three" />
         <activity
             android:name=".activity.GroupNotesActivity"
-            android:label="@string/title_activity_group_notes"></activity>
+            android:label="@string/title_activity_group_notes" />
         <activity
             android:name=".activity.AddNewGroupNoteActivity"
-            android:label="@string/title_activity_add_new_group_note"></activity>
+            android:label="@string/title_activity_add_new_group_note" />
         <activity
             android:name=".activity.ViewSingleProject"
             android:label="@string/title_activity_view_single_project"
@@ -149,7 +151,7 @@
         <activity
             android:name=".activity.SignIn"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -166,10 +168,19 @@
 
         <activity
             android:name=".activity.ContactsActivity"
-            android:label="@string/title_activity_contacts"></activity>
+            android:label="@string/title_activity_contacts" />
         <activity
             android:name=".activity.DeepLinkActivity"
-            android:label="@string/title_activity_deep_link"></activity>
+            android:label="@string/title_activity_deep_link" />
+        <activity
+            android:name=".activity.LoginRuby"
+            android:label="@string/title_activity_login_ruby"
+            android:parentActivityName=".activity.SummaryActivity"
+            android:theme="@style/AppBaseTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chris.collegeplanner.activity.SummaryActivity" />
+        </activity>
     </application>
 
 </manifest>

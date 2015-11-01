@@ -358,19 +358,19 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
-        if (requestCode == REQUEST_INVITE) {
-            if (resultCode == RESULT_OK) {
-                // Check how many invitations were sent and log a message
-                // The ids array contains the unique invitation ids for each invitation sent
-                // (one for each contact select by the user). You can use these for analytics
-                // as the ID will be consistent on the sending and receiving devices.
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
-            } else {
-                // Sending failed or it was canceled, show failure message to the user
-                showMessage(getString(R.string.send_failed));
-            }
-        }
+//        if (requestCode == REQUEST_INVITE) {
+//            if (resultCode == RESULT_OK) {
+//                // Check how many invitations were sent and log a message
+//                // The ids array contains the unique invitation ids for each invitation sent
+//                // (one for each contact select by the user). You can use these for analytics
+//                // as the ID will be consistent on the sending and receiving devices.
+//                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+//                Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
+//            } else {
+//                // Sending failed or it was canceled, show failure message to the user
+//                showMessage(getString(R.string.send_failed));
+//            }
+//        }
 
         switch (requestCode) {
             case SELECT_PHOTO:
@@ -442,8 +442,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void loginUserProxy(MenuItem item) {
 
-        // loginUser();
-        signInWithGplus();
+        loginUser();
+//        signInWithGplus();
     }
 
     public void addNewProject(MenuItem item) {

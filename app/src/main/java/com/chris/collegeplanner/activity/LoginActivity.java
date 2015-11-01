@@ -132,8 +132,7 @@ public class LoginActivity extends Activity {
 
                 session.setLogin(false);
 
-                Intent i = new Intent(getApplicationContext(),
-                        RegisterActivity.class);
+                Intent i = new Intent(getApplicationContext(), LoginRuby.class);
                 startActivity(i);
 
             }

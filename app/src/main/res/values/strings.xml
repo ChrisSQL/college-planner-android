@@ -214,5 +214,7 @@
     <string name="sent_invitations_fmt">Sent %d invitations</string>
     <string name="send_failed">Sending invitations failed</string>
     <string name="invite_dialog_title">You got an invitation!</string>
+    <string name="title_activity_online_register">OnlineRegister</string>
+    <string name="title_activity_login_ruby">LoginRuby</string>
 
 </resources>
