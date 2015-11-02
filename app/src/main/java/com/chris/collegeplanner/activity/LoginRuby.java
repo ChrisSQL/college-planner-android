@@ -3,13 +3,16 @@ package com.chris.collegeplanner.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
@@ -18,6 +21,7 @@ public class LoginRuby extends AppCompatActivity {
 
     private ProgressDialog progressBar;
     private static final String TAG = "Main";
+    private Button registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class LoginRuby extends AppCompatActivity {
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         progressBar = ProgressDialog.show(LoginRuby.this, "Register", "Loading...");
+        registerButton = (Button) findViewById(R.id.registerBackButton);
 
 
         WebView webview = (WebView) findViewById(R.id.registerWebview);
@@ -37,15 +42,6 @@ public class LoginRuby extends AppCompatActivity {
         settings.setJavaScriptEnabled(true);
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         webview.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -77,6 +73,14 @@ public class LoginRuby extends AppCompatActivity {
 
         webview.loadUrl("https://radiant-sea-5676.herokuapp.com/mobile");
 
+    }
+
+    public void clickFunc(View view) {
+
+        Intent intent = new Intent(LoginRuby.this, TimeTableWebView.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(LoginRuby.this, SummaryActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
 

@@ -26,5 +26,6 @@
         android:text="Back"
         android:id="@+id/registerBackButton"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="clickFunc" />
 </RelativeLayout>
