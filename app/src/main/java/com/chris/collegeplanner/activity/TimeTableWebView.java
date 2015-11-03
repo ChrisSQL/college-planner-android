@@ -1,6 +1,7 @@
 package com.chris.collegeplanner.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,12 +12,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
@@ -34,6 +37,8 @@ public class TimeTableWebView extends ActionBarActivity {
 
     private TimeTableAdapter dbHelper;
     private SimpleCursorAdapter dataAdapter;
+    private ProgressDialog progressBar;
+    private static final String TAG = "Timetable";
 
     private TimeTable timetable;
 
@@ -59,6 +64,9 @@ public class TimeTableWebView extends ActionBarActivity {
         dbHelper = new TimeTableAdapter(this);
         dbHelper.open();
 
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        progressBar = ProgressDialog.show(TimeTableWebView.this, "Timetable", "Loading...");
+
         webview = (WebView) findViewById(R.id.webView);
         webview.setBackgroundColor(0);
         webview.getSettings().setSupportZoom(true);
@@ -66,6 +74,33 @@ public class TimeTableWebView extends ActionBarActivity {
         webview.getSettings().setUseWideViewPort(true);
         webview.getSettings().setDisplayZoomControls(true);
         webview.setInitialScale(2);
+        webview.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.i(TAG, "Processing webview url click...");
+                view.loadUrl(url);
+                return true;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                Log.i(TAG, "Finished loading URL: " + url);
+                if (progressBar.isShowing()) {
+                    progressBar.dismiss();
+                }
+            }
+
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Log.e(TAG, "Error: " + description);
+                Toast.makeText(TimeTableWebView.this, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+                alertDialog.setTitle("Error");
+                alertDialog.setMessage(description);
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                });
+                alertDialog.show();
+            }
+        });
         //    Toast.makeText(getApplicationContext(), "URL - " + timetable.getTimetableURL(), Toast.LENGTH_LONG).show();
 
 

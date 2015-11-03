@@ -23,7 +23,7 @@
     <item
 
         android:id="@+id/search"
-        android:icon="@drawable/green_search_icon_fixed"
+        android:icon="@drawable/search_icon"
         android:onClick="setSearchVisibility"
         android:orderInCategory="102"
         android:title="Search Projects"
@@ -32,7 +32,7 @@
     <item
 
         android:id="@+id/action_group"
-        android:icon="@drawable/green_share_icon_fixed"
+        android:icon="@drawable/group_icon"
         android:onClick="launchShareProjects"
         android:orderInCategory="103"
         android:title="Share Projects"

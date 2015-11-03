@@ -441,8 +441,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void loginUserProxy(MenuItem item) {
 
-        loginUser();
-//        signInWithGplus();
+//        loginUser();
+        signInWithGplus();
     }
 
     public void addNewProject(MenuItem item) {
