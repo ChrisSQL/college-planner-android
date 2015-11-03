@@ -81,50 +81,51 @@ public class LoginActivity extends Activity {
     private void initialiseOnClickListeners() {
 
 
-        // Login button Click Event
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-
-                String email = inputEmail.getText().toString();
-                String password = inputPassword.getText().toString();
-
-                // Check for empty data in the form
-                if (email.trim().length() > 0 && password.trim().length() > 0) {
-                    // login user
-                    if (dbHelper.checkLoginOffline(email, password)) {
-
-                        session.setLogin(true);
-
-                        Toast.makeText(getApplicationContext(),
-                                "Correct!", Toast.LENGTH_LONG)
-                                .show();
-
-
-                        Intent i = new Intent(getApplicationContext(), SummaryActivity.class);
-                        i.putExtra("email", email);
-                        startActivity(i);
-                        finish();
-
-                    } else {
-
-                        Toast.makeText(getApplicationContext(),
-                                "Wrong details.", Toast.LENGTH_LONG)
-                                .show();
-
-                    }
-                    // checkLoginOnline(email, password);
-                } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter the credentials!", Toast.LENGTH_LONG)
-                            .show();
-                }
-            }
-
-        });
+//        // Login button Click Event
+//        btnLogin.setOnClickListener(new View.OnClickListener() {
+//
+//            public void onClick(View view) {
+//
+//                String email = inputEmail.getText().toString();
+//                String password = inputPassword.getText().toString();
+//
+//                // Check for empty data in the form
+//                if (email.trim().length() > 0 && password.trim().length() > 0) {
+//                    // login user
+//                    if (dbHelper.checkLoginOffline(email, password)) {
+//
+//                        session.setLogin(true);
+//
+//                        Toast.makeText(getApplicationContext(),
+//                                "Correct!", Toast.LENGTH_LONG)
+//                                .show();
+//
+//
+//                        Intent i = new Intent(getApplicationContext(), SummaryActivity.class);
+//                        i.putExtra("email", email);
+//                        startActivity(i);
+//                        finish();
+//
+//                    } else {
+//
+//                        Toast.makeText(getApplicationContext(),
+//                                "Wrong details.", Toast.LENGTH_LONG)
+//                                .show();
+//
+//                    }
+//                    // checkLoginOnline(email, password);
+//                } else {
+//                    // Prompt user to enter credentials
+//                    Toast.makeText(getApplicationContext(),
+//                            "Please enter the credentials!", Toast.LENGTH_LONG)
+//                            .show();
+//                }
+//            }
+//
+//        });
 
         // Link to Register Screen
+
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
 
@@ -137,6 +138,7 @@ public class LoginActivity extends Activity {
 
             }
         });
+
 
         // Link to Register Screen
         btnSkipLogin.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +189,9 @@ public class LoginActivity extends Activity {
                         intent.putExtra("email", email);
                         startActivity(intent);
                         finish();
+                        Toast.makeText(getApplicationContext(),
+                                "Welcome " + email, Toast.LENGTH_LONG).show();
+
 
                     } else {
                         // Error in login. Get the error message
@@ -246,5 +251,14 @@ public class LoginActivity extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    public void checkLoginOnlineProxy(View view) {
+
+        String email = inputEmail.getText().toString();
+        String password = inputPassword.getText().toString();
+
+        checkLoginOnline(email, password);
+
     }
 }

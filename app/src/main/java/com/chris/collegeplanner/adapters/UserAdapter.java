@@ -110,6 +110,7 @@ public class UserAdapter {
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{
                         KEY_EMAIL},
                 selection, null, null, null, null);
+        Log.d("Cursor -------- ", cursor.toString());
         return cursor != null;
 
         // return contact

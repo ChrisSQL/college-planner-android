@@ -244,9 +244,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         dataAdapter.getItem(position);
         Intent intent = new Intent(this, ViewSingleProject.class);
         intent.putExtra("id", (int) id);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(new Intent(SummaryActivity.this, ViewSingleProject.class));
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+        startActivity(intent);
 
 
     }
@@ -809,9 +808,10 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Intent intent = new Intent(SummaryActivity.this, ViewProjectActivity.class);
         intent.putExtra("id", id);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
         startActivity(new Intent(SummaryActivity.this, ViewProjectActivity.class));
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+        startActivity(intent);
+
 
     }
 

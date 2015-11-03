@@ -6,6 +6,7 @@ public class AppConfig {
 
 	// Server user register url
 	public static String URL_REGISTER = "http://chrismaher.info/college_planner/index.php";
+//	public static String URL_REGISTER = "https://radiant-sea-5676.herokuapp.com/api/v1/users";
 
 	// Server user register url
 	public static String URL_REGISTER_2 = "http://chrismaher.info/college_planner/register.php";
