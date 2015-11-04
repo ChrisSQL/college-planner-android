@@ -82,26 +82,32 @@ public class ViewSingleProject extends AppCompatActivity {
 
         project = dbHelper.getProject(id);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(project.getProjectDueDate());
-        Date today = new Date();
-        String days = (Days.daysBetween(new DateTime(today), new DateTime(date)).getDays()) + "";
-        if (Integer.valueOf(days) < 0) {
-            days = "-";
+        if(project != null){
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date = sdf.format(project.getProjectDueDate());
+            Date today = new Date();
+            String days = (Days.daysBetween(new DateTime(today), new DateTime(date)).getDays()) + "";
+            if (Integer.valueOf(days) < 0) {
+                days = "-";
+
+            }
+
+            DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+            String formattedDate = f.format(project.getProjectDueDate());
+
+
+            subjectSpinner.setText(project.getProjectSubject());
+            typeSpinner.setText(project.getProjectType());
+            worthText.setText(project.getProjectWorth());
+            detailsText.setText(project.getProjectDetails());
+            titleText.setText(project.getProjectTitle());
+            dueDateText.setText(days);
+            dueDateText2.setText(formattedDate);
+
 
         }
 
-        DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-        String formattedDate = f.format(project.getProjectDueDate());
-
-
-        subjectSpinner.setText(project.getProjectSubject());
-        typeSpinner.setText(project.getProjectType());
-        worthText.setText(project.getProjectWorth());
-        detailsText.setText(project.getProjectDetails());
-        titleText.setText(project.getProjectTitle());
-        dueDateText.setText(days);
-        dueDateText2.setText(formattedDate);
 
     }
 
@@ -189,6 +195,12 @@ public class ViewSingleProject extends AppCompatActivity {
         intent.putExtra("id", id);
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ViewSingleProject.this, SummaryActivity.class);
+        startActivity(intent);
     }
 
 }

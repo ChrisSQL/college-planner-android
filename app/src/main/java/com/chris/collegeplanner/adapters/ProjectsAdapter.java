@@ -235,38 +235,47 @@ public class ProjectsAdapter {
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
+
+            if(cursor.getCount() > 0)
+            {
+                String dateString = cursor.getString(5);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                Date convertedDate = new Date();
+                try {
+                    convertedDate = dateFormat.parse(dateString);
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+
+
+                Date date = new Date(cursor.getLong(5));
+                // Date date = new Date();
+                Log.d("Date : ", date.toString());
+
+                Project project = new Project(
+
+                        Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        convertedDate,
+                        cursor.getString(6),
+                        cursor.getString(7));
+
+                return project;
+            }
+
+
+
         }
 
 
-        String dateString = cursor.getString(5);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date convertedDate = new Date();
-        try {
-            convertedDate = dateFormat.parse(dateString);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
 
-
-        Date date = new Date(cursor.getLong(5));
-        // Date date = new Date();
-        Log.d("Date : ", date.toString());
-
-        Project project = new Project(
-
-                Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                convertedDate,
-                cursor.getString(6),
-                cursor.getString(7));
-
-        // return contact
-        return project;
+         return null;
     }
 
     public List<String> getSubjects() {

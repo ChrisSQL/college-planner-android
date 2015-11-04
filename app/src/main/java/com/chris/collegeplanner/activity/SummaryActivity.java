@@ -58,6 +58,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -123,17 +125,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private boolean searchVisible;
     private String extraEmail;
 
-    // Method to convert Strings to Title Case for use in ListView
-    public static String ConvertStringToTitleCase(String givenString) {
-        String[] arr = givenString.split(" ");
-        StringBuffer sb = new StringBuffer();
 
-        for (int i = 0; i < arr.length; i++) {
-            sb.append(Character.toUpperCase(arr[i].charAt(0)))
-                    .append(arr[i].substring(1)).append(" ");
-        }
-        return sb.toString().trim();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,13 +204,23 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         img = (ImageView) findViewById(R.id.fullscreen_content);
         relLayout = (RelativeLayout) findViewById(R.id.RelBackGround);
 
-        // Get projects from SQLite
-        getOfflineProjects();
+
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+
+
+
+
+
+        // Get projects from SQLite
+        getOfflineProjects();
+
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
 
 
     }
@@ -246,6 +248,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         intent.putExtra("id", (int) id);
         startActivity(new Intent(SummaryActivity.this, ViewSingleProject.class));
         startActivity(intent);
+        finish();
+
 
 
     }
@@ -303,7 +307,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(new Intent(SummaryActivity.this, AddNewProjectActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-        finish();
+
 
     }
 
@@ -441,8 +445,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void loginUserProxy(MenuItem item) {
 
-//        loginUser();
-        signInWithGplus();
+        loginUser();
+//        signInWithGplus();
     }
 
     public void addNewProject(MenuItem item) {
@@ -730,9 +734,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
 
         // Launching the login activity
-        Intent intent = new Intent(SummaryActivity.this, LoginActivity.class);
+        Intent intent = new Intent(SummaryActivity.this, ParseLogin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(new Intent(SummaryActivity.this, LoginActivity.class));
+        startActivity(new Intent(SummaryActivity.this, ParseLogin.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         finish();
     }
@@ -1094,6 +1098,18 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
             searchVisible = false;
         }
 
+    }
+
+    // Method to convert Strings to Title Case for use in ListView
+    public static String ConvertStringToTitleCase(String givenString) {
+        String[] arr = givenString.split(" ");
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(Character.toUpperCase(arr[i].charAt(0)))
+                    .append(arr[i].substring(1)).append(" ");
+        }
+        return sb.toString().trim();
     }
 }// Main Program Ends..
 

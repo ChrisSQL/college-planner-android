@@ -216,5 +216,6 @@
     <string name="invite_dialog_title">You got an invitation!</string>
     <string name="title_activity_online_register">OnlineRegister</string>
     <string name="title_activity_login_ruby">LoginRuby</string>
+    <string name="title_activity_parse_login">ParseLogin</string>
 
 </resources>
