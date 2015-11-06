@@ -29,10 +29,26 @@
 
     <item
 
-        android:id="@+id/logout"
+        android:id="@+id/login"
         android:onClick="loginUserProxy"
         android:orderInCategory="102"
         android:title="Login"
+        app:showAsAction="never" />
+
+    <item
+
+        android:id="@+id/logout"
+        android:onClick="logoutUserProxy"
+        android:orderInCategory="102"
+        android:title="Logout"
+        app:showAsAction="never" />
+
+    <item
+
+        android:id="@+id/refreshSummaryMenu"
+        android:onClick="refreshSummaryScreen"
+        android:orderInCategory="102"
+        android:title="Refresh"
         app:showAsAction="never" />
 
     <!--<item-->

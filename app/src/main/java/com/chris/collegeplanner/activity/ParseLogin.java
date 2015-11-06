@@ -22,8 +22,10 @@ public class ParseLogin extends Activity {
     Button skipSignIn;
     String usernametxt;
     String passwordtxt;
+    String emailtext;
     EditText password;
     EditText username;
+    SummaryActivity sa;
 
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class ParseLogin extends Activity {
         // Locate EditTexts in main.xml
         username = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
+
+        sa = new SummaryActivity();
 
         // Locate Buttons in main.xml
         loginbutton = (Button) findViewById(R.id.btnLogin);
@@ -45,6 +49,7 @@ public class ParseLogin extends Activity {
             public void onClick(View arg0) {
                 // Retrieve the text entered from the EditText
                 usernametxt = username.getText().toString();
+                emailtext = username.getText().toString();
                 passwordtxt = password.getText().toString();
 
                 // Send data to Parse.com for verification
@@ -53,6 +58,7 @@ public class ParseLogin extends Activity {
                             public void done(ParseUser user, ParseException e) {
                                 if (user != null) {
                                     // If user exist and authenticated, send user to Welcome.class
+//                                    sa.syncProjects(emailtext);
                                     Intent intent = new Intent(
                                             ParseLogin.this,
                                             SummaryActivity.class);
@@ -93,6 +99,7 @@ public class ParseLogin extends Activity {
             public void onClick(View arg0) {
                 // Retrieve the text entered from the EditText
                 usernametxt = username.getText().toString();
+                emailtext = username.getText().toString();
                 passwordtxt = password.getText().toString();
 
                 // Force user to fill up the form
@@ -105,6 +112,7 @@ public class ParseLogin extends Activity {
                     // Save new user data into Parse.com Data Storage
                     ParseUser user = new ParseUser();
                     user.setUsername(usernametxt);
+                    user.setEmail(usernametxt);
                     user.setPassword(passwordtxt);
                     user.signUpInBackground(new SignUpCallback() {
                         public void done(ParseException e) {

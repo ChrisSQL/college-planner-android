@@ -181,8 +181,8 @@ public class UpdateProjectActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         dueDateText.setText(sdf.format(myCalendar.getTime()));
 
-        String localDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(myCalendar.getTime());
-        dueDateText.setText(localDateString);
+//        String localDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(myCalendar.getTime());
+//        dueDateText.setText(localDateString);
     }
 
     private void getOfflineProjectDetails(int id) {

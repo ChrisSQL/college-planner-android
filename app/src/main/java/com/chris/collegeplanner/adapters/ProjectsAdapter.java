@@ -69,25 +69,27 @@ public class ProjectsAdapter {
 
     public void createProject(Project project) {
 
+        if(fetchProjectBySubjectDetailsTitle(project.getProjectSubject(), project.getProjectDetails(), project.getProjectTitle()) == false){
 
-        ContentValues values = new ContentValues();
+            ContentValues values = new ContentValues();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(project.getProjectDueDate());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date = sdf.format(project.getProjectDueDate());
 
-        // values.put(KEY_ID, project.get_id()); // Email
-        values.put(KEY_SUBJECT, project.getProjectSubject()); // Email
-        values.put(KEY_TYPE, project.getProjectType()); // Email
-        values.put(KEY_TITLE, project.getProjectTitle()); // Email
-        values.put(KEY_WORTH, project.getProjectWorth()); // Email
-        values.put(KEY_DUEDATE, date); // Email
-        values.put(KEY_DETAILS, project.getProjectDetails()); // Email
-        values.put(KEY_EMAIL, project.getProjectEmail()); // Email
+            // values.put(KEY_ID, project.get_id()); // Email
+            values.put(KEY_SUBJECT, project.getProjectSubject()); // Email
+            values.put(KEY_TYPE, project.getProjectType()); // Email
+            values.put(KEY_TITLE, project.getProjectTitle()); // Email
+            values.put(KEY_WORTH, project.getProjectWorth()); // Email
+            values.put(KEY_DUEDATE, date); // Email
+            values.put(KEY_DETAILS, project.getProjectDetails()); // Email
+            values.put(KEY_EMAIL, project.getProjectEmail()); // Email
 
-        // Inserting Row
-        mDb.insert(SQLITE_TABLE, null, values);
-        mDb.close(); // Closing database connection
+            // Inserting Row
+            mDb.insert(SQLITE_TABLE, null, values);
+            mDb.close(); // Closing database connection
 
+        }
 
     }
 
@@ -161,13 +163,14 @@ public class ProjectsAdapter {
 
     }
 
-    public boolean fetchProjectBySubjectDetails(String subject, String details) throws SQLException {
+    public boolean fetchProjectBySubjectDetailsTitle(String subject, String details, String title) throws SQLException {
 
 
         String Query = "" +
-                "Select * from " + DATABASE_NAME
+                "Select * from " + SQLITE_TABLE
                 + " where " + KEY_SUBJECT + " = \"" + subject
-                + "\" AND " + KEY_DETAILS + " = \"" + details + "\";";
+                + "\" AND " + KEY_DETAILS + " = \"" + details
+                + "\" AND " + KEY_TITLE + " = \"" + title + "\";";
 
         Cursor cursor = mDb.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
@@ -196,8 +199,6 @@ public class ProjectsAdapter {
             mCursor.moveToFirst();
         }
         return mCursor;
-
-
 
     }
 

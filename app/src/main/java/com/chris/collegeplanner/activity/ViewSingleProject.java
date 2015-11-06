@@ -93,8 +93,8 @@ public class ViewSingleProject extends AppCompatActivity {
 
             }
 
-            DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-            String formattedDate = f.format(project.getProjectDueDate());
+//            DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT);
+            String formattedDate = sdf.format(project.getProjectDueDate());
 
 
             subjectSpinner.setText(project.getProjectSubject());

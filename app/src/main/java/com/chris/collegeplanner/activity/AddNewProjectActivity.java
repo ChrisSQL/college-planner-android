@@ -30,9 +30,13 @@ import com.chris.collegeplanner.helper.IcsCalendarHelper;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Project;
 import com.chris.collegeplanner.reminders.AlarmReceiver;
+import com.parse.FindCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -114,74 +118,7 @@ public class AddNewProjectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                if (isNetworkAvailable()) {
-
-                    // Date Validation
-                    if (dueDateText.getText().toString().matches("")) {
-
-                        Toast.makeText(getApplicationContext(), "No Date Selected.", Toast.LENGTH_LONG).show();
-                        selectDateButton.performClick();
-
-                    } else if (titleText.getText().toString().matches("")) {
-
-                        Toast.makeText(getApplicationContext(), "Enter a Title.", Toast.LENGTH_LONG).show();
-                        titleText.requestFocus();
-
-                    } else {
-
-                        type = typeSpinner.getSelectedItem().toString();
-                        title = titleText.getText().toString();
-                        worth = worthSpinner.getSelectedItem().toString();
-                        details = detailsText.getText().toString();
-                        dueDate = dueDateText.getText().toString();
-
-                        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                        String email = prefs.getString("email", null);
-                        if (email != null) {
-                            project.setProjectEmail(email);
-                        }
-
-                        project.set_id(0);
-                        project.setProjectSubject(subjectSpinner.getText().toString());
-                        project.setProjectType(typeSpinner.getSelectedItem().toString());
-                        project.setProjectTitle(titleText.getText().toString());
-                        project.setProjectWorth(worthSpinner.getSelectedItem().toString());
-                        project.setProjectDetails(detailsText.getText().toString());
-
-
-                        try {
-                            project.setProjectDueDate(dueDateText.getText().toString());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        project.setProjectEmail(extraEmail);
-
-                        dbHelper.createProject(project);
-                        dbHelper.close();
-
-                        setCalendarReminder();
-
-                        scheduleAlarm();
-
-                        Intent intent = new Intent(AddNewProjectActivity.this, SummaryActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-
-
-//                } else {
-//
-//                    Toast.makeText(getApplicationContext(), "Internet Connection Required.", Toast.LENGTH_LONG).show();
-//
-//                }
-
-                //  subject = subjectSpinner.getText().toString();
-                type = typeSpinner.getSelectedItem().toString();
-                title = titleText.getText().toString();
-                worth = worthSpinner.getSelectedItem().toString();
-                details = detailsText.getText().toString();
-                dueDate = dueDateText.getText().toString();
+                addProject();
 
             }
         });
@@ -200,6 +137,118 @@ public class AddNewProjectActivity extends AppCompatActivity {
         //    getWebData();
 
 
+    }
+
+    private void addProject() {
+        //                if (isNetworkAvailable()) {
+
+        // Date Validation
+        if (dueDateText.getText().toString().matches("")) {
+
+            Toast.makeText(getApplicationContext(), "No Date Selected.", Toast.LENGTH_LONG).show();
+            selectDateButton.performClick();
+
+        } else if (titleText.getText().toString().matches("")) {
+
+            Toast.makeText(getApplicationContext(), "Enter a Title.", Toast.LENGTH_LONG).show();
+            titleText.requestFocus();
+
+        } else {
+
+            type = typeSpinner.getSelectedItem().toString();
+            title = titleText.getText().toString();
+            worth = worthSpinner.getSelectedItem().toString();
+            details = detailsText.getText().toString();
+            dueDate = dueDateText.getText().toString();
+
+            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+            String email = prefs.getString("email", null);
+            if (email != null) {
+                project.setProjectEmail(email);
+            }
+
+            project.set_id(0);
+            project.setProjectSubject(subjectSpinner.getText().toString());
+            project.setProjectType(typeSpinner.getSelectedItem().toString());
+            project.setProjectTitle(titleText.getText().toString());
+            project.setProjectWorth(worthSpinner.getSelectedItem().toString());
+            project.setProjectDetails(detailsText.getText().toString());
+
+
+            try {
+                project.setProjectDueDate(dueDateText.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            project.setProjectEmail(extraEmail);
+
+            dbHelper.createProject(project);
+            dbHelper.close();
+
+
+//            final ParseObject p2 = new ParseObject("Project");
+//            p2.put("projectSubject", project.getProjectSubject());
+//            p2.put("projectType", project.getProjectType());
+//            p2.put("projectTitle", project.getProjectTitle());
+//            p2.put("projectWorth", project.getProjectWorth());
+//            p2.put("projectDueDate", project.getProjectDueDate());
+//            p2.put("projectDetails", project.getProjectDetails());
+//            p2.put("email", "chrismaher.wit@gmail.com");
+//
+//            ///////////////////////////////////
+//
+//            ParseQuery<ParseObject> querySubject = ParseQuery.getQuery("Project");
+//            querySubject.whereEqualTo("projectSubject", project.getProjectSubject());
+//
+//            ParseQuery<ParseObject> queryTitle = ParseQuery.getQuery("Project");
+//            queryTitle.whereEqualTo("projectTitle", project.getProjectTitle());
+//
+//            ParseQuery<ParseObject> queryDetails= ParseQuery.getQuery("Project");
+//            queryDetails.whereEqualTo("projectDetails", project.getProjectDetails());
+//
+//            List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+//            queries.add(querySubject);
+//            queries.add(queryTitle);
+//            queries.add(queryDetails);
+//
+//            ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+//            mainQuery.findInBackground(new FindCallback<ParseObject>() {
+//                @Override
+//                public void done(List<ParseObject> list, com.parse.ParseException e) {
+//
+//                    if (list.size() != 0 && project.getProjectEmail() != null) {
+//                        p2.saveInBackground();
+//                    }
+//
+//                }
+//
+//
+//            });
+
+
+            setCalendarReminder();
+
+//            scheduleAlarm();
+
+            Intent intent = new Intent(AddNewProjectActivity.this, SummaryActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+
+//                } else {
+//
+//                    Toast.makeText(getApplicationContext(), "Internet Connection Required.", Toast.LENGTH_LONG).show();
+//
+//                }
+
+        //  subject = subjectSpinner.getText().toString();
+        type = typeSpinner.getSelectedItem().toString();
+        title = titleText.getText().toString();
+        worth = worthSpinner.getSelectedItem().toString();
+        details = detailsText.getText().toString();
+        dueDate = dueDateText.getText().toString();
     }
 
 
@@ -298,6 +347,7 @@ public class AddNewProjectActivity extends AppCompatActivity {
 
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         String dateInString = dueDateText.getText().toString();
         Date date = null;
         try {
