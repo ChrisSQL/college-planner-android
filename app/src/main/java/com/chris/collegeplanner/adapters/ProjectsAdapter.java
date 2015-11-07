@@ -219,7 +219,7 @@ public class ProjectsAdapter {
         return mDb.delete(SQLITE_TABLE, KEY_ID + "=" + id, null) > 0;
     }
 
-    // Getting single contact
+    // Getting single project
     public Project getProject(int id) {
 
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{

@@ -5,22 +5,33 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.ProjectsAdapter;
 import com.chris.collegeplanner.model.Project;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ViewSingleProject extends AppCompatActivity {
@@ -39,6 +50,8 @@ public class ViewSingleProject extends AppCompatActivity {
     private ProjectsAdapter dbHelper;
     private Project project;
     private Button saveButton;
+    private ParseUser currentUser;
+    private String user = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +175,7 @@ public class ViewSingleProject extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         dbHelper.deleteTitle(idIn + "");
+
                         // Launching the login activity
                         Intent intent = new Intent(ViewSingleProject.this, SummaryActivity.class);
                         startActivity(intent);
@@ -178,7 +192,24 @@ public class ViewSingleProject extends AppCompatActivity {
         AlertDialog alert11 = builder1.create();
         alert11.show();
 
+        // Delete from Parse Server.
+        // get project from id
+
+        Project project = dbHelper.getProject(id);
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+        query.whereEqualTo("projectId", id);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (object == null) {
+//                    Toast.makeText(getApplicationContext(), "Delete Failed " + id, Toast.LENGTH_LONG).show();
+                } else {
+                    object.deleteInBackground();
+                }
+            }
+        });
     }
+
 
     public void updateProject() {
 
@@ -201,6 +232,51 @@ public class ViewSingleProject extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(ViewSingleProject.this, SummaryActivity.class);
         startActivity(intent);
+    }
+
+    public void deleteAllOnline(final String email){
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+        query.whereEqualTo("email",email);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, com.parse.ParseException e) {
+
+                // TODO Auto-generated method stub
+                if (list.size() != 0) {
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        list.get(i).deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(com.parse.ParseException e) {
+
+                                if (e == null) {
+//                            Toast.makeText(getBaseContext(), "Deleted Successfully!", Toast.LENGTH_LONG).show();
+
+
+                                } else {
+                                    Toast.makeText(getBaseContext(), "Cant Delete!" + e.toString(), Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+
+                        });
+
+
+                    }
+
+
+                }
+
+
+            }
+
+        });
+
+
+
+
     }
 
 }

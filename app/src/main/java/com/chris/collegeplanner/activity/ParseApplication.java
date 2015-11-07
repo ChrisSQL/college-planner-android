@@ -19,6 +19,7 @@ public class ParseApplication extends Application {
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "jHff55KsNNo2V1KqGiE8WeixJv1M72OqByXATrwX", "ZojNXQRS0b2XJeKnENyqqYxtaUXqURJwu2ky2Sti");
+        Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
 
 //        ParseUser.enableAutomaticUser();
 //        ParseACL defaultACL = new ParseACL();

@@ -1,7 +1,10 @@
 package com.chris.collegeplanner.activity;
 
         import android.app.Activity;
+        import android.content.Context;
         import android.content.Intent;
+        import android.net.ConnectivityManager;
+        import android.net.NetworkInfo;
         import android.os.Bundle;
         import android.view.View;
         import android.view.View.OnClickListener;
@@ -10,6 +13,7 @@ package com.chris.collegeplanner.activity;
         import android.widget.Toast;
 
         import com.chris.collegeplanner.R;
+        import com.chris.collegeplanner.adapters.ProjectsAdapter;
         import com.parse.LogInCallback;
         import com.parse.ParseException;
         import com.parse.ParseUser;
@@ -26,6 +30,7 @@ public class ParseLogin extends Activity {
     EditText password;
     EditText username;
     SummaryActivity sa;
+    ProjectsAdapter dbAdapter;
 
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,7 @@ public class ParseLogin extends Activity {
         // Get the view from main.xml
         setContentView(R.layout.activity_login);
         // Locate EditTexts in main.xml
+        dbAdapter = new ProjectsAdapter(this);
         username = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
 
@@ -77,6 +83,10 @@ public class ParseLogin extends Activity {
                                 }
                             }
                         });
+
+
+
+
             }
         });
 
@@ -137,5 +147,20 @@ public class ParseLogin extends Activity {
             }
         });
 
+    if(isNetworkAvailable() == false){
+
+        loginbutton.setEnabled(false);
+        loginbutton.setText("No Connection.");
+
+    }
+
+    }
+
+    // Method to check if device has internet connection.
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

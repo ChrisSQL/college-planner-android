@@ -51,6 +51,14 @@
         android:title="Refresh"
         app:showAsAction="never" />
 
+    <item
+
+        android:id="@+id/restoreOnlineProjects"
+        android:onClick="onlineProjectsSync"
+        android:orderInCategory="102"
+        android:title="Sync"
+        app:showAsAction="never" />
+
     <!--<item-->
 
     <!--android:id="@+id/login"-->

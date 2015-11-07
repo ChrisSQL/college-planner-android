@@ -19,17 +19,24 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chris.collegeplanner.R;
 import com.chris.collegeplanner.adapters.ProjectsAdapter;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Project;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 //import com.chris.collegeplanner.helper.JSONParser;
 //import org.apache.http.NameValuePair;
@@ -72,6 +79,8 @@ public class UpdateProjectActivity extends AppCompatActivity {
     private Button selectDateButton;
     private ProgressDialog pDialog;
     private ProjectsAdapter dbHelper;
+    private ParseUser currentUser;
+    private String user = "";
 
 
     public static String toTitleCase(String givenString) {
@@ -107,6 +116,7 @@ public class UpdateProjectActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 updateProject();
+
                 Intent i = new Intent(UpdateProjectActivity.this, SummaryActivity.class);
                 startActivity(i);
                 finish();
@@ -218,6 +228,8 @@ public class UpdateProjectActivity extends AppCompatActivity {
 
     private void updateProject() {
 
+
+
         project = new Project();
 
         project.set_id(pid);
@@ -236,6 +248,20 @@ public class UpdateProjectActivity extends AppCompatActivity {
         Log.d("PROJECT", project.toString());
 
         dbHelper.updateProject(project);
+
+        // Delete all online projects
+
+
+
+
+
+
+    }
+
+    public void deleteAllOnlineProjects(String email){
+
+
+
 
     }
 
@@ -465,5 +491,6 @@ public class UpdateProjectActivity extends AppCompatActivity {
         }
 
     }
+
 
 }

@@ -61,7 +61,9 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -123,7 +125,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private boolean mIntentInProgress;
-    private MenuItem login, share, logout;
+    private MenuItem login, share, logout, downloadProjects;
     private Button addButton, timetableButton;
     private LinearLayout welcomePanellayout;
     private int projectCount = 0;
@@ -134,6 +136,7 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private List<Project> projectList = new ArrayList<Project>();
     private int syncCount = 0;
     private int listSize, otherListSize;
+    private ParseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,31 +227,23 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
 
         if (currentUser == null) {
-
-//            Toast.makeText(getApplicationContext(), "Offline.", Toast.LENGTH_SHORT).show();
             loginState = 0;
             invalidateOptionsMenu();
         } else {
-
             Log.i(TAG, currentUser.getUsername());
-//            Toast.makeText(getApplicationContext(), "Online.", Toast.LENGTH_SHORT).show();
             loginState = 1;
             invalidateOptionsMenu(); // now onCreateOptionsMenu(...) is called again
-
         }
 
         try {
 
-            if(null != currentUser.getUsername()){
+            if (null != currentUser.getUsername()) {
                 syncProjects(currentUser.getUsername());
             }
 
         } catch (NullPointerException name) {
 
         }
-
-
-
 
 
         getOfflineProjects();
@@ -258,18 +253,39 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void syncProjects(String email) {
 
-//        Toast.makeText(getApplicationContext(), "Syncing.", Toast.LENGTH_SHORT).show();
-        offlineProjectsSync();
-        onlineProjectsSync(email);
+        // On Login, Download all that are online that
 
+
+            currentUser = ParseUser.getCurrentUser();
+            if (currentUser != null) {
+
+//              deleteAllOnline(email);
+                offlineProjectsSync();
+
+//                onlineProjectsSync(email); MAKE BUTTON
+
+
+
+            } else {
+                // show the signup or login screen
+            }
 
     }
 
     private void onlineProjectsSync(String email) {
         // Get all Projects with Email
 
+
+    }
+
+    public void onlineProjectsSync(MenuItem item) {
+
+        // IF LOGGED IN
+
+        // Prompt to download projects
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
-        query.whereEqualTo("email", email);
+        query.whereEqualTo("email", currentUser.getEmail());
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, com.parse.ParseException e) {
@@ -281,10 +297,11 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 //                            Toast.makeText(getApplicationContext(), "Online Size : " + list.size(), Toast.LENGTH_SHORT).show();
                         }
 
+//                        XXX
 
                         Date subdate = new Date();
 
-                        String id = list.get(i).getString("objectId");
+                        int id = list.get(i).getInt("projectId");
                         String subject = list.get(i).getString("projectSubject");
                         String type = list.get(i).getString("projectType");
                         String title = list.get(i).getString("projectTitle");
@@ -300,14 +317,11 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                         String details = list.get(i).getString("projectDetails");
                         String email = list.get(i).getString("email");
 
-                        Project p1 = new Project(0, subject, type, title, worth, subdate, details, email);
-
-                        projectList.add(p1);
+                        Project p1 = new Project(id, subject, type, title, worth, subdate, details, email);
 
                         dbHelper = new ProjectsAdapter(SummaryActivity.this);
                         dbHelper.open();
                         dbHelper.createProject(p1);
-
 
 
                     }
@@ -322,14 +336,18 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
     private void offlineProjectsSync() {
         // Create list of SQLite Projects
 
-        Cursor c = dbHelper.fetchAllProjects();
+        // Loop through Cursor and upload to Parse if it doesnt exist.
+        // If email is null
+
+        final Cursor c = dbHelper.fetchAllProjects();
 
         String[] data;
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
 
-//            Toast.makeText(getApplicationContext(), "Cursor Count : " + c.getCount(), Toast.LENGTH_LONG).show();
+//          Toast.makeText(getApplicationContext(), "Cursor Count : " + c.getCount(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Email " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
 
             String s = c.getString(5);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -341,63 +359,69 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 e.printStackTrace();
             }
 
-            data = new String[8];
-            data[0] = c.getString(0);
-            data[1] = c.getString(1);
-            data[2] = c.getString(2);
-            data[3] = c.getString(3);
-            data[4] = c.getString(4);
-            data[6] = c.getString(6);
-            data[7] = c.getString(7);
+            Log.d("projectId", c.getString(0));
+            Log.d("projectSubject", c.getString(1));
+            Log.d("projectType", c.getString(2));
+            Log.d("projectTitle", c.getString(3));
+            Log.d("projectWorth", c.getString(4));
+            Log.d("projectDueDate", d.toString());
+            Log.d("projectDetails", c.getString(6));
+            Log.d("projectEmail", currentUser.getEmail());
 
-            Project p1 = new Project(Integer.valueOf(data[0]), data[1], data[2], data[3], data[4], d, data[6], data[7]);
+            final ParseObject p2 = new ParseObject("Project");
 
-            ParseObject p2 = new ParseObject("Project");
-            p2.put("projectSubject", p1.getProjectSubject());
-            p2.put("projectType", p1.getProjectType());
-            p2.put("projectTitle", p1.getProjectTitle());
-            p2.put("projectWorth", p1.getProjectWorth());
-            p2.put("projectDueDate", p1.getProjectDueDate());
-            p2.put("projectDetails", p1.getProjectDetails());
-            p2.put("projectEmail", "chrismaher.wit@gmail.com");
-            p2.put("email", "chrismaher.wit@gmail.com");
-
-            ///////////////////////////////////
-
-            ParseQuery<ParseObject> querySubject = ParseQuery.getQuery("Project");
-            querySubject.whereEqualTo("projectSubject", p1.getProjectSubject());
-
-            ParseQuery<ParseObject> queryTitle = ParseQuery.getQuery("Project");
-            queryTitle.whereEqualTo("projectTitle", p1.getProjectTitle());
-
-            ParseQuery<ParseObject> queryDetails = ParseQuery.getQuery("Project");
-            queryDetails.whereEqualTo("projectDetails", p1.getProjectDetails());
-
-            List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
-            queries.add(querySubject);
-            queries.add(queryTitle);
-            queries.add(queryDetails);
-
-            ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
-            mainQuery.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> list1, com.parse.ParseException e) {
-
-                    otherListSize = list1.size();
+            p2.put("projectId", c.getString(0));
+            p2.put("projectSubject", c.getString(1));
+            p2.put("projectType", c.getString(2));
+            p2.put("projectTitle", c.getString(3));
+            p2.put("projectWorth", c.getString(4));
+            p2.put("projectDueDate", d);
+            p2.put("projectDetails", c.getString(6));
+            p2.put("projectEmail", currentUser.getEmail());
+            p2.put("email", currentUser.getEmail());
 
 
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+            query.whereEqualTo("projectId", p2.getString("projectId"));
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                public void done(ParseObject object, com.parse.ParseException e) {
+                    if (object == null) {
+                        Toast.makeText(getApplicationContext(), "New Project " + p2.getString("projectId"), Toast.LENGTH_SHORT).show();
+                        p2.saveInBackground();
+                    }
                 }
             });
 
-
-
-            if (otherListSize == 0) {
-//                Toast.makeText(getApplicationContext(), "Duplicate Count(List1) : " + otherListSize, Toast.LENGTH_LONG).show();
-                p2.saveInBackground();
-
-            }else{
-//                Toast.makeText(getApplicationContext(), "Duplicate", Toast.LENGTH_LONG).show();
-            }
+//            ///////////////////////////////////
+//
+//            ParseQuery<ParseObject> querySubject = ParseQuery.getQuery("Project");
+//            querySubject.whereEqualTo("projectSubject", p1.getProjectSubject());
+//
+//            ParseQuery<ParseObject> queryTitle = ParseQuery.getQuery("Project");
+//            queryTitle.whereEqualTo("projectTitle", p1.getProjectTitle());
+//
+//            ParseQuery<ParseObject> queryDetails = ParseQuery.getQuery("Project");
+//            queryDetails.whereEqualTo("projectDetails", p1.getProjectDetails());
+//
+//            List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+//            queries.add(querySubject);
+//            queries.add(queryTitle);
+//            queries.add(queryDetails);
+//
+//            ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+//            mainQuery.findInBackground(new FindCallback<ParseObject>() {
+//                @Override
+//                public void done(List<ParseObject> list1, com.parse.ParseException e) {
+//
+//                    otherListSize = list1.size();
+//                }
+//            });
+//
+//            if (otherListSize == 0) {
+//                p2.saveInBackground();
+//
+//            }else{
+//            }
 
 
             c.moveToNext();
@@ -406,6 +430,50 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         c.close();
     }
 
+    public void deleteAllOnline(final String email){
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+        query.whereEqualTo("email",email);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, com.parse.ParseException e) {
+
+                // TODO Auto-generated method stub
+                if (list.size() != 0) {
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        list.get(i).deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(com.parse.ParseException e) {
+
+                                if (e == null) {
+//                            Toast.makeText(getBaseContext(), "Deleted Successfully!", Toast.LENGTH_LONG).show();
+
+
+                                } else {
+                                    Toast.makeText(getBaseContext(), "Cant Delete!" + e.toString(), Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+
+                        });
+
+
+                    }
+
+
+                }
+
+
+            }
+
+        });
+
+
+
+
+    }
 
     private void getExtras(Bundle savedInstanceState) {
 
@@ -443,15 +511,18 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         inflater.inflate(R.menu.action_schedule, menu);
         login = menu.findItem(R.id.login);
         logout = menu.findItem(R.id.logout);
+        downloadProjects = menu.findItem(R.id.restoreOnlineProjects);
         share = menu.findItem(R.id.action_group);
 
         if (loginState == 1) {
             login.setVisible(false);
             logout.setVisible(true);
+            downloadProjects.setVisible(true);
         } else {
 
             login.setVisible(true);
             logout.setVisible(false);
+            downloadProjects.setVisible(false);
         }
 
         return true;
@@ -823,7 +894,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
         Cursor cursor = dbHelper.fetchAllProjects();
         projectCount = cursor.getCount();
-
 
 
         // Show Welcome Panel if there are no projects in list //
@@ -1328,6 +1398,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         finish();
 
     }
+
+
 }// Main Program Ends..
 
 

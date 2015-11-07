@@ -27,6 +27,10 @@ import com.chris.collegeplanner.adapters.TabsPagerAdapter;
 import com.chris.collegeplanner.helper.SQLiteHandler;
 import com.chris.collegeplanner.helper.SessionManager;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.HashMap;
 import java.util.List;
