@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class ProjectsAdapter {
 
@@ -76,7 +77,7 @@ public class ProjectsAdapter {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(project.getProjectDueDate());
 
-            // values.put(KEY_ID, project.get_id()); // Email
+            values.put(KEY_ID, randId()); // Email
             values.put(KEY_SUBJECT, project.getProjectSubject()); // Email
             values.put(KEY_TYPE, project.getProjectType()); // Email
             values.put(KEY_TITLE, project.getProjectTitle()); // Email
@@ -314,6 +315,15 @@ public class ProjectsAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
             onCreate(db);
         }
+    }
+
+    private int randId(){
+
+        Random obj= new Random();
+        int rgen1= obj.nextInt(10000);
+
+        return rgen1;
+
     }
 }
 

@@ -159,7 +159,7 @@ public class ViewSingleProject extends AppCompatActivity {
                 id = extras.getInt("id");
             }
         } else {
-            id = (int) savedInstanceState.getSerializable("id");
+           //  id = (int) savedInstanceState.getSerializable("id");
         }
     }
 

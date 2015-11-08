@@ -253,29 +253,40 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
 
     public void syncProjects(String email) {
 
-        // On Login, Download all that are online that
+        // If user is logged in
 
-
-            currentUser = ParseUser.getCurrentUser();
-            if (currentUser != null) {
-
-//              deleteAllOnline(email);
-                offlineProjectsSync();
-
-//                onlineProjectsSync(email); MAKE BUTTON
-
-
-
-            } else {
-                // show the signup or login screen
-            }
+        currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            // Delete projects by User
+//            deleteAllOnlineProjects(currentUser.getEmail());
+            // Reupload projects by user
+             offlineProjectsSync();
+        }
 
     }
 
-    private void onlineProjectsSync(String email) {
-        // Get all Projects with Email
+    public void deleteAllOnlineProjects(String email) {
 
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+        query.whereEqualTo("email", email);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> scoreList, com.parse.ParseException e) {
+                if (e == null) {
+                    if (scoreList.size() > 0) {
+//                        Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                        for (int i = 0; i < scoreList.size(); i++) {
+                            scoreList.get(i).deleteInBackground(new DeleteCallback() {
+                                public void done(com.parse.ParseException e) {
+                                    if (e == null) {
 
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void onlineProjectsSync(MenuItem item) {
@@ -346,9 +357,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         c.moveToFirst();
         while (!c.isAfterLast()) {
 
-//          Toast.makeText(getApplicationContext(), "Cursor Count : " + c.getCount(), Toast.LENGTH_LONG).show();
-//            Toast.makeText(getApplicationContext(), "Email " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-
             String s = c.getString(5);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date d = new Date();
@@ -359,18 +367,9 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
                 e.printStackTrace();
             }
 
-            Log.d("projectId", c.getString(0));
-            Log.d("projectSubject", c.getString(1));
-            Log.d("projectType", c.getString(2));
-            Log.d("projectTitle", c.getString(3));
-            Log.d("projectWorth", c.getString(4));
-            Log.d("projectDueDate", d.toString());
-            Log.d("projectDetails", c.getString(6));
-            Log.d("projectEmail", currentUser.getEmail());
-
             final ParseObject p2 = new ParseObject("Project");
 
-            p2.put("projectId", c.getString(0));
+            p2.put("projectId", c.getInt(0));
             p2.put("projectSubject", c.getString(1));
             p2.put("projectType", c.getString(2));
             p2.put("projectTitle", c.getString(3));
@@ -381,13 +380,29 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
             p2.put("email", currentUser.getEmail());
 
 
+//            ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+//            query.whereEqualTo("projectId", p2.getString("projectId"));
+//            query.getFirstInBackground(new GetCallback<ParseObject>() {
+//                public void done(ParseObject object, com.parse.ParseException e) {
+//                    if (object == null) {
+//                        Toast.makeText(getApplicationContext(), "New Project " + p2.getInt("projectId"), Toast.LENGTH_SHORT).show();
+//                        p2.saveInBackground();
+//                    }
+//                }
+//            });
+
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
-            query.whereEqualTo("projectId", p2.getString("projectId"));
-            query.getFirstInBackground(new GetCallback<ParseObject>() {
-                public void done(ParseObject object, com.parse.ParseException e) {
-                    if (object == null) {
-                        Toast.makeText(getApplicationContext(), "New Project " + p2.getString("projectId"), Toast.LENGTH_SHORT).show();
-                        p2.saveInBackground();
+            query.whereEqualTo("projectId", c.getInt(0));
+            query.findInBackground(new FindCallback<ParseObject>() {
+                public void done(List<ParseObject> scoreList, com.parse.ParseException e) {
+                    if (e == null) {
+                        if (scoreList.size() > 0) {
+
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+                            p2.saveInBackground();
+
+                        }
                     }
                 }
             });
@@ -430,51 +445,6 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         c.close();
     }
 
-    public void deleteAllOnline(final String email){
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
-        query.whereEqualTo("email",email);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, com.parse.ParseException e) {
-
-                // TODO Auto-generated method stub
-                if (list.size() != 0) {
-
-                    for (int i = 0; i < list.size(); i++) {
-
-                        list.get(i).deleteInBackground(new DeleteCallback() {
-                            @Override
-                            public void done(com.parse.ParseException e) {
-
-                                if (e == null) {
-//                            Toast.makeText(getBaseContext(), "Deleted Successfully!", Toast.LENGTH_LONG).show();
-
-
-                                } else {
-                                    Toast.makeText(getBaseContext(), "Cant Delete!" + e.toString(), Toast.LENGTH_LONG).show();
-                                }
-
-                            }
-
-                        });
-
-
-                    }
-
-
-                }
-
-
-            }
-
-        });
-
-
-
-
-    }
-
     private void getExtras(Bundle savedInstanceState) {
 
 
@@ -488,6 +458,8 @@ public class SummaryActivity extends AppCompatActivity implements AdapterView.On
         } else {
             extraEmail = (String) savedInstanceState.getSerializable("email");
         }
+
+
     }
 
     @Override

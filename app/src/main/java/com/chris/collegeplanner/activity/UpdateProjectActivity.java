@@ -27,6 +27,7 @@ import com.chris.collegeplanner.helper.SessionManager;
 import com.chris.collegeplanner.model.Project;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -81,6 +82,7 @@ public class UpdateProjectActivity extends AppCompatActivity {
     private ProjectsAdapter dbHelper;
     private ParseUser currentUser;
     private String user = "";
+    private SummaryActivity sa = new SummaryActivity();
 
 
     public static String toTitleCase(String givenString) {
@@ -98,6 +100,7 @@ public class UpdateProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_project);
         setTitle("Update Project");
+        currentUser = ParseUser.getCurrentUser();
 
         project = new Project();
         // Offline Projects
@@ -116,8 +119,14 @@ public class UpdateProjectActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 updateProject();
+                if(currentUser != null){
+
+                    sa.deleteAllOnlineProjects(currentUser.getEmail());
+
+                }
 
                 Intent i = new Intent(UpdateProjectActivity.this, SummaryActivity.class);
+                i.putExtra("Updated",true);
                 startActivity(i);
                 finish();
 
