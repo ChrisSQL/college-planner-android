@@ -1,6 +1,8 @@
 package com.chris.collegeplanner.activity;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -9,11 +11,12 @@ import com.parse.ParseUser;
 /**
  * Created by chris on 04/11/15.
  */
-public class ParseApplication extends Application {
+public class ParseApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
 
     //    ParseCrashReporting.enable(this);
         // Enable Local Datastore.

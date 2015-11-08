@@ -40,13 +40,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:23.0.3'
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // ...
-
     compile 'com.mcxiaoke.volley:library:1.+'
+    compile 'com.android.support:multidex:1.0.0'
 }
 
 dependencies {
@@ -59,7 +58,7 @@ dependencies {
 }
 dependencies {
     compile 'com.google.android.gms:play-services:7.8.0'
-    compile 'com.android.support:appcompat-v7:19.+'
+//    compile 'com.android.support:appcompat-v7:19.+'
     compile 'com.google.android.gms:play-services-analytics:7.8.0'
 }
 dependencies {
@@ -76,4 +75,6 @@ dependencies {
 }
 dependencies {
     compile 'com.android.support:support-v4:23.+'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.+'
 }
